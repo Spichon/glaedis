@@ -8,6 +8,10 @@ Parameters:
   RootDomain:
     Type: String
     Description: Root domain associated with site
+  EnvDomain:
+    Type: String
+    Default: ""
+    Description: Env domain dev or prod
   CloudFrontCertArn:
     Type: String
     Description: US-East-1 wildcard certificate required for cloudfront
@@ -21,6 +25,10 @@ Parameters:
 Resources:
   CodeBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub
+        - glaedis-backend-${EnvDomain}
+        - { EnvDomain: !ImportValue UserManagerApp-RootDomain }
 
   AlertSNSTopic:
     Type: AWS::SNS::Topic
@@ -44,7 +52,6 @@ Outputs:
   HostedZoneId:
     Description: "HostedZoneId"
     Value: !Ref HostedZoneId
-    Value: !Ref HostedZoneId
     Export:
       Name: UserManagerApp-HostedZoneId
   CloudFrontCertArn:
@@ -62,3 +69,8 @@ Outputs:
     Value: !Ref RootDomain
     Export:
       Name: UserManagerApp-RootDomain
+  EnvDomain:
+    Description: "EnvDomain"
+    Value: !Ref EnvDomain
+    Export:
+      Name: UserManagerApp-EnvDomain

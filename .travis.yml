@@ -7,7 +7,8 @@ install:
 - pip install aws-sam-cli
 jobs:
   include:
-  - stage: architecture
+  - stage: architecture-dev
+    skip_cleanup: true
     script:
     - aws cloudformation deploy
     - --template-file ./templates/00-infra.yml
@@ -17,20 +18,22 @@ jobs:
     - --parameter-overrides
     - RootDomain=$DOMAIN
     - RegionalCertArn=$REGIONAL_CERT
-    - HostedZoneId=Z02091723GSEIGSCA821F
+    - HostedZoneId=$HOSTED_ZONE_ID
     - CloudFrontCertArn=$CLOUDFRONT_CERT
     - EmailAddress=$EMAIL
+    - EnvDomain=$TRAVIS_BRANCH
+
 notifications:
   email:
     on_failure: always
 env:
   global:
   - AWS_DEFAULT_REGION=eu-west-1
-  - STACK_NAME=concat("glaedis-infra", "-", branch)
+  - STACK_NAME=glaedis-infra-$TRAVIS_BRANCH
   - DOMAIN=glaedis.com
   - REGIONAL_CERT=arn:aws:acm:eu-west-1:671533333131:certificate/41b76978-cf6a-425f-9d34-93f5dc010ecc
   - CLOUDFRONT_CERT=arn:aws:acm:us-east-1:671533333131:certificate/bde6f20e-a1fa-41a4-bd0f-ab9eba6cf4a2
-  - DOMAIN=glaedis.com
+  - HOSTED_ZONE_ID=Z02091723GSEIGSCA821F
   - EMAIL=simon.pichon@outlook.fr
   - secure: a/3bGV+Cx1hX2S/dpi5kBDInXWcV889qciIqw42ntC5TG8uHd3af5UmzbXU4nIcRK0gF2tltvuDRN4mb1EQIeEff6w3SwViXdn76xf6l0H9dNELcrAzOz85K6C+mf1msE5l4x+hIY1nirl0Qh7Hg2KNByzp5dO5a9EqEpqRFmolGHaCILWXx9q2YqYI5kG7LFhyvRuRD5ZP3Ugti9kxa3RIlzE4hZhAwjECx9NGqWL4j0oqMewigb2dfGSL8pRxss48USubMZpvDFhIQ8f5m/ORPeSEnt2OGGNu+JPXvnsr70N9zBwr7RfNv6a44zTlfHH2ANOOAYtYrZugtv/bgKg/OlJ0yrAaYKnEDdGxizP6DNe1wBvw0fYVVEHStIyJRXfsPTxSACFcUj3jSkTV59VUc0KiUgIVsFszFvWcpJKbVMHf2vYaX/TM60VVezTUHuEb9j1u7DOBix1ajL+UGU7PzaC9mfjiVyrI5PAdUCo9rjybce54wmKl1UbvsFJkiI3sTcn1/fk6HegIhAiRhFhHnDFl22z8eao9rnrI5WJCtLz/IddcINlj7h8In2M6egIIuyYzZ9hY3VvL+DALxbLdvPOUevNWvsQpj44Yovc1h1RLic0OfaZ2LOcw+mpKguZUztSMjc4/6r4rF1bkDQJTETpvlzcPsbhFaPoLWiOo=
   - secure: AQgNXqMp/BPHqeVEat+ZdWlV+Lih94nsrqvBCcAn+OySW9aQ5X2VdDSryWlwXKVHzCkeO87OFHg/HJaSuaShcrZl6tKuooMTqxKeYh0PNKJ4pVQCHFIMWHndcCA+udg24Qm6ZzK2xfFhRpVEYUA7sCzpxuVV78Q0PQqBrQOz4TIVvtP1+G1mVA2no91Id/uedT6pHAZb8vB0uSUJEnEekH4Hh+1ErFxIxkS8cMrIxyeLCAEbgim7nOimRJhiBmQtXQRW3yxW6Qo5RwAlsjIoLVuDmZPyeH+vVOlpiELm09aVBib29LpF81YNMST4kItC5+vj1RpG6e+AKRuzQShsKA9zfPTouN8MEwmyEiltW4IXEvam7A/t/rbwRB1fwyIrsn1Cw5gUrW6NnVI1fsSUVyY/J50gzKljGPabmwNCPngvssPdVyc1olTnCOyi1A5/aKwR42CVXnLnv7yqvrNIfkAbr/zMvTyTcXi6cpzekDD5velD8raQ0eBLCE4N6WydNn4+8QnzP8JLYPHG3QtxfZRvpf/jAiuNs71If51yzuh1Wh74YSLW8emFDtFCW5L0sxj5nzYX2mVzhXmYWIB1K6ba5PaqCziLKEwgDbP5c7UBIMoE6c4HuQl9YpXBiiJoE8VAm+HVX0HGxZ/VWLCisYD4rW8gVN4Xh369nBGs2ws=
