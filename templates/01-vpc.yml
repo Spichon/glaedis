@@ -28,7 +28,7 @@ Resources:
         - Fn::GetAZs: !Ref AWS::Region
       Tags:
         - Key: Name
-          Value: !Ref EnvironmentName
+          Value: !Sub ${EnvironmentName} Private Subnet (AZ1)
 
   PublicSubB:
     Type: AWS::EC2::Subnet
@@ -41,7 +41,7 @@ Resources:
         - Fn::GetAZs: !Ref AWS::Region
       Tags:
         - Key: Name
-          Value: !Ref EnvironmentName
+          Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
