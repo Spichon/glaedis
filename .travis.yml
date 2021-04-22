@@ -18,6 +18,8 @@ jobs:
       CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
     - aws cloudformation deploy --template-file ./templates/01-vpc.yml --stack-name glaedis-vpc-$TRAVIS_BRANCH
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
+    - aws cloudformation deploy --template-file ./templates/02-tables.yml --stack-name glaedis-tables-$TRAVIS_BRANCH
+      --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
 
 env:
   global:
