@@ -30,15 +30,15 @@ Resources:
         - UserTable-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
 
-Outputs:
-  UserTableName:
-    Description: "UserTableName"
-    Value: !Ref UserTable
-    Export:
-      Name: UserManagerApp-UserTableName
-
-  UserTableArn:
-    Description: "UserTableArn"
-    Value: !GetAtt UserTable.Arn
-    Export:
-      Name: UserManagerApp-UserTableArn
+#Outputs:
+#  UserTableName:
+#    Description: "UserTableName"
+#    Value: !Ref UserTable
+#    Export:
+#      Name: UserManagerApp-UserTableName
+#
+#  UserTableArn:
+#    Description: "UserTableArn"
+#    Value: !GetAtt UserTable.Arn
+#    Export:
+#      Name: UserManagerApp-UserTableArn
