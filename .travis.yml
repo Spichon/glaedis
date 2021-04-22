@@ -20,6 +20,8 @@ jobs:
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
     - aws cloudformation deploy --template-file ./templates/02-tables.yml --stack-name glaedis-tables-$TRAVIS_BRANCH
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
+    - mkdir zip
+    - zip -r zip/TestKey.zip backend/TestKey
 
 env:
   global:
