@@ -28,7 +28,7 @@ Resources:
     Properties:
       BucketName: !Sub
         - glaedis-backend-${EnvDomain}
-        - { EnvDomain: !ImportValue UserManagerApp-RootDomain }
+        - { EnvDomain: !Ref EnvDomain }
 
   AlertSNSTopic:
     Type: AWS::SNS::Topic
@@ -38,39 +38,39 @@ Resources:
           Protocol: "email"
 
 
-Outputs:
-  AlertSNSTopicArn:
-    Description: "AlertSNSTopicArn"
-    Value: !Ref AlertSNSTopic
-    Export:
-      Name: UserManagerApp-AlertSNSTopicArn
-  CodeBucketName:
-    Description: "CodeBucketName"
-    Value: !Ref CodeBucket
-    Export:
-      Name: UserManagerApp-CodeBucketName
-  HostedZoneId:
-    Description: "HostedZoneId"
-    Value: !Ref HostedZoneId
-    Export:
-      Name: UserManagerApp-HostedZoneId
-  CloudFrontCertArn:
-    Description: "CloudFrontCertArn"
-    Value: !Ref CloudFrontCertArn
-    Export:
-      Name: UserManagerApp-CloudFrontCertArn
-  RegionalCertArn:
-    Description: "RegionalCertArn"
-    Value: !Ref RegionalCertArn
-    Export:
-      Name: UserManagerApp-RegionalCertArn
-  RootDomain:
-    Description: "RootDomain"
-    Value: !Ref RootDomain
-    Export:
-      Name: UserManagerApp-RootDomain
-  EnvDomain:
-    Description: "EnvDomain"
-    Value: !Ref EnvDomain
-    Export:
-      Name: UserManagerApp-EnvDomain
+#Outputs:
+#  AlertSNSTopicArn:
+#    Description: "AlertSNSTopicArn"
+#    Value: !Ref AlertSNSTopic
+#    Export:
+#      Name: UserManagerApp-AlertSNSTopicArn
+#  CodeBucketName:
+#    Description: "CodeBucketName"
+#    Value: !Ref CodeBucket
+#    Export:
+#      Name: UserManagerApp-CodeBucketName
+#  HostedZoneId:
+#    Description: "HostedZoneId"
+#    Value: !Ref HostedZoneId
+#    Export:
+#      Name: UserManagerApp-HostedZoneId
+#  CloudFrontCertArn:
+#    Description: "CloudFrontCertArn"
+#    Value: !Ref CloudFrontCertArn
+#    Export:
+#      Name: UserManagerApp-CloudFrontCertArn
+#  RegionalCertArn:
+#    Description: "RegionalCertArn"
+#    Value: !Ref RegionalCertArn
+#    Export:
+#      Name: UserManagerApp-RegionalCertArn
+#  RootDomain:
+#    Description: "RootDomain"
+#    Value: !Ref RootDomain
+#    Export:
+#      Name: UserManagerApp-RootDomain
+#  EnvDomain:
+#    Description: "EnvDomain"
+#    Value: !Ref EnvDomain
+#    Export:
+#      Name: UserManagerApp-EnvDomain
