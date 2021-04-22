@@ -8,7 +8,7 @@ Parameters:
   RootDomain:
     Type: String
     Description: Root domain associated with site
-  EnvDomain:
+  EnvironmentName:
     Type: String
     Default: ""
     Description: Env domain dev or prod
@@ -27,8 +27,8 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub
-        - glaedis-backend-${EnvDomain}
-        - { EnvDomain: !Ref EnvDomain }
+        - glaedis-backend-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
 
   AlertSNSTopic:
     Type: AWS::SNS::Topic
@@ -69,8 +69,8 @@ Resources:
 #    Value: !Ref RootDomain
 #    Export:
 #      Name: UserManagerApp-RootDomain
-#  EnvDomain:
-#    Description: "EnvDomain"
-#    Value: !Ref EnvDomain
+#  EnvironmentName:
+#    Description: "EnvironmentName"
+#    Value: !Ref EnvironmentName
 #    Export:
-#      Name: UserManagerApp-EnvDomain
+#      Name: UserManagerApp-EnvironmentName
