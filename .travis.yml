@@ -10,7 +10,7 @@ jobs:
   - stage: architecture-dev
     skip_cleanup: true
     before_install:
-      - ./scripts/aws_config.sh
+      - bash ./scripts/aws_config.sh
     script:
     - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
       $STACK_NAME --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM --parameter-overrides
