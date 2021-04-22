@@ -10,19 +10,10 @@ jobs:
   - stage: architecture-dev
     skip_cleanup: true
     script:
-    - aws cloudformation deploy
-    - --template-file ./templates/00-infra.yml
-    - --stack-name $STACK_NAME
-    - --region=$AWS_DEFAULT_REGION
-    - --capabilities CAPABILITY_IAM
-    - --parameter-overrides
-    - RootDomain=$DOMAIN
-    - RegionalCertArn=$REGIONAL_CERT
-    - HostedZoneId=$HOSTED_ZONE_ID
-    - CloudFrontCertArn=$CLOUDFRONT_CERT
-    - EmailAddress=$EMAIL
-    - EnvDomain=$TRAVIS_BRANCH
-
+    - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
+      $STACK_NAME --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM --parameter-overrides
+      RootDomain=$DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
+      CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvDomain=$TRAVIS_BRANCH
 notifications:
   email:
     on_failure: always
@@ -31,9 +22,9 @@ env:
   - AWS_DEFAULT_REGION=eu-west-1
   - STACK_NAME=glaedis-infra-$TRAVIS_BRANCH
   - DOMAIN=glaedis.com
-  - REGIONAL_CERT=arn:aws:acm:eu-west-1:671533333131:certificate/41b76978-cf6a-425f-9d34-93f5dc010ecc
-  - CLOUDFRONT_CERT=arn:aws:acm:us-east-1:671533333131:certificate/bde6f20e-a1fa-41a4-bd0f-ab9eba6cf4a2
-  - HOSTED_ZONE_ID=Z02091723GSEIGSCA821F
   - EMAIL=simon.pichon@outlook.fr
   - secure: a/3bGV+Cx1hX2S/dpi5kBDInXWcV889qciIqw42ntC5TG8uHd3af5UmzbXU4nIcRK0gF2tltvuDRN4mb1EQIeEff6w3SwViXdn76xf6l0H9dNELcrAzOz85K6C+mf1msE5l4x+hIY1nirl0Qh7Hg2KNByzp5dO5a9EqEpqRFmolGHaCILWXx9q2YqYI5kG7LFhyvRuRD5ZP3Ugti9kxa3RIlzE4hZhAwjECx9NGqWL4j0oqMewigb2dfGSL8pRxss48USubMZpvDFhIQ8f5m/ORPeSEnt2OGGNu+JPXvnsr70N9zBwr7RfNv6a44zTlfHH2ANOOAYtYrZugtv/bgKg/OlJ0yrAaYKnEDdGxizP6DNe1wBvw0fYVVEHStIyJRXfsPTxSACFcUj3jSkTV59VUc0KiUgIVsFszFvWcpJKbVMHf2vYaX/TM60VVezTUHuEb9j1u7DOBix1ajL+UGU7PzaC9mfjiVyrI5PAdUCo9rjybce54wmKl1UbvsFJkiI3sTcn1/fk6HegIhAiRhFhHnDFl22z8eao9rnrI5WJCtLz/IddcINlj7h8In2M6egIIuyYzZ9hY3VvL+DALxbLdvPOUevNWvsQpj44Yovc1h1RLic0OfaZ2LOcw+mpKguZUztSMjc4/6r4rF1bkDQJTETpvlzcPsbhFaPoLWiOo=
   - secure: AQgNXqMp/BPHqeVEat+ZdWlV+Lih94nsrqvBCcAn+OySW9aQ5X2VdDSryWlwXKVHzCkeO87OFHg/HJaSuaShcrZl6tKuooMTqxKeYh0PNKJ4pVQCHFIMWHndcCA+udg24Qm6ZzK2xfFhRpVEYUA7sCzpxuVV78Q0PQqBrQOz4TIVvtP1+G1mVA2no91Id/uedT6pHAZb8vB0uSUJEnEekH4Hh+1ErFxIxkS8cMrIxyeLCAEbgim7nOimRJhiBmQtXQRW3yxW6Qo5RwAlsjIoLVuDmZPyeH+vVOlpiELm09aVBib29LpF81YNMST4kItC5+vj1RpG6e+AKRuzQShsKA9zfPTouN8MEwmyEiltW4IXEvam7A/t/rbwRB1fwyIrsn1Cw5gUrW6NnVI1fsSUVyY/J50gzKljGPabmwNCPngvssPdVyc1olTnCOyi1A5/aKwR42CVXnLnv7yqvrNIfkAbr/zMvTyTcXi6cpzekDD5velD8raQ0eBLCE4N6WydNn4+8QnzP8JLYPHG3QtxfZRvpf/jAiuNs71If51yzuh1Wh74YSLW8emFDtFCW5L0sxj5nzYX2mVzhXmYWIB1K6ba5PaqCziLKEwgDbP5c7UBIMoE6c4HuQl9YpXBiiJoE8VAm+HVX0HGxZ/VWLCisYD4rW8gVN4Xh369nBGs2ws=
+  - secure: ZPbJnH9B3T10kNqRazE8wRmcL+tStQ2gF2eubVvdiYlGK7kjoQShxsLiZxguB1Y1uk5JlqTs74xNqoGiUDeOW/NDdUZfoJGbXZBE7+Tcu1u8MjMMbL+jYBy/tfW+kwL/+KQcgR8HoBZm92LPBLR7oHi4tnPNu+TULTg9GiN1ty5guMZxgtGg7+GaHEZQ4a1ruq7KlkJBvIEp7MK4pIXNahlLhDeAWmD9qPlv5hQqzjjJsp0/AF6cLKkPQmE6+Hx3sajZqtDUtZY1ui6dwg6CuJ1kH1PGPk3cjLQmlfguteLB+vNzChYNcTbAD4rKYbPDMm546L8/Bi7oMcEco/mQnfpJO7VPmZpJH35141nTVb2HDIC24BtTBsKqGKgBlzRckUYsMMJMv/XTZ/vqoIaveBkICKOEfxoaZJ78K3Q4nDdnP+5MUbMJseVL6295qz3s/neh7CTuv7SijeLrslytueAAkUanY0uT/BEokwfJZC8Vm4yWPPz+PnE4IaWAwRxM3JtgHom+vvwfXc7V9Hv3jUnAKin1WmtWgcYlrPDrO75Xb5cz8dgGjwCojNSwje/xXL/WkKndZONBXM0ac5+tZ2TN1S91w2aw2BWBG9c9LLKS7utYOr4CUIYZvl4hUSWlmfo2/cXO7iyo28jdC3fuMChNsBch6xtGb2OVjE0hgrM=
+  - secure: KNXAGtKa8u3FEI9gPINypIPkhygXNATwRWKc0ys13xacskxQ9hp82z7m+S9Z9rG0XT90vN7qEeYQ6nb9Ix4ZD5xdmIWkvqagivmE/d9g0Hf6xaCTUQfkxY0rM7CBzwagdkD/Xx/GTk93jJMb4KCjK576YqSiH3jY1OQNHwEeFI9iCXw1sZHqb33t7T0HkM8E4sg7O+wesbsf09sUyNq5YF3xw0M2WrSEU32tq8YIxog9h3AHG2LwrJBZGSzSIZ1VE5p9J7x4OorE7dAkrFC5F0hSjMs8qli2DgTb6vZzxoLMV4XB9SevrAahMf+3wIF9WdfV9+wY1nbOH0ILhsKo+9ZEIwq/Qlzn/V9C7s95OekaHpDj44LPW5G2nUiUm4jGtZ2hA9kdtUt2zfTftEBbgEesRHFmlmolRMPg6RbOrjZYqaSqp1Gin2V9W01E8qJyq8w1asHyEKTWSZTIhGzK/Yv/q1RmrSsx71S4MfwToCCnuvrcISaP9eZlNcaaK0Y+Hlsy+zd7PDct2+aBLq+QSW0J4cOXTOE6x857UY5hvrRSw68KRVkkJNj+lFUmmxayfZ9D9oXJO8Kfunu+EAbt9gP5vdLPWdblb7TVA451fpBq+RA7WFgKpgpwnbHbQiqRz/fIDAANYNw6ialf5qNQv5RZhHnSeixiMkm77PE3ZhU=
+  - secure: yvtJamf5W1AJuNNRMhsTZVRO+rF55aJKlOQ/5oAVFrOyCHSLefpqG6+byy1TFe2RQe2F7qMZvCjtedTy+PoxXNqJd4UlHA+6LE8bS0VA7WuS//R9TbuAHjLTel+D/bD0maPH6cW6SEKsdrPr5tZ24ZMbZC1J95VZ6e1kYR5+BWr2uMuytABsp1/xWUg/tau4YcD41t0O7JXqj2z0SSdhln3jY/OtC4Isa+V29+/xKqMaxkuqeCFetjYV6m4rdv2eGry+QNpNNbDAvxinlxc2qGBMIrn3BM90Pn2XCEwiLJZq9eT3yc3bqfiH1kWznY6rmG/F/eCbm3OLzLdQ9yY5l/CkyoHd1YKxxv4v9wII3oWtE1AOMy4av1wONCVAueSRej+8VOdD801ND3YdWUywkv6W9oj0FOxaWndXvA+cU5FWR8U3g9d6/7FJKYwQ8iNUGPFNDypR+pDWPWkLcCjOhaJ/1WyAuzhFK/4RWz8+Dcq1D9yzY4d5cQXEzc14ZSaoZL8ZbZ+nbj4POh+eY4ZpxtdCXCa0bWXc9Ef+GzZe8geAz9fi3mLPv6zByVvjOQIBRE0dnh+a49NMZyoOLZuGKyhLOMFhloLVM3fsbqUwVn8fpkBg8sF9Y3214HSgCHj51CsuJsLc9USjN3A+TgYQmiqAaeXKSGJeUdC9JYH0pQw=
