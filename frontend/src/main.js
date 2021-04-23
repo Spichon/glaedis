@@ -44,7 +44,7 @@ Amplify.configure({
             },
             {
                 name: "TestAPIKey",
-                endpoint: `https://glaedis-test.${ROOT_DOMAIN}`,
+                endpoint: `https://test.${ROOT_DOMAIN}`,
             }
         ]
     }
