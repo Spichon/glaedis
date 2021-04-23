@@ -22,7 +22,7 @@ jobs:
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
     - mkdir zip
     - zip -r zip/PostConfirmation.zip backend/PostConfirmation
-    - aws s3 cp zip/PostConfirmation.zip s3://glaedis-backend-${$TRAVIS_BRANCH}/
+    - aws s3 cp zip/PostConfirmation.zip s3://glaedis-backend-${TRAVIS_BRANCH}/
     - aws cloudformation deploy --template-file ./templates/03-cognito.yml --stack-name glaedis-cognito-$TRAVIS_BRANCH
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
 

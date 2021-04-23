@@ -49,18 +49,18 @@ Resources:
         - !Sub
           - https://glaedis-app.${ Domain }
           - Domain:
-            - Fn::ImportValue:
-              - !Sub
-                - Glaedis-${EnvironmentName}-RootDomain
-                - { EnvironmentName: !Ref EnvironmentName }
+              Fn::ImportValue:
+                !Sub
+                  - Glaedis-${EnvironmentName}-RootDomain
+                  - { EnvironmentName: !Ref EnvironmentName }
       CallbackURLs:
         - !Sub
           - https://glaedis-app.${ Domain }
           - Domain:
-              - Fn::ImportValue:
-                  - !Sub
-                    - Glaedis-${EnvironmentName}-RootDomain
-                    - { EnvironmentName: !Ref EnvironmentName }
+              Fn::ImportValue:
+                !Sub
+                  - Glaedis-${EnvironmentName}-RootDomain
+                  - { EnvironmentName: !Ref EnvironmentName }
       SupportedIdentityProviders:
         - COGNITO
 
@@ -69,10 +69,10 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          - Fn::ImportValue:
-              - !Sub
-                - Glaedis-${EnvironmentName}-CodeBucketName
-                - { EnvironmentName: !Ref EnvironmentName }
+          Fn::ImportValue:
+            !Sub
+              - Glaedis-${EnvironmentName}-CodeBucketName
+              - { EnvironmentName: !Ref EnvironmentName }
         S3Key: PostConfirmation.zip
       Handler: main.handler
       MemorySize: 128
@@ -82,10 +82,10 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            - Fn::ImportValue:
-                - !Sub
-                  - Glaedis-${EnvironmentName}-UserTableName
-                  - { EnvironmentName: !Ref EnvironmentName }
+            Fn::ImportValue:
+              !Sub
+                - Glaedis-${EnvironmentName}-UserTableName
+                - { EnvironmentName: !Ref EnvironmentName }
 
   PostConfirmationLambdaCognitoUserPoolExecutionPermission:
     Type: AWS::Lambda::Permission
@@ -116,10 +116,10 @@ Resources:
                 Action:
                   - 'dynamodb:PutItem*'
                 Resource:
-                  - Fn::ImportValue:
-                      - !Sub
-                        - Glaedis-${EnvironmentName}-UserTableArn
-                        - { EnvironmentName: !Ref EnvironmentName }
+                  Fn::ImportValue:
+                    !Sub
+                      - Glaedis-${EnvironmentName}-UserTableArn
+                      - { EnvironmentName: !Ref EnvironmentName }
 
 Outputs:
   CognitoUserPoolId:
