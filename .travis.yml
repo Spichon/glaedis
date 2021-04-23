@@ -24,6 +24,7 @@ jobs:
     - zip -r zip/PostConfirmation.zip backend/PostConfirmation
     - aws s3 cp zip/PostConfirmation.zip s3://glaedis-backend-${TRAVIS_BRANCH}/
     - aws cloudformation deploy --template-file ./templates/03-cognito.yml --stack-name glaedis-cognito-$TRAVIS_BRANCH
+      --region=eu-west-1 --capabilities CAPABILITY_NAMED_IAM
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
 
 env:
