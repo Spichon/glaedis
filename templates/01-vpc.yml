@@ -84,16 +84,22 @@ Resources:
       RouteTableId: !Ref RouteTablePublic
       SubnetId: !Ref PublicSubB
 
-#Outputs:
-#  VPCID:
-#    Value: !Ref VPC
-#    Export:
-#      Name: UserManagerApp-VPCID
-#  PublicSubnetA:
-#    Value: !Ref PublicSubA
-#    Export:
-#      Name: UserManagerApp-PublicSubnetA
-#  PublicSubnetB:
-#    Value: !Ref PublicSubB
-#    Export:
-#      Name: UserManagerApp-PublicSubnetB
+Outputs:
+  VPCID:
+    Value: !Ref VPC
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-VPCID
+        - { EnvironmentName: !Ref EnvironmentName }
+  PublicSubnetA:
+    Value: !Ref PublicSubA
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-PublicSubnetA
+        - { EnvironmentName: !Ref EnvironmentName }
+  PublicSubnetB:
+    Value: !Ref PublicSubB
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-PublicSubnetB
+        - { EnvironmentName: !Ref EnvironmentName }

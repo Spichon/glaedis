@@ -48,11 +48,19 @@ Resources:
       LogoutURLs:
         - !Sub
           - https://glaedis-app.${ Domain }
-          - Domain: !ImportValue UserManagerApp-RootDomain
+          - Domain:
+            - Fn::ImportValue:
+              - !Sub
+                - Glaedis-${EnvironmentName}-RootDomain
+                - { EnvironmentName: !Ref EnvironmentName }
       CallbackURLs:
         - !Sub
           - https://glaedis-app.${ Domain }
-          - Domain: !ImportValue UserManagerApp-RootDomain
+          - Domain:
+              - Fn::ImportValue:
+                  - !Sub
+                    - Glaedis-${EnvironmentName}-RootDomain
+                    - { EnvironmentName: !Ref EnvironmentName }
       SupportedIdentityProviders:
         - COGNITO
 
@@ -60,7 +68,11 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: !ImportValue UserManagerApp-CodeBucketName
+        S3Bucket:
+          - Fn::ImportValue:
+              - !Sub
+                - Glaedis-${EnvironmentName}-CodeBucketName
+                - { EnvironmentName: !Ref EnvironmentName }
         S3Key: PostConfirmation.zip
       Handler: main.handler
       MemorySize: 128
@@ -69,7 +81,11 @@ Resources:
       Role: !GetAtt PostConfirmationLambdaRole.Arn
       Environment:
         Variables:
-          TABLE_NAME: !ImportValue UserManagerApp-UserTableName
+          TABLE_NAME:
+            - Fn::ImportValue:
+                - !Sub
+                  - Glaedis-${EnvironmentName}-UserTableName
+                  - { EnvironmentName: !Ref EnvironmentName }
 
   PostConfirmationLambdaCognitoUserPoolExecutionPermission:
     Type: AWS::Lambda::Permission
@@ -99,23 +115,33 @@ Resources:
               - Effect: Allow
                 Action:
                   - 'dynamodb:PutItem*'
-                Resource: !ImportValue UserManagerApp-UserTableArn
+                Resource:
+                  - Fn::ImportValue:
+                      - !Sub
+                        - Glaedis-${EnvironmentName}-UserTableArn
+                        - { EnvironmentName: !Ref EnvironmentName }
 
 Outputs:
   CognitoUserPoolId:
     Description: "Cognito User Pool Id"
     Value: !Ref CognitoUserPool
     Export:
-      Name: UserManagerApp-CognitoUserPoolId
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-CognitoUserPoolId
+        - { EnvironmentName: !Ref EnvironmentName }
 
   CognitoUserPoolArn:
     Description: "Cognito User Pool Id"
     Value: !GetAtt  CognitoUserPool.Arn
     Export:
-      Name: UserManagerApp-CognitoUserPoolArn
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-CognitoUserPoolArn
+        - { EnvironmentName: !Ref EnvironmentName }
 
   CognitoUserPoolClientId:
     Description: "Cognito User Pool Client Id"
     Value: !Ref CognitoUserPoolClient
     Export:
-      Name: UserManagerApp-CognitoUserPoolClientId
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-CognitoUserPoolClientId
+        - { EnvironmentName: !Ref EnvironmentName }
