@@ -17,19 +17,24 @@ Vue.use(fullscreen);
 Vue.use(VueScrollTo);
 Vue.use(VueClipboard);
 
-const ROOT_DOMAIN = 'glaedis.com';
+const VUE_APP_COGNITO_USER_POOL_CLIENT_ID = process.env.VUE_APP_COGNITO_USER_POOL_CLIENT_ID;
+const VUE_APP_COGNITO_USER_POOL_ID = process.env.VUE_APP_COGNITO_USER_POOL_ID;
+const VUE_APP_REDIRECT_URL = process.env.VUE_APP_REDIRECT_URL;
+const VUE_APP_AWS_REGIONS = process.env.VUE_APP_AWS_REGION;
+const VUE_APP_USER_API = process.env.VUE_APP_USER_API;
+const VUE_APP_TEST_API = process.env.VUE_APP_TEST_API;
 
 
 Amplify.configure({
     Auth: {
-        region: 'eu-west-1',
-        userPoolId: 'eu-west-1_IEI0AT7pa',
-        userPoolWebClientId: 'v43j263bt8a17qacme6obvvro',
+        region: VUE_APP_AWS_REGIONS,
+        userPoolId: VUE_APP_COGNITO_USER_POOL_ID,
+        userPoolWebClientId: VUE_APP_COGNITO_USER_POOL_CLIENT_ID,
         mandatorySignIn: false,
         oauth: {
             scope: ['email', 'openid'],
-            redirectSignIn: `https://glaedis-app.${ROOT_DOMAIN}/`,
-            redirectSignOut: `https://glaedis-app.${ROOT_DOMAIN}/`,
+            redirectSignIn: VUE_APP_REDIRECT_URL,
+            redirectSignOut: VUE_APP_REDIRECT_URL,
             responseType: 'code'
         }
     },
@@ -37,14 +42,14 @@ Amplify.configure({
         endpoints: [
             {
                 name: "UserAPI",
-                endpoint: `https://glaedis-user.${ROOT_DOMAIN}`,
+                endpoint: VUE_APP_USER_API,
                 custom_header: async () => {
                     return {Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`}
                 }
             },
             {
                 name: "TestAPIKey",
-                endpoint: `https://test.${ROOT_DOMAIN}`,
+                endpoint: VUE_APP_TEST_API,
             }
         ]
     }

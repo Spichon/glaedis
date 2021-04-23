@@ -29,6 +29,7 @@ jobs:
         CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
   - stage: architecture
     skip_cleanup: true
+    if: branch IN (dev, master)
     before_install:
     - bash ./scripts/aws_config.sh
     script:
@@ -57,6 +58,26 @@ jobs:
     - aws cloudformation deploy --template-file ./templates/06-site.yml --stack-name glaedis-site-$TRAVIS_BRANCH
       --region=eu-west-1 --capabilities CAPABILITY_NAMED_IAM --parameter-overrides EnvironmentName=$TRAVIS_BRANCH
       --no-fail-on-empty-changeset
+  - stage: Deploy front
+    skip_cleanup: true
+    before_install:
+      - bash ./scripts/aws_config.sh
+      - bash ./scripts/generate-env-front.sh
+    if: branch = master
+    script:
+      - cd frontend
+      - npm run build
+      - aws s3 cp ./dist s3://www.${DOMAIN}/ --recursive
+  - stage: Deploy front
+    skip_cleanup: true
+    before_install:
+      - bash ./scripts/aws_config.sh
+      - bash ./scripts/generate-env-front.sh
+    if: branch = dev
+    script:
+      - cd frontend
+      - npm run build
+      - aws s3 cp ./dist s3://www.${DEV_DOMAIN}/ --recursive
 env:
   global:
   - AWS_DEFAULT_REGION=eu-west-1
