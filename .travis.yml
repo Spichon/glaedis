@@ -7,26 +7,26 @@ install:
 - pip install aws-sam-cli
 jobs:
   include:
-    - stage: init master
-      skip_cleanup: true
-      before_install:
-        - bash ./scripts/aws_config.sh
-      if: branch = master
-      script:
-        - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
-          glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM --parameter-overrides
-          RootDomain=$DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
-          CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
-    - stage: init master
-      skip_cleanup: true
-      before_install:
-        - bash ./scripts/aws_config.sh
-      if: branch = dev
-      script:
-        - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
-          glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM --parameter-overrides
-          RootDomain=$DEV_DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
-          CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
+  - stage: init master
+    skip_cleanup: true
+    before_install:
+      - bash ./scripts/aws_config.sh
+    if: branch = master
+    script:
+      - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
+        glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM --parameter-overrides
+        RootDomain=$DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
+        CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
+  - stage: init dev
+    skip_cleanup: true
+    before_install:
+      - bash ./scripts/aws_config.sh
+    if: branch = dev
+    script:
+      - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
+        glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM --parameter-overrides
+        RootDomain=$DEV_DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
+        CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
   - stage: architecture
     skip_cleanup: true
     before_install:
