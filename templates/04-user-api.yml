@@ -1,13 +1,26 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+
 Resources:
   DomainName:
     Type: AWS::ApiGateway::DomainName
     Properties:
-      RegionalCertificateArn: !ImportValue UserManagerApp-RegionalCertArn
+      RegionalCertificateArn:
+        Fn::ImportValue:
+          !Sub
+          - Glaedis-${EnvironmentName}-RegionalCertArn
+          - { EnvironmentName: !Ref EnvironmentName }
       DomainName: !Sub
       - glaedis-user.${Domain}
-      - { Domain: !ImportValue UserManagerApp-RootDomain }
+      - Domain:
+          Fn::ImportValue:
+            !Sub
+            - Glaedis-${EnvironmentName}-RootDomain
+            - { EnvironmentName: !Ref EnvironmentName }
       EndpointConfiguration:
         Types:
           - REGIONAL
@@ -19,12 +32,16 @@ Resources:
     Properties:
       DomainName: !Ref DomainName
       RestApiId: !Ref UserApi
-      Stage: Dev
+      Stage: !Ref EnvironmentName
 
   RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneId: !ImportValue UserManagerApp-HostedZoneId
+      HostedZoneId:
+        Fn::ImportValue:
+          !Sub
+          - Glaedis-${EnvironmentName}-HostedZoneId
+          - { EnvironmentName: !Ref EnvironmentName }
       Name: !Ref DomainName
       Type: A
       AliasTarget:
@@ -34,6 +51,9 @@ Resources:
   UserApi:
     Type: 'AWS::ApiGateway::RestApi'
     Properties:
+      Name: !Sub
+        - glaedis-ApiGateway-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
       Body:
         info:
           version: '1.0'
@@ -133,7 +153,10 @@ Resources:
             name: Authorization
             x-amazon-apigateway-authorizer:
               providerARNs:
-                - !ImportValue UserManagerApp-CognitoUserPoolArn
+                Fn::ImportValue:
+                  !Sub
+                  - Glaedis-${EnvironmentName}-CognitoUserPoolArn
+                  - { EnvironmentName: !Ref EnvironmentName }
               type: cognito_user_pools
             x-amazon-apigateway-authtype: cognito_user_pools
 
@@ -142,20 +165,31 @@ Resources:
     Properties:
       RestApiId: !Ref UserApi
       Description: 'RestApi deployment id: 0'
-      StageName: Dev
+      StageName: !Ref EnvironmentName
 
   GetUserFunction:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: !Sub
+        - glaedis-getUser-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
       Handler: main.handler
       Runtime: python3.8
       Code:
-        S3Bucket: !ImportValue UserManagerApp-CodeBucketName
+        S3Bucket:
+          Fn::ImportValue:
+            !Sub
+            - Glaedis-${EnvironmentName}-CodeBucketName
+            - { EnvironmentName: !Ref EnvironmentName }
         S3Key: GetUser.zip
       Role: !GetAtt UserLambdaRole.Arn
       Environment:
         Variables:
-          TABLE_NAME: !ImportValue UserManagerApp-UserTableName
+          TABLE_NAME:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-UserTableName
+              - { EnvironmentName: !Ref EnvironmentName }
 
   GetUserPermission:
     Type: 'AWS::Lambda::Permission'
@@ -172,15 +206,26 @@ Resources:
   GenerateKeyFunction:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: !Sub
+        - glaedis-generateKey-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
       Handler: main.handler
       Runtime: python3.8
       Code:
-        S3Bucket: !ImportValue UserManagerApp-CodeBucketName
+        S3Bucket:
+          Fn::ImportValue:
+            !Sub
+            - Glaedis-${EnvironmentName}-CodeBucketName
+            - { EnvironmentName: !Ref EnvironmentName }
         S3Key: GenerateKey.zip
       Role: !GetAtt UserLambdaRole.Arn
       Environment:
         Variables:
-          TABLE_NAME: !ImportValue UserManagerApp-UserTableName
+          TABLE_NAME:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-UserTableName
+              - { EnvironmentName: !Ref EnvironmentName }
 
   GenerateKeyPermission:
     Type: 'AWS::Lambda::Permission'
@@ -216,5 +261,9 @@ Resources:
                   - 'dynamodb:UpdateItem*'
                   - 'dynamodb:GetItem*'
                   - 'dynamodb:Query*'
-                Resource: !ImportValue UserManagerApp-UserTableArn
+                Resource:
+                  Fn::ImportValue:
+                    !Sub
+                    - Glaedis-${EnvironmentName}-UserTableArn
+                    - { EnvironmentName: !Ref EnvironmentName }
 
