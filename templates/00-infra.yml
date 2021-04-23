@@ -38,39 +38,53 @@ Resources:
           Protocol: "email"
 
 
-#Outputs:
-#  AlertSNSTopicArn:
-#    Description: "AlertSNSTopicArn"
-#    Value: !Ref AlertSNSTopic
-#    Export:
-#      Name: UserManagerApp-AlertSNSTopicArn
-#  CodeBucketName:
-#    Description: "CodeBucketName"
-#    Value: !Ref CodeBucket
-#    Export:
-#      Name: UserManagerApp-CodeBucketName
-#  HostedZoneId:
-#    Description: "HostedZoneId"
-#    Value: !Ref HostedZoneId
-#    Export:
-#      Name: UserManagerApp-HostedZoneId
-#  CloudFrontCertArn:
-#    Description: "CloudFrontCertArn"
-#    Value: !Ref CloudFrontCertArn
-#    Export:
-#      Name: UserManagerApp-CloudFrontCertArn
-#  RegionalCertArn:
-#    Description: "RegionalCertArn"
-#    Value: !Ref RegionalCertArn
-#    Export:
-#      Name: UserManagerApp-RegionalCertArn
-#  RootDomain:
-#    Description: "RootDomain"
-#    Value: !Ref RootDomain
-#    Export:
-#      Name: UserManagerApp-RootDomain
-#  EnvironmentName:
-#    Description: "EnvironmentName"
-#    Value: !Ref EnvironmentName
-#    Export:
-#      Name: UserManagerApp-EnvironmentName
+Outputs:
+  AlertSNSTopicArn:
+    Description: "AlertSNSTopicArn"
+    Value: !Ref AlertSNSTopic
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-AlertSNSTopicArn
+        - { EnvironmentName: !Ref EnvironmentName }
+  CodeBucketName:
+    Description: "CodeBucketName"
+    Value: !Ref CodeBucket
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-CodeBucketName
+        - { EnvironmentName: !Ref EnvironmentName }
+  HostedZoneId:
+    Description: "HostedZoneId"
+    Value: !Ref HostedZoneId
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-HostedZoneId
+        - { EnvironmentName: !Ref EnvironmentName }
+  CloudFrontCertArn:
+    Description: "CloudFrontCertArn"
+    Value: !Ref CloudFrontCertArn
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-CloudFrontCertArn
+        - { EnvironmentName: !Ref EnvironmentName }
+  RegionalCertArn:
+    Description: "RegionalCertArn"
+    Value: !Ref RegionalCertArn
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-RegionalCertArn
+        - { EnvironmentName: !Ref EnvironmentName }
+  RootDomain:
+    Description: "RootDomain"
+    Value: !Ref RootDomain
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-RootDomain
+        - { EnvironmentName: !Ref EnvironmentName }
+  EnvironmentName:
+    Description: "EnvironmentName"
+    Value: !Ref EnvironmentName
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-EnvironmentName
+        - { EnvironmentName: !Ref EnvironmentName }
