@@ -44,6 +44,8 @@ jobs:
       --no-fail-on-empty-changeset
     - zip -r zip/GenerateKey.zip backend/GenerateKey
     - aws s3 cp zip/GenerateKey.zip s3://glaedis-backend-${TRAVIS_BRANCH}/
+    - zip -r zip/GetUser.zip backend/GetUser
+    - aws s3 cp zip/GetUser.zip s3://glaedis-backend-${TRAVIS_BRANCH}/
     - aws cloudformation deploy --template-file ./templates/04-user-api.yml --stack-name glaedis-user-api-$TRAVIS_BRANCH
       --region=eu-west-1 --capabilities CAPABILITY_NAMED_IAM --parameter-overrides EnvironmentName=$TRAVIS_BRANCH
       --no-fail-on-empty-changeset
