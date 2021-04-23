@@ -1,6 +1,11 @@
 Description: ALB And Lambdas
 AWSTemplateFormatVersion: '2010-09-09'
 
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+
 Resources:
   Domain:
     Type: AWS::Route53::RecordSet
@@ -11,17 +16,29 @@ Resources:
         HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
       HostedZoneName: !Sub
         - ${Domain}.
-        - { Domain: !ImportValue UserManagerApp-RootDomain }
+        - Domain:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-RootDomain
+              - { EnvironmentName: !Ref EnvironmentName }
       Name: !Sub
-        - glaedis-test.${Domain}.
-        - { Domain: !ImportValue UserManagerApp-RootDomain }
+        - test.${Domain}.
+        - Domain:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-RootDomain
+              - { EnvironmentName: !Ref EnvironmentName }
       Type: A
 
   LoadBalancerSecGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Load balance allow port 443 traffic
-      VpcId: !ImportValue UserManagerApp-VPCID
+      VpcId:
+        Fn::ImportValue:
+          !Sub
+          - Glaedis-${EnvironmentName}-VPCID
+          - { EnvironmentName: !Ref EnvironmentName }
       SecurityGroupIngress:
         CidrIp: 0.0.0.0/0
         FromPort: 443
@@ -31,11 +48,20 @@ Resources:
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
+      Name: !Sub
+        - GlaedisLoadBalancer-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
       SecurityGroups:
         - !Ref LoadBalancerSecGroup
       Subnets:
-        - !ImportValue UserManagerApp-PublicSubnetA
-        - !ImportValue UserManagerApp-PublicSubnetB
+        - Fn::ImportValue:
+            !Sub
+            - Glaedis-${EnvironmentName}-PublicSubnetA
+            - { EnvironmentName: !Ref EnvironmentName }
+        - Fn::ImportValue:
+            !Sub
+            - Glaedis-${EnvironmentName}-PublicSubnetB
+            - { EnvironmentName: !Ref EnvironmentName }
 
   LoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -48,7 +74,11 @@ Resources:
           TargetGroupArn: !Ref LoadBalancerTargetGroup
       Port: 443
       Certificates:
-        - CertificateArn: !ImportValue UserManagerApp-RegionalCertArn
+        - CertificateArn:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-RegionalCertArn
+              - { EnvironmentName: !Ref EnvironmentName }
       Protocol: HTTPS
 
   LoadBalancerTargetGroup:
@@ -62,6 +92,9 @@ Resources:
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Sub
+        - GlaedisUserLambdaRole-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
       AssumeRolePolicyDocument:
         Statement:
           - Action: ['sts:AssumeRole']
@@ -81,10 +114,17 @@ Resources:
                   - 'dynamodb:GetItem*'
                   - 'dynamodb:Query*'
                 Resource:
-                  - !ImportValue UserManagerApp-UserTableArn
+                  - Fn::ImportValue:
+                      !Sub
+                      - Glaedis-${EnvironmentName}-UserTableArn
+                      - { EnvironmentName: !Ref EnvironmentName }
                   - !Sub
                     - '${TableName}/index/KeyLookup'
-                    - TableName: !ImportValue UserManagerApp-UserTableArn
+                    - TableName:
+                        Fn::ImportValue:
+                          !Sub
+                          - Glaedis-${EnvironmentName}-UserTableArn
+                          - { EnvironmentName: !Ref EnvironmentName }
                 Effect: Allow
 
 
@@ -98,8 +138,15 @@ Resources:
   Lambda:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: !Sub
+        - GlaedisTestKeyLambda-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
       Code:
-        S3Bucket: !ImportValue UserManagerApp-CodeBucketName
+        S3Bucket:
+          Fn::ImportValue:
+            !Sub
+            - Glaedis-${EnvironmentName}-CodeBucketName
+            - { EnvironmentName: !Ref EnvironmentName }
         S3Key: TestKey.zip
       Description: Test Service function
       Handler: main.handler
@@ -109,11 +156,19 @@ Resources:
       Timeout: 60
       Environment:
         Variables:
-          TABLE_NAME: !ImportValue  UserManagerApp-UserTableName
+          TABLE_NAME:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-UserTableName
+              - { EnvironmentName: !Ref EnvironmentName }
 
 Outputs:
   TestApiUrl:
-    Description: "API endpoint URL for Prod environment"
+    Description: "API endpoint URL"
     Value: !Sub
       - 'https://test.${RootDomain}/'
-      - RootDomain: !ImportValue UserManagerApp-RootDomain
+      - RootDomain:
+          Fn::ImportValue:
+            !Sub
+            - Glaedis-${EnvironmentName}-RootDomain
+            - { EnvironmentName: !Ref EnvironmentName }

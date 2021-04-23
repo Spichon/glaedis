@@ -47,7 +47,7 @@ Resources:
         - openid
       LogoutURLs:
         - !Sub
-          - https://glaedis.${ Domain }
+          - https://www.${ Domain }
           - Domain:
               Fn::ImportValue:
                 !Sub
@@ -55,7 +55,7 @@ Resources:
                   - { EnvironmentName: !Ref EnvironmentName }
       CallbackURLs:
         - !Sub
-          - https://glaedis.${ Domain }
+          - https://www.${ Domain }
           - Domain:
               Fn::ImportValue:
                 !Sub
@@ -67,6 +67,9 @@ Resources:
   PostConfirmationLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: !Sub
+        - GlaedisPostConfirmationLambda-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
       Code:
         S3Bucket:
           Fn::ImportValue:
@@ -98,6 +101,9 @@ Resources:
   PostConfirmationLambdaRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Sub
+        - GlaedisPostConfirmationLambdaRole-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
       AssumeRolePolicyDocument:
         Statement:
           - Action: [ 'sts:AssumeRole' ]
@@ -132,7 +138,7 @@ Outputs:
 
   CognitoUserPoolArn:
     Description: "Cognito User Pool Id"
-    Value: !GetAtt  CognitoUserPool.Arn
+    Value: !GetAtt CognitoUserPool.Arn
     Export:
       Name: !Sub
         - Glaedis-${EnvironmentName}-CognitoUserPoolArn

@@ -15,7 +15,7 @@ Resources:
           - Glaedis-${EnvironmentName}-RegionalCertArn
           - { EnvironmentName: !Ref EnvironmentName }
       DomainName: !Sub
-      - glaedis-user.${Domain}
+      - user.${Domain}
       - Domain:
           Fn::ImportValue:
             !Sub
@@ -31,11 +31,7 @@ Resources:
     Type: AWS::ApiGateway::BasePathMapping
     Properties:
       DomainName: !Ref DomainName
-      RestApiId:
-        Fn::ImportValue:
-          !Sub
-          - glaedis-ApiGateway-${EnvironmentName}
-          - { EnvironmentName: !Ref EnvironmentName }
+      RestApiId: !Ref UserApi
       Stage: !Ref EnvironmentName
 
   RecordSet:
@@ -157,21 +153,17 @@ Resources:
             name: Authorization
             x-amazon-apigateway-authorizer:
               providerARNs:
-                Fn::ImportValue:
-                  !Sub
-                  - Glaedis-${EnvironmentName}-CognitoUserPoolArn
-                  - { EnvironmentName: !Ref EnvironmentName }
+                - Fn::ImportValue:
+                    !Sub
+                    - Glaedis-${EnvironmentName}-CognitoUserPoolArn
+                    - { EnvironmentName: !Ref EnvironmentName }
               type: cognito_user_pools
             x-amazon-apigateway-authtype: cognito_user_pools
 
   UserApiDeployment0:
     Type: 'AWS::ApiGateway::Deployment'
     Properties:
-      RestApiId:
-        Fn::ImportValue:
-          !Sub
-          - glaedis-ApiGateway-${EnvironmentName}
-          - { EnvironmentName: !Ref EnvironmentName }
+      RestApiId: !Ref UserApi
       Description: 'RestApi deployment id: 0'
       StageName: !Ref EnvironmentName
 
@@ -179,7 +171,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub
-        - glaedis-getUser-${EnvironmentName}
+        - GlaedisGetUserLambda-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
       Handler: main.handler
       Runtime: python3.8
@@ -187,8 +179,8 @@ Resources:
         S3Bucket:
           Fn::ImportValue:
             !Sub
-            - Glaedis-${EnvironmentName}-CodeBucketName
-            - { EnvironmentName: !Ref EnvironmentName }
+              - Glaedis-${EnvironmentName}-CodeBucketName
+              - { EnvironmentName: !Ref EnvironmentName }
         S3Key: GetUser.zip
       Role: !GetAtt UserLambdaRole.Arn
       Environment:
@@ -196,8 +188,8 @@ Resources:
           TABLE_NAME:
             Fn::ImportValue:
               !Sub
-              - Glaedis-${EnvironmentName}-UserTableName
-              - { EnvironmentName: !Ref EnvironmentName }
+                - Glaedis-${EnvironmentName}-UserTableName
+                - { EnvironmentName: !Ref EnvironmentName }
 
   GetUserPermission:
     Type: 'AWS::Lambda::Permission'
@@ -209,17 +201,13 @@ Resources:
         - >-
           arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/user
         - __Stage__: '*'
-          __ApiId__:
-            Fn::ImportValue:
-              !Sub
-              - glaedis-ApiGateway-${EnvironmentName}
-              - { EnvironmentName: !Ref EnvironmentName }
+          __ApiId__: !Ref UserApi
 
   GenerateKeyFunction:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub
-        - glaedis-generateKey-${EnvironmentName}
+        - GlaedisGenerateKeyLambda-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
       Handler: main.handler
       Runtime: python3.8
@@ -227,8 +215,8 @@ Resources:
         S3Bucket:
           Fn::ImportValue:
             !Sub
-            - Glaedis-${EnvironmentName}-CodeBucketName
-            - { EnvironmentName: !Ref EnvironmentName }
+              - Glaedis-${EnvironmentName}-CodeBucketName
+              - { EnvironmentName: !Ref EnvironmentName }
         S3Key: GenerateKey.zip
       Role: !GetAtt UserLambdaRole.Arn
       Environment:
@@ -236,8 +224,8 @@ Resources:
           TABLE_NAME:
             Fn::ImportValue:
               !Sub
-              - Glaedis-${EnvironmentName}-UserTableName
-              - { EnvironmentName: !Ref EnvironmentName }
+                - Glaedis-${EnvironmentName}-UserTableName
+                - { EnvironmentName: !Ref EnvironmentName }
 
   GenerateKeyPermission:
     Type: 'AWS::Lambda::Permission'
@@ -249,11 +237,7 @@ Resources:
         - >-
           arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/generate-key
         - __Stage__: '*'
-          __ApiId__:
-            Fn::ImportValue:
-              !Sub
-              - glaedis-ApiGateway-${EnvironmentName}
-              - { EnvironmentName: !Ref EnvironmentName }
+          __ApiId__: !Ref UserApi
 
   UserLambdaRole:
     Type: AWS::IAM::Role
@@ -280,6 +264,6 @@ Resources:
                 Resource:
                   Fn::ImportValue:
                     !Sub
-                    - Glaedis-${EnvironmentName}-UserTableArn
-                    - { EnvironmentName: !Ref EnvironmentName }
+                      - Glaedis-${EnvironmentName}-UserTableArn
+                      - { EnvironmentName: !Ref EnvironmentName }
 
