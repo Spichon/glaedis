@@ -47,7 +47,7 @@ Resources:
         - openid
       LogoutURLs:
         - !Sub
-          - https://glaedis-app.${ Domain }
+          - https://glaedis.${ Domain }
           - Domain:
               Fn::ImportValue:
                 !Sub
@@ -55,7 +55,7 @@ Resources:
                   - { EnvironmentName: !Ref EnvironmentName }
       CallbackURLs:
         - !Sub
-          - https://glaedis-app.${ Domain }
+          - https://glaedis.${ Domain }
           - Domain:
               Fn::ImportValue:
                 !Sub

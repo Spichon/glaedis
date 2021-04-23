@@ -9,9 +9,8 @@ Parameters:
     Type: String
     Description: Root domain associated with site
   EnvironmentName:
+    Description: An environment name that is prefixed to resource names
     Type: String
-    Default: ""
-    Description: Env domain dev or prod
   CloudFrontCertArn:
     Type: String
     Description: US-East-1 wildcard certificate required for cloudfront

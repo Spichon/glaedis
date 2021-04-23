@@ -7,15 +7,31 @@ install:
 - pip install aws-sam-cli
 jobs:
   include:
+    - stage: init master
+      skip_cleanup: true
+      before_install:
+        - bash ./scripts/aws_config.sh
+      if: branch = master
+      script:
+        - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
+          glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM --parameter-overrides
+          RootDomain=$DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
+          CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
+    - stage: init master
+      skip_cleanup: true
+      before_install:
+        - bash ./scripts/aws_config.sh
+      if: branch = dev
+      script:
+        - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
+          glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM --parameter-overrides
+          RootDomain=$DEV_DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
+          CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
   - stage: architecture
     skip_cleanup: true
     before_install:
     - bash ./scripts/aws_config.sh
     script:
-    - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
-      glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM --parameter-overrides
-      RootDomain=$DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
-      CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
     - aws cloudformation deploy --template-file ./templates/01-vpc.yml --stack-name glaedis-vpc-$TRAVIS_BRANCH
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
     - aws cloudformation deploy --template-file ./templates/02-tables.yml --stack-name glaedis-tables-$TRAVIS_BRANCH
@@ -36,6 +52,7 @@ env:
   global:
   - AWS_DEFAULT_REGION=eu-west-1
   - DOMAIN=glaedis.com
+  - DEV_DOMAIN=dev.glaedis.com
   - EMAIL=simon.pichon@outlook.fr
   - secure: OFKl00OtZEN203RECSUWJEGwPNenMYqwRcH+M0RBAqZju5B4lsQqC2TRATNAadd8MdsKAWLl5C795EMH5z4K6PWgqUN/HcR0Xr/JZrw+OkYZURJEfjy1NIOict+5qB9XWCC4DZG+odCUkD1yA3o8SM+1x1cmbD0Qu1lMdk+I/PvaSwMnQFuPTYTpVkohMiPQ11EaZoQMJ8PNR5hEsoSrCKEufu9FQjMUiOU2RD2/Au8zLqj/GWLYGcOA3TBxK8rVzhxA7N3q5y20B3N7qKhBnXfJzWY70sI2/zP5O1B0wPc2Qot5GFhEdAKZKdRXjU1CvIy4t4SI3GiooAGtKtRSd/AxoNIOlfWUHmq78Q19KYeJONPhcRxwdw6WEjZ5C1Sqb3W/bdpDY8zYna+jhyzJX+PJN0VN+I/RiJMn1rGcVzQhVpMsb7nQY3BOIqXGK1xv0plhnpRHdANp/rIjtDdmP7bEsgpK2Fv2GsyTx4saVYiVDbfdclfPsDvXq6sVDO9H4baOa3zahpurh8IIeNBacFjCAJIxBVE2v1A/TnI9ePmFv63o8hqznwF6MkqFovfAvuJI3IE3qgCWDT7dsvEqFPAIC+xanbn++BYNnPca1ZR4Emxj3Z9GCxyJCKnMFxkucJg0xPBaBEdIcU36uIRXZfbw4Z3VbN7sJssFZHvXaH0=
   - secure: nnxqXIpeF6ggmA95s+firWjhYKlwqXBbEzpeZrpaOmjHmL1d9kjciubIVqFLdQrCXz/eLcvcFY0tHjGhClcoZS8yJ7sCbqedMSyGs+5jgOnYqm0e/Er5aH5/MpBruRo2LP+YgQdHuQyk7t0sKkQNhD71CuHkbZZ247l6lAf/SZ07MVLGmapZE4hpweCWHYjI3yNKoWnON0+pyI/QSc8wtnGQhB83CcgwOCq85LrGNcFczx4C/RPhIszrqrzbikBH+SdM1tRboK8jP8hn0mYkg4bXc6FKKqMtTEUggKMUTKdq/lntrwVVlhRFYcdtt64L9ez5eZvuORSK/UnjAmETRRN+XMQpJ2HdVaHZtTSiOJTkCsVrR/m2AHAEqkP4vgBmfcOQMMFMnrzXSrZlcUjYBkbaESO51G1fe5bNJF94Y1AxrtneaW+//umcSEjPE1K6Iq8aV/svbQvxYzevhnGWL/2h3LihRu4j0QeS3gf+3O+vsWtFDNPJnsnpZMCM5CT2oD2ye+G2Uj90G4j3JAAi3lU9eCKd5QjbusQLHYNijcb0h3jAQBXlzmYVc5r8hozbbc5lr9yQkfUA4GtiCdsST0IFQmk9dwdVATUIGAeyVUOGYUzKXliQc1lPp3QqcIQMI9zRKMCpmfiT5bqsBMP+6LtEFioTHRWkaDg5bwV8nvE=
