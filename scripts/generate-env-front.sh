@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cat >../frontend/.env <<EOL
+cat > frontend/.env <<EOL
 VUE_APP_COGNITO_USER_POOL_CLIENT_ID=$(aws cloudformation describe-stacks --stack-name glaedis-cognito-master --query "Stacks[0].Outputs[?OutputKey=='CognitoUserPoolClientId'].OutputValue" --output text)
 VUE_APP_COGNITO_USER_POOL_ID=$(aws cloudformation describe-stacks --stack-name glaedis-cognito-master --query "Stacks[0].Outputs[?OutputKey=='CognitoUserPoolId'].OutputValue" --output text)
 VUE_APP_AWS_REGION=eu-west-1
