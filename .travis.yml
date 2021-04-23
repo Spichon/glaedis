@@ -58,7 +58,7 @@ jobs:
     - aws cloudformation deploy --template-file ./templates/06-site.yml --stack-name glaedis-site-$TRAVIS_BRANCH
       --region=eu-west-1 --capabilities CAPABILITY_NAMED_IAM --parameter-overrides EnvironmentName=$TRAVIS_BRANCH
       --no-fail-on-empty-changeset
-  - stage: Deploy front
+  - stage: Deploy front prod
     skip_cleanup: true
     before_install:
       - bash ./scripts/aws_config.sh
@@ -68,7 +68,7 @@ jobs:
       - cd frontend
       - npm run build
       - aws s3 cp ./dist s3://www.${DOMAIN}/ --recursive
-  - stage: Deploy front
+  - stage: Deploy front dev
     skip_cleanup: true
     before_install:
       - bash ./scripts/aws_config.sh
