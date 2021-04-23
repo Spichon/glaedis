@@ -49,7 +49,11 @@ jobs:
     - aws cloudformation deploy --template-file ./templates/04-user-api.yml --stack-name glaedis-user-api-$TRAVIS_BRANCH
       --region=eu-west-1 --capabilities CAPABILITY_NAMED_IAM --parameter-overrides EnvironmentName=$TRAVIS_BRANCH
       --no-fail-on-empty-changeset
-
+    - zip -r zip/TestKey.zip backend/TestKey
+    - aws s3 cp zip/TestKey.zip s3://glaedis-backend-${TRAVIS_BRANCH}/
+    - aws cloudformation deploy --template-file ./templates/05-test-api.yml --stack-name glaedis-test-api-$TRAVIS_BRANCH
+      --region=eu-west-1 --capabilities CAPABILITY_NAMED_IAM --parameter-overrides EnvironmentName=$TRAVIS_BRANCH
+      --no-fail-on-empty-changeset
 env:
   global:
   - AWS_DEFAULT_REGION=eu-west-1

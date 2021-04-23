@@ -31,7 +31,11 @@ Resources:
     Type: AWS::ApiGateway::BasePathMapping
     Properties:
       DomainName: !Ref DomainName
-      RestApiId: !Ref UserApi
+      RestApiId:
+        Fn::ImportValue:
+          !Sub
+          - glaedis-ApiGateway-${EnvironmentName}
+          - { EnvironmentName: !Ref EnvironmentName }
       Stage: !Ref EnvironmentName
 
   RecordSet:
@@ -163,7 +167,11 @@ Resources:
   UserApiDeployment0:
     Type: 'AWS::ApiGateway::Deployment'
     Properties:
-      RestApiId: !Ref UserApi
+      RestApiId:
+        Fn::ImportValue:
+          !Sub
+          - glaedis-ApiGateway-${EnvironmentName}
+          - { EnvironmentName: !Ref EnvironmentName }
       Description: 'RestApi deployment id: 0'
       StageName: !Ref EnvironmentName
 
@@ -201,7 +209,11 @@ Resources:
         - >-
           arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/user
         - __Stage__: '*'
-          __ApiId__: !Ref UserApi
+          __ApiId__:
+            Fn::ImportValue:
+              !Sub
+              - glaedis-ApiGateway-${EnvironmentName}
+              - { EnvironmentName: !Ref EnvironmentName }
 
   GenerateKeyFunction:
     Type: AWS::Lambda::Function
@@ -237,7 +249,11 @@ Resources:
         - >-
           arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/generate-key
         - __Stage__: '*'
-          __ApiId__: !Ref UserApi
+          __ApiId__:
+            Fn::ImportValue:
+              !Sub
+              - glaedis-ApiGateway-${EnvironmentName}
+              - { EnvironmentName: !Ref EnvironmentName }
 
   UserLambdaRole:
     Type: AWS::IAM::Role
