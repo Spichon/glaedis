@@ -78,6 +78,7 @@ jobs:
     - echo ${VUE_APP_COGNITO_USER_POOL_ID}
     - echo $VUE_APP_COGNITO_USER_POOL_ID
     - bash ./scripts/generate-env-front.sh
+    - cat ./frontend/.env
     if: branch = master
     script:
     - cd frontend
