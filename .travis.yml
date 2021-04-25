@@ -74,6 +74,7 @@ jobs:
     if: branch = master
     script:
     - bash ./scripts/generate-env-front.sh
+    - cat ./frontend/.env
     - cd frontend
     - npm install
     - npm run build
