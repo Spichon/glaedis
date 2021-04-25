@@ -72,7 +72,7 @@ jobs:
     script:
     - cd frontend
     - npm run build
-    - aws s3 cp frontend/dist s3://www.${DOMAIN}/ --recursive
+    - aws s3 cp dist s3://www.${DOMAIN}/ --recursive
   - stage: Deploy front dev
     skip_cleanup: true
     before_install:
@@ -83,7 +83,7 @@ jobs:
     script:
     - cd frontend
     - npm run build
-    - aws s3 cp frontend/dist s3://www.${DEV_DOMAIN}/ --recursive
+    - aws s3 cp dist s3://www.${DEV_DOMAIN}/ --recursive
 env:
   global:
   - AWS_DEFAULT_REGION=eu-west-1
