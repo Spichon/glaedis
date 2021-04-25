@@ -1,16 +1,17 @@
 import boto3
 import os
 import json
-      
+
 dynamodb = boto3.resource('dynamodb')
 TABLE_NAME = os.environ['TABLE_NAME']
+CORS_URL = os.environ['CORS_URL']
 table = dynamodb.Table(TABLE_NAME)
 
 def handler(event, context):
-  # TODO: restrict access origin to site 
+  # TODO: restrict access origin to site
   response = {
     "headers": {
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': CORS_URL
     }
   }
 

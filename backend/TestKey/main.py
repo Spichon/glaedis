@@ -5,6 +5,7 @@ import json
 
 dynamodb = boto3.resource('dynamodb')
 TABLE_NAME = os.environ['TABLE_NAME']
+CORS_URL = os.environ['CORS_URL']
 table = dynamodb.Table(TABLE_NAME)
 
 
@@ -13,12 +14,12 @@ def handler(event, context):
     Test Key - this functions expects an API key.
     The API key is searched for on the user table secondary index and credit decremented.
     """
-    # TODO: restrict access origin to site 
+    # TODO: restrict access origin to site
     response = {
         'isBase64Encoded': False,
         'headers': {
             'access-control-allow-methods': 'POST',
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': CORS_URL,
             'access-control-allow-headers': 'Content-Type, Access-Control-Allow-Headers'
         },
         'statusCode': 200
@@ -35,7 +36,7 @@ def handler(event, context):
         item = table_query_resp["Items"][0]
         count = item["Count"]
         id = item["Id"]
-        
+
         table_update_resp = table.update_item(
             Key={
                 'Id': id,

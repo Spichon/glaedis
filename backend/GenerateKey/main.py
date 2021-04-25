@@ -2,16 +2,17 @@ import boto3
 import os
 import json
 
-      
+
 dynamodb = boto3.resource('dynamodb')
 TABLE_NAME = os.environ['TABLE_NAME']
+CORS_URL = os.environ['CORS_URL']
 table = dynamodb.Table(TABLE_NAME)
 
 def handler(event, context):
-  # TODO: restrict access origin to site 
+  # TODO: restrict access origin to site
   response = {
     "headers": {
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': CORS_URL
     }
   }
   key = "UNKNOWN"
@@ -19,7 +20,7 @@ def handler(event, context):
   try:
     username = event["requestContext"]["authorizer"]["claims"]["cognito:username"]
     key = os.urandom(64).hex()
-    
+
     keyUpdateResp = table.update_item(
       Key={'Id': username },
       UpdateExpression="set #k = :key",
@@ -27,12 +28,12 @@ def handler(event, context):
       ExpressionAttributeValues={':key': key},
       ReturnValues="UPDATED_NEW"
     )
-        
+
     new_key = keyUpdateResp["Attributes"]["Key"]
 
     response["statusCode"] = 200
     response["body"] = json.dumps({"key": new_key})
-    
+
   except Exception as err:
     print("ERR: ", err)
     response["statusCode"] = 500

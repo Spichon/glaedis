@@ -234,6 +234,14 @@ Resources:
               !Sub
                 - Glaedis-${EnvironmentName}-UserTableName
                 - { EnvironmentName: !Ref EnvironmentName }
+          CORS_URL:
+            - !Sub
+              - https://www.${Domain}
+              - Domain:
+                  Fn::ImportValue:
+                    !Sub
+                    - Glaedis-${EnvironmentName}-RootDomain
+                    - { EnvironmentName: !Ref EnvironmentName }
 
   GenerateKeyPermission:
     Type: 'AWS::Lambda::Permission'
