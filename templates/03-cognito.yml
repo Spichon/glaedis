@@ -90,7 +90,7 @@ Resources:
                 - Glaedis-${EnvironmentName}-UserTableName
                 - { EnvironmentName: !Ref EnvironmentName }
           CORS_URL:
-            - !Sub
+            !Sub
               - https://www.${Domain}
               - Domain:
                   Fn::ImportValue:
