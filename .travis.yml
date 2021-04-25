@@ -27,7 +27,7 @@ jobs:
     - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
       glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM
       --parameter-overrides RootDomain=$DEV_DOMAIN RegionalCertArn=$DEV_REGIONAL_CERT
-      HostedZoneId=$DEV_HOSTED_ZONE_ID CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL
+      HostedZoneId=$DEV_HOSTED_ZONE_ID CloudFrontCertArn=$DEV_CLOUDFRONT_CERT EmailAddress=$EMAIL
       EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
   - stage: architecture
     skip_cleanup: true
@@ -66,7 +66,7 @@ jobs:
     skip_cleanup: true
     language: node_js
     node_js:
-      - "node"
+    - node
     cache: npm
     before_install:
     - export ROOT_DOMAIN=${DOMAIN}
@@ -81,7 +81,7 @@ jobs:
   - stage: Deploy front dev
     language: node_js
     node_js:
-      - "node"
+    - node
     cache: npm
     skip_cleanup: true
     before_install:
@@ -107,3 +107,4 @@ env:
   - secure: IcsgsNHeuJvGyQ2zHIcvyVWkBqMfEq5FdN2KkfvMB3RxWbGV40HNv0gOgfblW09BCyFZvD8YcIFmlZp1Lc+WxHbNtHjANtuIKjPu2cx7G54DDZUHNqxOL+exr+SJ++mB5q6aPzOfltVBRZkVwe/LFCsMwXkrsp6nf1NQtXI8vz4ksWXwHJPeBaaRyNQItaXVSu+3jJsCs2rjCTGL4elZraRbYKBMKnVUrWn6uhaHuRdfZT5JnHvRUru2efQKFYdJvVEOtO+tHd3WzUq/I0JZjahRh7smuNDsNVBlEBcQ8RRmDubSQhnSGVKhF+CAmyEgX3Kyg9HcPAH0e5EieyluJ4NMt2UZQT6nt+Dx1dJztul2t11lxGVHrHcwv+o6Dn72z7mZLGn/dAn+SQsyMV0sLswk711MEMLPYy+axs7Jl551WJMbY0hOeVpk6pZRySGLH9NgaPiMo5UpWGleHrF5P5Hg7tdVLhhgUPzOuUAaaFMuEA1cis41koySXAx/qlrThUqmdSDEQLKEVSFXNF6ZjkVjEiLSKDis0/KfKgBY5UNH6cKLi+/wzw8NVBa+nEg8fsLZq3dVygH4Lt6P76BLox8DCSkKZN/FHpA27AcTurwgCGMvjmii5caApDdKWD5WCXIAPCT7AnYtom8NGe+V2iQ8zxIZs7MIC9tSvqkPw90=
   - secure: WVHdp/BAfW/vkCQTqsT0Nnk2UY1WMySEh+RK7Foh3iyDsq0yTm3Cn/xJxV02qKjh+ltA1yZglkLoRa5EqgBUa3vguG6U+lbMLkRovZ7uin47O6kCqDoIBvKLszd3VujdD/nFR6AYKhAhEFnla9OnOlJCTrCKvaJ1NN/aakezzzoi1s1Vj8oiX5xPKlR33EaGUFpzGShjef60ivxy4LTkaEJzTbaIm+7zUBQOq/15LRB8Z1NsSKpi3S55gUdJxA0xJc2LwhoUwk8sFN1ymgw1wGIdiyU2kbbhiHk/5JgROu3kX/B65VDTZRUmJjNPvf/qqCCBUuLgAHviBBhVJijSxdFCLG5/PSZng5ANMHetjMCtvgfFLzoVkxVhBiWVh6pZUSJ19E5EVfyWJAouMBZHv0Cp5oqe/ojNr80m0LJmHNDGvHnl3K0NkpXDx5+dEUrklYm0qwzliS+XVBJg2DS12ozF4yZs8gNmrOYRux6dkhEIV6tMgveHGygXMqonkSO7QT2OBdiF3/HDLyuKWxpFecvgeW84kOUxdY2Qfdp0Jfl0E30trF8rgWBPKetAxVQ33phYJZeqOPcmWNYLezy8HGaAm1yVfbz1y+rPitS4L/M6zdnFr9kTfVmLzfJvxJfdFoJYLLN8y31Ruuc/3LpTg9Th7nWB/GaWUn3ResZKmTg=
   - secure: J8gmdEpXTgjlZ3pDEP7VDmPYfx/F2QbjElCkOujplTWTdKC2gJv+xQtudtjf+BsQpyegPcqoTOzWifMYyQwDMdI0CVkuPyoqVK0mHRkIX/0rw8uwQ+Xsz3kiRVdE5iqrVzKCn7YwFRGh3lZwV4ev5S792x7Q/R8PKyGJEHs7JAvlwuN4HMmxlwtVVUf3SMB1TEbbT0RD+PMsImqQfjLrVNywd/mXO93cQkVU6T9AenJ3YIjRPYSNncUMdBx8tbrKSitIBnagq99P1LtObI6RSvnB0WT5mzscDCfZANxzZAMA+9Bq9XYlFy6lavVzAfR71kOa413xg1OcJP5BnlU6YVDTsHWeGbuip+s7VsgamIV4dvC8Nm1T7yNle99YxXzSGMCZPiEfM7LiXQ5n2ubPxklaXzTFW7z/TSx5CgtCho4lZiOI3YDS/UPT/9WdvGfgLs9178139VurVPkHCg1qIZ5AjfSWAyGDzbD99TCj06KtvwiyEZDbNHHqMlQUKFGuI2RFTk2rGsfZQEhwRBMnVqH66vWTheFeHoU2qZl9jerQiNl1AdEIoG1l1cWbT8IEH3NYxIng/R3/I5fx9EU6thr/C/rJ563VAHcaU7FcRN690azk6P0YpwA5117dTjLBGq0nmWHoXFs65/cfd9ghY/Sk0kE05YdkqVJqCiP9hnI=
+  - secure: FEFww5vZjzRVu8ylq9a8iolNO7bYFuJGKqOAymmEq4rh6QcY8neHW2yZLjEH5GTOrcEVxsROQmg/hft4Lo/UChtuB+QW8XyABjud/4wI6kb0jrZgEWaUay35AiThWnJq2K3VNBCG6O8BNzTmWWzm4tJO62aVxNy3CD2ZtOBcZDmmNoL8rfkud78Gv7ptby2UmGCL1tghoN9qAHXtoTLtCVYGGXCCYeomsNaCiqyh90oiDE69zVuzIh6MsZJm47cWsZi3irbSjRMgyveqml71wqK6GKaX3no9flA5jlXIQyRQOnnXWpgmZyVNmfAuNKRLx2q/IeE14hqdcEMRQMQBIVk0ge9LllXZcLvUYz5lVSwXGgt9DuO3vTfHmVW4ug6KfKznQRAqCyAbiwHpWlHUrnYsiP78PnVAjr/sMabt+rUqwfphK0tu6czak0K+i7OKKGeiZh+SQUCWFMP5jg1XP50FtujasrGv2p/YEQEgMwwNmPSbptkLrC4flL00aYAHzQ5defen4RUV8jmmYa9+7sJtBeK9Lua7A+e1eAchVclerFdxZCmtVy+odSBpPiteB2yeA3f5YWkI4Vzb15sSD9hhw/cVq0Ms4uLar6FWandXfK/34OXUfIB3iQpidjN1M11O/VCRfTujVEb6O+B5bBJS0F3LTr8d1S+tDgk5yiU=
