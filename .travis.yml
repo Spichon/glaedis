@@ -64,6 +64,9 @@ jobs:
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
   - stage: Deploy front prod
     skip_cleanup: true
+    language: node_js
+    node_js:
+      - 7
     before_install:
     - export ROOT_DOMAIN=${DOMAIN}
     - bash ./scripts/aws_config.sh
@@ -74,6 +77,9 @@ jobs:
     - npm run build
     - aws s3 cp dist s3://www.${DOMAIN}/ --recursive
   - stage: Deploy front dev
+    language: node_js
+    node_js:
+      - 7
     skip_cleanup: true
     before_install:
     - export ROOT_DOMAIN=${DEV_DOMAIN}
