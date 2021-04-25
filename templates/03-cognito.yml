@@ -67,7 +67,6 @@ Resources:
   PostConfirmationLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      CodeUri: ./PostConfirmation
       FunctionName: !Sub
         - GlaedisPostConfirmationLambda-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
