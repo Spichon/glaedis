@@ -93,7 +93,7 @@ jobs:
     - cd frontend
     - npm install
     - npm run build
-    - aws s3 cp dist s3://www.${DEV_DOMAIN}/ --recursive
+    - aws s3 cp ./dist s3://www.${DEV_DOMAIN}/ --recursive
 env:
   global:
   - AWS_DEFAULT_REGION=eu-west-1
