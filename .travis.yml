@@ -71,6 +71,8 @@ jobs:
     before_install:
     - export ROOT_DOMAIN=${DOMAIN}
     - bash ./scripts/aws_config.sh
+    - export VUE_APP_COGNITO_USER_POOL_CLIENT_ID=$(aws cloudformation describe-stacks --stack-name glaedis-cognito-${TRAVIS_BRANCH} --query "Stacks[0].Outputs[?OutputKey=='CognitoUserPoolClientId'].OutputValue" --output text)
+    - export VUE_APP_COGNITO_USER_POOL_ID=$(aws cloudformation describe-stacks --stack-name glaedis-cognito-${TRAVIS_BRANCH} --query "Stacks[0].Outputs[?OutputKey=='CognitoUserPoolId'].OutputValue" --output text)
     - bash ./scripts/generate-env-front.sh
     if: branch = master
     script:
@@ -87,6 +89,8 @@ jobs:
     before_install:
     - export ROOT_DOMAIN=${DEV_DOMAIN}
     - bash ./scripts/aws_config.sh
+    - export VUE_APP_COGNITO_USER_POOL_CLIENT_ID=$(aws cloudformation describe-stacks --stack-name glaedis-cognito-${TRAVIS_BRANCH} --query "Stacks[0].Outputs[?OutputKey=='CognitoUserPoolClientId'].OutputValue" --output text)
+    - export VUE_APP_COGNITO_USER_POOL_ID=$(aws cloudformation describe-stacks --stack-name glaedis-cognito-${TRAVIS_BRANCH} --query "Stacks[0].Outputs[?OutputKey=='CognitoUserPoolId'].OutputValue" --output text)
     - bash ./scripts/generate-env-front.sh
     if: branch = dev
     script:

@@ -24,7 +24,7 @@ const VUE_APP_AWS_REGIONS = process.env.VUE_APP_AWS_REGION;
 const VUE_APP_USER_API = process.env.VUE_APP_USER_API;
 const VUE_APP_TEST_API = process.env.VUE_APP_TEST_API;
 
-
+console.log(process.env.NODE_ENV)
 Amplify.configure({
     Auth: {
         region: VUE_APP_AWS_REGIONS,
