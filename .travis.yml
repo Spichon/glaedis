@@ -66,7 +66,8 @@ jobs:
     skip_cleanup: true
     language: node_js
     node_js:
-    - 7
+      - "node"
+    cache: npm
     before_install:
     - export ROOT_DOMAIN=${DOMAIN}
     - bash ./scripts/aws_config.sh
@@ -76,11 +77,12 @@ jobs:
     - cd frontend
     - npm install
     - npm run build
-    - aws s3 cp dist s3://www.${DOMAIN}/ --recursive
+    - aws s3 cp ./dist s3://www.${DOMAIN}/ --recursive
   - stage: Deploy front dev
     language: node_js
     node_js:
-    - 7
+      - "node"
+    cache: npm
     skip_cleanup: true
     before_install:
     - export ROOT_DOMAIN=${DEV_DOMAIN}
