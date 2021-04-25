@@ -54,8 +54,6 @@ Amplify.configure({
     }
 });
 
-const currentConfig = Auth.configure();
-console.log(currentConfig);
 
 Vue.prototype.$Amplify = Amplify;
 
