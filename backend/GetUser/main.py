@@ -11,7 +11,7 @@ def handler(event, context):
   # TODO: restrict access origin to site
   response = {
     "headers": {
-      'Access-Control-Allow-Origin': CORS_URL
+      'Access-Control-Allow-Origin': '*'
     }
   }
 

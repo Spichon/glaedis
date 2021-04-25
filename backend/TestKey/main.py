@@ -19,7 +19,7 @@ def handler(event, context):
         'isBase64Encoded': False,
         'headers': {
             'access-control-allow-methods': 'POST',
-            'Access-Control-Allow-Origin': CORS_URL,
+            'Access-Control-Allow-Origin': '*',
             'access-control-allow-headers': 'Content-Type, Access-Control-Allow-Headers'
         },
         'statusCode': 200
