@@ -1,0 +1,199 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+
+Resources:
+  DomainName:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      RegionalCertificateArn:
+        Fn::ImportValue:
+          !Sub
+          - Glaedis-${EnvironmentName}-RegionalCertArn
+          - { EnvironmentName: !Ref EnvironmentName }
+      DomainName: !Sub
+        - app.${Domain}
+        - Domain:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-RootDomain
+              - { EnvironmentName: !Ref EnvironmentName }
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  BasePathMapping:
+    DependsOn:
+      - AppApiDeployment0
+    Type: AWS::ApiGateway::BasePathMapping
+    Properties:
+      DomainName: !Ref DomainName
+      RestApiId: !Ref AppApi
+      Stage: !Ref EnvironmentName
+
+  RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId:
+        Fn::ImportValue:
+          !Sub
+          - Glaedis-${EnvironmentName}-HostedZoneId
+          - { EnvironmentName: !Ref EnvironmentName }
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        HostedZoneId: !GetAtt DomainName.RegionalHostedZoneId
+        DNSName: !GetAtt DomainName.RegionalDomainName
+
+  RootMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      HttpMethod: ANY
+      ResourceId: !GetAtt AppApi.RootResourceId
+      RestApiId: !Ref AppApi
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: ANY
+        Type: AWS
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AppFunction.Arn}/invocations'
+        PassthroughBehavior: WHEN_NO_MATCH
+        IntegrationResponses:
+          - StatusCode: 200
+
+  ApiGatewayMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: false
+      AuthorizationType: NONE
+      HttpMethod: ANY
+      RequestParameters:
+        method.request.path.proxy: true
+      Integration:
+        CacheKeyParameters:
+          - 'method.request.path.proxy'
+        RequestParameters:
+          integration.request.path.proxy: 'method.request.path.proxy'
+        ConnectionType: INTERNET
+        Credentials: !GetAtt ApiGatewayIamRole.Arn
+        IntegrationHttpMethod: ANY
+        PassthroughBehavior: WHEN_NO_MATCH
+        TimeoutInMillis: 29000
+        Type: AWS
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AppFunction.Arn}/invocations/{proxy}'
+      ResourceId: !Ref Resource
+      RestApiId: !Ref AppApi
+
+  Resource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt AppApi.RootResourceId
+      RestApiId: !Ref AppApi
+      PathPart: '{proxy+}'
+
+  AppApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: !Sub
+        - glaedis-AppApiGateway-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
+      ApiKeySourceType: HEADER
+      Description: An API Gateway with a Lambda Integration
+      EndpointConfiguration:
+        Types:
+          - EDGE
+
+  ApiGatewayModel:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      ContentType: 'application/json'
+      RestApiId: !Ref AppApi
+      Schema: { }
+
+  ApiGatewayStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId: !Ref AppApiDeployment0
+      Description: Lambda API Stage v0
+      RestApiId: !Ref AppApi
+      StageName: 'v0'
+
+  AppApiDeployment0:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - ApiGatewayMethod
+      - RootMethod
+    Properties:
+      RestApiId: !Ref AppApi
+      Description: 'App RestApi deployment id: 0'
+      StageName: !Ref EnvironmentName
+
+  AppFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::ImportValue:
+            !Sub
+            - Glaedis-${EnvironmentName}-CodeBucketName
+            - { EnvironmentName: !Ref EnvironmentName }
+        S3Key: App.zip
+      Description: Example Lambda function
+      FunctionName: !Sub
+        - GlaedisAppLambda-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
+      Handler: App/app/main.handler
+      MemorySize: 128
+      Role: !GetAtt LambdaIamRole.Arn
+      Runtime: python3.8
+
+  GetUserPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref AppFunction
+      SourceArn: !Sub
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/user
+        - __Stage__: '*'
+          __ApiId__: !Ref AppApi
+
+  ApiGatewayIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: ''
+            Effect: 'Allow'
+            Principal:
+              Service:
+                - 'apigateway.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Path: '/'
+      Policies:
+        - PolicyName: LambdaAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action: 'lambda:*'
+                Resource: !GetAtt AppFunction.Arn
+
+  LambdaIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Principal:
+              Service:
+                - 'lambda.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Path: '/'

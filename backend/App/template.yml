@@ -1,0 +1,156 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+
+Resources:
+  DomainName:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      RegionalCertificateArn:
+        Fn::ImportValue:
+          !Sub
+          - Glaedis-${EnvironmentName}-RegionalCertArn
+          - { EnvironmentName: !Ref EnvironmentName }
+      DomainName: !Sub
+        - app.${Domain}
+        - Domain:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-RootDomain
+              - { EnvironmentName: !Ref EnvironmentName }
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  BasePathMapping:
+    DependsOn:
+      - AppApiDeployment0
+      - AppApi
+      - AppFunction
+      - ApiGatewayStage
+    Type: AWS::ApiGateway::BasePathMapping
+    Properties:
+      DomainName: !Ref DomainName
+      RestApiId: !Ref AppApi
+      Stage: !Ref EnvironmentName
+
+  RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId:
+        Fn::ImportValue:
+          !Sub
+          - Glaedis-${EnvironmentName}-HostedZoneId
+          - { EnvironmentName: !Ref EnvironmentName }
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        HostedZoneId: !GetAtt DomainName.RegionalHostedZoneId
+        DNSName: !GetAtt DomainName.RegionalDomainName
+
+  AppApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub
+        - glaedis-AppApiGateway-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
+      StageName: 'prod'
+
+  ApiGatewayModel:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      ContentType: 'application/json'
+      RestApiId: !Ref AppApi
+      Schema: { }
+
+  ApiGatewayStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId: !Ref AppApiDeployment0
+      Description: Lambda API Stage v0
+      RestApiId: !Ref AppApi
+      StageName: 'v0'
+
+  AppApiDeployment0:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref AppApi
+      Description: 'App RestApi deployment id: 0'
+      StageName: !Ref EnvironmentName
+
+  AppFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Events:
+        ApiEvent:
+          Properties:
+            RestApiId:
+              Ref: AppApi
+            Path: /{proxy+}
+            Method: ANY
+          Type: Api
+      FunctionName: !Sub
+        - GlaedisAppLambda-${EnvironmentName}
+        - { EnvironmentName: !Ref EnvironmentName }
+      CodeUri: ./
+      Handler: app.main.handler
+      Runtime: python3.7
+      Timeout: 300 # timeout of your lambda function
+      MemorySize: 128 # memory size of your lambda function
+      Description: fastAPI aws lambda example
+      # other options, see ->
+      # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html#sam-specification-template-anatomy-globals-supported-resources-and-properties
+      Role: !GetAtt LambdaIamRole.Arn
+
+  GetUserPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref AppFunction
+      SourceArn: !Sub
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/user
+        - __Stage__: '*'
+          __ApiId__: !Ref AppApi
+
+  ApiGatewayIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: ''
+            Effect: 'Allow'
+            Principal:
+              Service:
+                - 'apigateway.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Path: '/'
+      Policies:
+        - PolicyName: LambdaAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action: 'lambda:*'
+                Resource: !GetAtt AppFunction.Arn
+
+  LambdaIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Principal:
+              Service:
+                - 'lambda.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Path: '/'
