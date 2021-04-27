@@ -61,14 +61,20 @@ Resources:
       StageName: 'prod'
       Cors: "'*'"
       Auth:
-        DefaultAuthorizer: MyCognitoAuthorizer
+        DefaultAuthorizer: CognitoUserPoolAuthorizer
         Authorizers:
-          MyCognitoAuthorizer:
-            UserPoolArn:
-              - Fn::ImportValue:
-                  !Sub
-                  - Glaedis-${EnvironmentName}-CognitoUserPoolArn
-                  - { EnvironmentName: !Ref EnvironmentName }
+          CognitoUserPoolAuthorizer:
+            in: header
+            type: apiKey
+            name: Authorization
+            x-amazon-apigateway-authorizer:
+              providerARNs:
+                - Fn::ImportValue:
+                    !Sub
+                    - Glaedis-${EnvironmentName}-CognitoUserPoolArn
+                    - { EnvironmentName: !Ref EnvironmentName }
+              type: cognito_user_pools
+            x-amazon-apigateway-authtype: cognito_user_pools
 
   ApiGatewayModel:
     Type: AWS::ApiGateway::Model
@@ -103,7 +109,7 @@ Resources:
             Path: /{proxy+}
             Method: ANY
             Auth:
-              Authorizer: MyCognitoAuthorizer
+              Authorizer: CognitoUserPoolAuthorizer
           Type: Api
       FunctionName: !Sub
         - GlaedisAppLambda-${EnvironmentName}
