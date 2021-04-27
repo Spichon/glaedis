@@ -63,7 +63,7 @@ jobs:
       glaedis-site-$TRAVIS_BRANCH --region=eu-west-1 --capabilities CAPABILITY_NAMED_IAM
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
     - cd backend/App
-    - sam valdiate
+    - sam validate
     - sam build --debug
     - sam package --s3-bucket glaedis-backend-${TRAVIS_BRANCH} --s3-prefix glaedis-app-api-${TRAVIS_BRANCH} --output-template-file out.yml --region eu-west-1
     - sam deploy --template-file out.yml --stack-name glaedis-app-api-${TRAVIS_BRANCH} --region eu-west-1
