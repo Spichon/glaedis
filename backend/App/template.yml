@@ -34,7 +34,7 @@ Resources:
     Properties:
       DomainName: !Ref DomainName
       RestApiId: !Ref AppApi
-      Stage: !Ref EnvironmentName
+      Stage: !Ref AppApi.Stage
 
   RecordSet:
     Type: AWS::Route53::RecordSet
@@ -103,7 +103,7 @@ Resources:
       SourceArn: !Sub
         - >-
           arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/user
-        - __Stage__: !Ref EnvironmentName
+        - __Stage__: '*'
           __ApiId__: !Ref AppApi
 
   ApiGatewayIamRole:
