@@ -1,0 +1,113 @@
+version: '3.7'
+
+services:
+  backend:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    build: tradingbot_backend
+    container_name: backend
+    volumes:
+      - ./tradingbot_backend/app/:/app/
+    depends_on:
+      - db
+    command: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    ports:
+      - 8002:8000
+    env_file:
+      - .env
+    environment:
+      - SERVER_NAME=${DOMAIN?Variable not set}
+      - SERVER_HOST=https://${DOMAIN?Variable not set}
+      - SMTP_HOST=${SMTP_HOST}
+  db:
+    image: postgres:12.3
+    container_name: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+  flower:
+    image: mher/flower
+    container_name: flower
+    depends_on:
+      - rabbitmq
+      - celerybeat
+      - celeryworker
+    ports:
+      - 5555:5555
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS-guest}
+    command:
+      - "--broker=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672//"
+      - "--broker_api=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:15672/api//"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS-guest}
+  celeryworker:
+    container_name: celeryworker
+    image: 'celeryworker:latest'
+    depends_on:
+      - db
+      - rabbitmq
+      - celerybeat
+    volumes:
+      - ./tradingbot_backend/app/:/app/
+    env_file:
+      - .env
+    environment:
+      - SERVER_NAME=${DOMAIN?Variable not set}ff
+      - SERVER_HOST=https://${DOMAIN?Variable not set}
+      - SMTP_HOST=${SMTP_HOST?Variable not set}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS-guest}
+    build:
+      context: ./tradingbot_backend
+      dockerfile: celeryworker.dockerfile
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-false}
+    command: celery worker -A app.worker -l info -Q main-queue,beat-queue -c 1
+  celerybeat:
+    container_name: celeryworker-beat
+    image: 'celeryworker:latest'
+    volumes:
+      - ./tradingbot_backend/app/:/app/
+    env_file:
+      - .env
+    environment:
+      - SERVER_NAME=${DOMAIN?Variable not set}ff
+      - SERVER_HOST=https://${DOMAIN?Variable not set}
+      - SMTP_HOST=${SMTP_HOST?Variable not set}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS-guest}
+    depends_on:
+      - db
+      - rabbitmq
+      - backend
+    build:
+      context: ./tradingbot_backend
+      dockerfile: celeryworker.dockerfile
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-false}
+    command: celery beat -A app.worker -S app.core.scheduler.scheduler:DatabaseScheduler -l info
+volumes:
+  postgres_data:
