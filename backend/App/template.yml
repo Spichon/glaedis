@@ -59,6 +59,16 @@ Resources:
         - glaedis-AppApiGateway-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
       StageName: 'prod'
+      Cors: "'*'"
+        Auth:
+          DefaultAuthorizer: MyCognitoAuthorizer
+          Authorizers:
+            MyCognitoAuthorizer:
+              UserPoolArn:
+                - Fn::ImportValue:
+                    !Sub
+                    - Glaedis-${EnvironmentName}-CognitoUserPoolArn
+                    - { EnvironmentName: !Ref EnvironmentName }
 
   ApiGatewayModel:
     Type: AWS::ApiGateway::Model
