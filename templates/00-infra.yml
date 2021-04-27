@@ -20,6 +20,15 @@ Parameters:
   HostedZoneId:
     Type: String
     Description: Id of route53 hosted zone
+  DBUser:
+    Type: String
+    Description: Name of the DB
+  DBName:
+    Type: String
+    Description: Name of the PSQL user
+  DBPassword:
+    Type: String
+    Description: Password of the PSQL user
 
 Resources:
   CodeBucket:
@@ -86,4 +95,25 @@ Outputs:
     Export:
       Name: !Sub
         - Glaedis-${EnvironmentName}-EnvironmentName
+        - { EnvironmentName: !Ref EnvironmentName }
+  DBName:
+    Description: "DBName"
+    Value: !Ref DBName
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-DBName
+        - { EnvironmentName: !Ref EnvironmentName }
+  DBUser:
+    Description: "DBUser"
+    Value: !Ref DBUser
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-DBUser
+        - { EnvironmentName: !Ref EnvironmentName }
+  DBPassword:
+    Description: "DBPassword"
+    Value: !Ref DBPassword
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-DBPassword
         - { EnvironmentName: !Ref EnvironmentName }

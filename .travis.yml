@@ -16,7 +16,8 @@ jobs:
     - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
       glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM
       --parameter-overrides RootDomain=$DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
-      CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH
+      CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH DBName=$DB_NAME
+      DBUser=$DB_USER DBPassword=$DB_PASSWORD
       --no-fail-on-empty-changeset
   - stage: init dev
     skip_cleanup: true
@@ -38,8 +39,11 @@ jobs:
     - aws cloudformation deploy --template-file ./templates/01-vpc.yml --stack-name
       glaedis-vpc-$TRAVIS_BRANCH --parameter-overrides EnvironmentName=$TRAVIS_BRANCH
       --no-fail-on-empty-changeset
-    - aws cloudformation deploy --template-file ./templates/02-tables.yml --stack-name
+    - aws cloudformation deploy --template-file ./templates/02-1-tables.yml --stack-name
       glaedis-tables-$TRAVIS_BRANCH --parameter-overrides EnvironmentName=$TRAVIS_BRANCH
+      --no-fail-on-empty-changeset
+    - aws cloudformation deploy --template-file ./templates/02-2-rds.yml --stack-name glaedis-rds-stack-$TRAVIS_BRANCH
+      --region=eu-west-1 --capabilities CAPABILITY_NAMED_IAM --parameter-overrides EnvironmentName=$TRAVIS_BRANCH
       --no-fail-on-empty-changeset
     - mkdir zip
     - zip -r -j zip/PostConfirmation.zip backend/PostConfirmation
@@ -65,9 +69,11 @@ jobs:
     - cd backend/App
     - sam validate
     - sam build --debug
-    - sam package --s3-bucket glaedis-backend-${TRAVIS_BRANCH} --s3-prefix glaedis-app-api-${TRAVIS_BRANCH} --output-template-file out.yml --region eu-west-1
-    - sam deploy --template-file out.yml --stack-name glaedis-app-api-${TRAVIS_BRANCH} --region eu-west-1
-      --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
+    - sam package --s3-bucket glaedis-backend-${TRAVIS_BRANCH} --s3-prefix glaedis-app-api-${TRAVIS_BRANCH}
+      --output-template-file out.yml --region eu-west-1
+    - sam deploy --template-file out.yml --stack-name glaedis-app-api-${TRAVIS_BRANCH}
+      --region eu-west-1 --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
+      --capabilities CAPABILITY_IAM
     - cd ../..
   - stage: Deploy front prod
     skip_cleanup: true
@@ -117,3 +123,6 @@ env:
   - secure: E47+1dJj3KBtC9uRkih/D4hKm3+OWrG1hOMh1XPikDWjK33iXt18yjCoPPgPObP6ZNmJS8vnIzFIfIu2Afp8zDdPlGg+WtEJ/JqriGi9nB4r33bcTCFN2ZmIrKG9SnwUPAvDclKrM1z9sHwrq7in5WSRY6nBlQAM2/xsRsajSp5jlofiaBxk7wKp2BPH4u8NI7x29tzWo32GBaSrl1bIyAEY6myRsmI6McfZkGOSM39WamarGX0ZpZ0byqCdLvfz32tX/UnjPrKxwYIJi5BLR/vkK38/Cq6ufJtaoluTdU5rxD2UYZ4X40O0ayWCYDzrZKU+gHh/FPin74dXxVUCAllLXrFnbf8OKL8/uwtx0URrRZ+QyotUW3eITMuAdxN5ceO5+NZYaRTPKkAj9WLpsSSL8XvFSMEQwkLWE/8BCc6YFUBgbwBXIXWPIWa6R/HhrmrzQPZdi43Yh40ujTnAkbITWkhN5hy6FNSAXn/RcCS578pwYHQSu5bWKepwy2nc4yRHtThMeS8JHXDt20PPOz3fJR6R++GJ11bwJ6r0oGS2ifaARYk3RNQ/MXUUp1nFREbLCNmocgCGCUH06ERtWqBvYdRrQR9BdF55i13xARDGjamGh9ZyO7rpaFTxbs+Ec861Row50OX3Y0+Z4A80Cz0Ty1yrib2YNQgMX8YdQO4=
   - secure: RzjeRQ8z0ZYqeHy5FlZxzrnDEWj6AB1wUHyRhYV5makBRQOenwsXk5TVkYXT7L5xBk/MGo4QmzzR/0+tbBWGStlzNSA2iw32AY6LLLZACIEHT/aojUfi4/dsZQLfARSXJBZRoNNN7K6m2cvuzpLO64TBI0yv3yNChYj5JE0xah/WR5oHYSRwGj3x1Y5nLxLy/QCq5NkjWxCfUUh2xfYMEBRvTnWW69oQEpRYthzD+irJDnRXFvSCVItKybfxGjtEv7C/1eb4t0T4eoMGDQ3V0c7fmL6jvkJLKCobxU1oUS7KWe3CoYBcX0n9geBO/hFyPJ9r2AICsQ5daR9PQtFwhTVIqXWqmHgvPzka0sjsoh4pcSAmvyLm6cSDzIz/q3olzkOHXiuU6LmKgoH8ybh4tF6IygpSaBVQ/2qFd6WfA2KFoEfVWJygZAarayU8axFj17p5UeVHYb4s8XiqGLxrt+hzMPWiwwY4vmW9xTm9LTZBl9/B26Y/Tdg2DmGEZvJSR0A4x1x5QTRQ7DjDFETBkhBch5uDxCGozNVf3+MEjE0gIOtdvlWvCHV9TstX0e1XgO8G66QRlrfjpQrt8c7ZN3mHfNyGrcwmPcTlH+4JhBCGPB7sroYLr3lcQUYCYZpd7wq22ycUt/Pxn1lrp+Ehf/lapFtvaZKi0XVlhwUz5u4=
   - secure: q+aDXA2I0D2qcpxlEAc+LwFkeMfkb9hoznk0o00vR1RiaGV9iva5e9iHltsMSq3J41F3B0+iuDhVfw6iomY5nQ2IEeGZeyAmBx5uciGqwMN8nAU8MpwiFJ2MWUYav1jUEhPgz/eeZQocTOb7Q0WUn6KJtt2qXLPonAB90IpRedudPwAnHnuSA8nPrpIxMHQs6EfLXXIFKePxET8Oi6eFf2Ouu9vlYHTQ0CcxVgnujJcXNw80dKkle3jzubdD6pR2OA0aPnlw2yGp7VPxy6LRyMJxlXo+vqeCcmr3tMIdFPlwEyiaDz8wcO3kivQMqjmMd7AtPGKZMf1HZfK6e7xq4dFVkSbOMgM5+wD1p6tkbhhbtHgPqbZGTbEhkgH0n2vgjbnPI3HiGfaiBhQ3UeHksaNCZWHsYI3k3er/kZ0+YUbX2vxwX455nf8sLDlthlSLgtu7CVVygCVXq8NLP46hcm60LotVA7OusGoWp7Yvv5WsZbKq5k4php8lqCmNlcQDO2K7Avp1bmeExeuUJZUJiM0M8PaFVzn2x/p5VypMgndxa5TAdS0W8F5Zsl4++smTL/q8issUnE4kNDd4Y28cBlnLGX4YOA3i2pdy12vmBU3UfZsl+dBUlB40RojeNV9dxTkmJOiko27oh+/WafsltZHSTHogntlK+rxHE/3+Vow=
+  - secure: nKjHNtnbaNMzAoAZOJMTJ7H/dH7KPdxsQqnYLwmG1GllhecKYfhwrh0exUhOm0K/ZrTexjBN2TA0Js8InuVdF2XgjD+v0rSIUPxmlrzLaNCViO7ED9WZAr5S0ATjhUq+Ltu13MXS9gK2QnVb4fvycUxhFLDUoRz48QbuLQsRNT77vLp+wmY58h/gWMLtLrAgW9JGuQStjeO5Laz7npyKGvmV4+aG+1YoH6OwhZ30KNEZsbvRc7PUEjJPa9dfivkvsjC/h/wQlZoqxk3v+lCKK1o8rk+HedJ0MOCJ6H17sDcffoF5ozGmzB/Y5IM0FheN5B+bjuoqdCyQq4Qbv6SEIDhivnL6YrUjXZERySlVPSnhJi3i0hR2PK2yUMA03AwR1y7bcp6AEicp5+NJ7BJbgfCQ2DC5eSiquC70FoiFe7TeoLpCbUKgcL0sg1Af08p4rqnF/mNvxcOgQ4HByz7FMM8J/9Oa9G37kP3aCHvzuGzr3AqG3SI8iaHQk4WMBZxRQ2Ra5wGY8xNkc5vF18+5Grki5H1JTnwk8K/2Vl8CgXEn0kND16lqgQcFPmL++OkQg9pr+aAf/JFTxn4yVGTXvg8gMJFPMv1OW3LsmOABM8wGiMyeQvZtoU54Bnehb8NztqngXu2kdulp7HlJR/8BT0MkKJDnEZNUR+1/UT8ZK8g=
+  - secure: ZxrmOS9MVTmUDaD91bjIhzMYp/VL16Df2dqg668jt7ma7HhnvW65NW9RMMg+e6G++gey3zVFeUtQ9lgO7LVprE1h/i7j0+ksVlZYCiK/Vw/FVnULRJw/bs8j75KNzO68/2dSNBRPgIlbsSfNBqsYg3w+gqZKdWhJPO4AeGjGCM4Xl/uoTM/81V0RDBQsbJeFu1VHrdccKxhoShdK/Rk4Jf//laFsSvkykmzB0q5p3hPQoL0KipExRv4JSe723D6Gzlm748DkzxWnPzC6Mz2jgssGZm8qVmC1yZYnK7Cix4lGERToe4R2NKnkV54hsaExZqvsOnv+U3oKWkUDE520xQyu0kCUK3ukzRfUEAwaIzNJ21BBWMiZuDEqQOKJNgEFQ24FKjac5lDHVoYgfgutbMyOKAsZ0UgC2uKl2aVC64DaVbr5oV0grarpEuiOl0csQUSwuHvbf8l8WmpZtJ7uNJjhg93GdyouPcAUE4Lb7P7iis5mWZHNUngdSdPTBaltLXUGFrueR1BazsypCITg8haKtoQV4eJUC4r+VW27FWDFa8f6h1rNC7lQciJUI3G2zNmOZWjIPghYJx22ZzqDz0aEwZ6P/lTTUX1ty2pPQnnFrdoGHpSXelaVOVgm5jfm/XJwhkG6lVgabCaEaazicHT/MlevEQ4ThwF6tzJDhfw=
+  - secure: ORaf0VX9Tfg9z3AvACua7Ef4vPAUMn3VQH+QVlUxr/VTmNpMZR8puLK/xMKkZmNqJbxt9d3dKLxDh2StBcrmuC9DTj929VO/Kja7zzLeoT+IwIpsb4Wz0awtb5IKNR4e/T5853QP03KXYmW67eVDlOFRzYtbWzNNXJExj1ftPps0hhrkdK1Bgx0+LcKJu7usHUisXSYiiOo/VdAe2QqsVwy+nKf0oryJojPZA6lpV0OqoQCezrMzYt5s2phPqOrSq6tQRhp4uPNimddFEqE2p9lYuXDr1T+qDNTmohpXXgx7IEGM3eUBeUb/SgvJc2ULNqTc5mNxR78KfynjUV7pm9L5EnXlXgrCHmbqvt/tbIOyfG0eViKMqiD3xreDRzr4yPunAtBfSCz8hQmKnPvMkj4JgU8dfh/voaCNmvfHW+UG4fMhEYukpeVetHb32u09bladB44yUNz/Do0CNRmMzvXYAZJ/8gM3O3c3v8/1llKOyylgGfaI8ifj1CTQPwpNOVkclHVPP0RR2TUtS2MT8567giSTgloj23LQsz4BBTourJ7ufNybMTmBgebJ28FTHseSkaMmIe6xT+NgBD01Oga/oa8d5NBkC3LMkbnu3qnBskyKKihn0WVqyPEGosY/lGUiolmK2O2cCTx7wL0vJYx8ClCSzeE8w6Kp5JrBgLo=
