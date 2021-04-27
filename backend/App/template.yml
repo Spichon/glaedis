@@ -28,10 +28,8 @@ Resources:
 
   BasePathMapping:
     DependsOn:
-      - AppApiDeployment0
       - AppApi
       - AppFunction
-      - ApiGatewayStage
     Type: AWS::ApiGateway::BasePathMapping
     Properties:
       DomainName: !Ref DomainName
@@ -69,28 +67,6 @@ Resources:
                   !Sub
                   - Glaedis-${EnvironmentName}-CognitoUserPoolArn
                   - { EnvironmentName: !Ref EnvironmentName }
-
-  ApiGatewayModel:
-    Type: AWS::ApiGateway::Model
-    Properties:
-      ContentType: 'application/json'
-      RestApiId: !Ref AppApi
-      Schema: { }
-
-  ApiGatewayStage:
-    Type: AWS::ApiGateway::Stage
-    Properties:
-      DeploymentId: !Ref AppApiDeployment0
-      Description: Lambda API Stage v0
-      RestApiId: !Ref AppApi
-      StageName: !Ref EnvironmentName
-
-  AppApiDeployment0:
-    Type: 'AWS::ApiGateway::Deployment'
-    Properties:
-      RestApiId: !Ref AppApi
-      Description: 'App RestApi deployment id: 0'
-      StageName: !Ref EnvironmentName
 
   AppFunction:
     Type: AWS::Serverless::Function
