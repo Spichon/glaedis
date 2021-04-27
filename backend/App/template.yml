@@ -102,6 +102,8 @@ Resources:
               Ref: AppApi
             Path: /{proxy+}
             Method: ANY
+            Auth:
+              Authorizer: MyCognitoAuthorizer
           Type: Api
       FunctionName: !Sub
         - GlaedisAppLambda-${EnvironmentName}
