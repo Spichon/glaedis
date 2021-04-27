@@ -200,17 +200,3 @@ Outputs:
   PortDB:
     Description: "Port of the newly created RDS PostgreSQL master and replica"
     Value: !GetAtt GlaedisMasterInstance.Endpoint.Port
-  JdbcConnString:
-    Description: "JDBC connection string of newly created RDS PostgreSQL master, w/o password"
-    Value: !Join
-      - ""
-      - - "jdbc:postgresql://"
-        - !GetAtt GlaedisMasterInstance.Endpoint.Address
-        - ":"
-        - !GetAtt GlaedisMasterInstance.Endpoint.Port
-        - "/"
-        - "{{resolve:ssm:/rds_Glaedis/db_name:1}}"
-        - "?user="
-        - "{{resolve:ssm:/rds_Glaedis/master_username:1}}"
-        - "&password="
-        - ""
