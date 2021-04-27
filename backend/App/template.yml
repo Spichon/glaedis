@@ -58,7 +58,7 @@ Resources:
       Name: !Sub
         - glaedis-AppApiGateway-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
-      StageName: 'prod'
+      StageName: !Ref EnvironmentName
       Cors: "'*'"
       Auth:
         DefaultAuthorizer: MyCognitoAuthorizer
@@ -83,7 +83,7 @@ Resources:
       DeploymentId: !Ref AppApiDeployment0
       Description: Lambda API Stage v0
       RestApiId: !Ref AppApi
-      StageName: 'v0'
+      StageName: !Ref EnvironmentName
 
   AppApiDeployment0:
     Type: 'AWS::ApiGateway::Deployment'
@@ -127,7 +127,7 @@ Resources:
       SourceArn: !Sub
         - >-
           arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/user
-        - __Stage__: '*'
+        - __Stage__: !Ref EnvironmentName
           __ApiId__: !Ref AppApi
 
   ApiGatewayIamRole:
