@@ -25,7 +25,7 @@ def pong():
     * show a lifesign
 
     """
-    return {"ping": "pong!"}
+    return {"ping": "pongeur!"}
 
 
 handler = Mangum(app)
