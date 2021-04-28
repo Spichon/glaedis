@@ -27,7 +27,7 @@ jobs:
     - aws cloudformation deploy --template-file ./templates/00-infra.yml --stack-name
       glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM
       --parameter-overrides RootDomain=$DEV_DOMAIN RegionalCertArn=$DEV_REGIONAL_CERT
-      HostedZoneId=$DEV_HOSTED_ZONE_ID CloudFrontCertArn=$DEV_CLOUDFRONT_CERT EmailAddress=$EMAIL
+      HostedZoneId=$HOSTED_ZONE_ID CloudFrontCertArn=$DEV_CLOUDFRONT_CERT EmailAddress=$EMAIL
       EnvironmentName=$TRAVIS_BRANCH DBName=$DB_NAME DBUser=$DB_USER DBPassword=$DB_PASSWORD
       --no-fail-on-empty-changeset
   - stage: architecture
