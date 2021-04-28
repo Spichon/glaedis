@@ -3,6 +3,7 @@ cache: pip
 python:
 - '3.7'
 install:
+- travis wait 60
 - pip install awscli
 - pip install aws-sam-cli
 jobs:
