@@ -3,7 +3,6 @@ cache: pip
 python:
 - '3.7'
 install:
-- travis wait 60
 - pip install awscli
 - pip install aws-sam-cli
 jobs:
@@ -43,7 +42,7 @@ jobs:
     - aws cloudformation deploy --template-file ./templates/02-1-tables.yml --stack-name
       glaedis-tables-$TRAVIS_BRANCH --parameter-overrides EnvironmentName=$TRAVIS_BRANCH
       --no-fail-on-empty-changeset
-    - aws cloudformation deploy --template-file ./templates/02-2-rds.yml --stack-name
+    - travis_wait 60 aws cloudformation deploy --template-file ./templates/02-2-rds.yml --stack-name
       glaedis-rds-stack-$TRAVIS_BRANCH --region=eu-west-1 --capabilities CAPABILITY_NAMED_IAM
       --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
     - mkdir zip
