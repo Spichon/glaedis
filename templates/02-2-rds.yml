@@ -198,3 +198,24 @@ Outputs:
   PortDB:
     Description: "Port of the newly created RDS PostgreSQL master and replica"
     Value: !GetAtt GlaedisMasterInstance.Endpoint.Port
+  DBName:
+    Description: "Name of the DB"
+    Value:
+      Fn::ImportValue:
+        !Sub
+        - Glaedis-${EnvironmentName}-DBName
+        - { EnvironmentName: !Ref EnvironmentName }
+  DBUser:
+    Description: "Name of the user DB"
+    Value:
+      Fn::ImportValue:
+        !Sub
+        - Glaedis-${EnvironmentName}-DBUser
+        - { EnvironmentName: !Ref EnvironmentName }
+  DBPassword:
+    Description: "Name of the user DB"
+    Value:
+      Fn::ImportValue:
+        !Sub
+        - Glaedis-${EnvironmentName}-DBPassword
+        - { EnvironmentName: !Ref EnvironmentName }
