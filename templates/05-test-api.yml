@@ -14,13 +14,7 @@ Resources:
         DNSName: !GetAtt LoadBalancer.DNSName
         EvaluateTargetHealth: false
         HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
-      HostedZoneName: !Sub
-        - ${Domain}.
-        - Domain:
-            Fn::ImportValue:
-              !Sub
-              - Glaedis-${EnvironmentName}-RootDomain
-              - { EnvironmentName: !Ref EnvironmentName }
+      HostedZoneName: glaedis.com.
       Name: !Sub
         - test.${Domain}.
         - Domain:
