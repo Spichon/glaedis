@@ -33,7 +33,7 @@ Parameters:
     Default: "eu-west-1"
   DBInstanceClass:
     Type: String
-    Default: "db.t3.medium"
+    Default: "db.t3.micro"
   DBStorageType:
     Type: String
     Default: "gp2"
