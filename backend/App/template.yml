@@ -127,17 +127,6 @@ Resources:
               - Glaedis-${EnvironmentName}-DBPassword
               - { EnvironmentName: !Ref EnvironmentName }
           PROJECT_NAME: "Glaedis"
-  GetUserPermission:
-    Type: 'AWS::Lambda::Permission'
-    Properties:
-      Action: 'lambda:InvokeFunction'
-      Principal: apigateway.amazonaws.com
-      FunctionName: !Ref AppFunction
-      SourceArn: !Sub
-        - >-
-          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/user
-        - __Stage__: '*'
-          __ApiId__: !Ref AppApi
 
   ApiGatewayIamRole:
     Type: AWS::IAM::Role
