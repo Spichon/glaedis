@@ -93,7 +93,40 @@ Resources:
       # other options, see ->
       # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html#sam-specification-template-anatomy-globals-supported-resources-and-properties
       Role: !GetAtt LambdaIamRole.Arn
-
+      Environment:
+        Variables:
+          COGNITO_USER_POOL_ID:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-CognitoUserPoolId
+              - { EnvironmentName: !Ref EnvironmentName }
+          COGNITO_REGION: !Ref AWS::Region
+          DB_URL:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-EndpointMaster
+              - { EnvironmentName: !Ref EnvironmentName }
+          DB_URL_REPLICA:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-PortReadReplica
+              - { EnvironmentName: !Ref EnvironmentName }
+          DB_NAME:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-DBName
+              - { EnvironmentName: !Ref EnvironmentName }
+          DB_USER:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-DBUser
+              - { EnvironmentName: !Ref EnvironmentName }
+          DB_PASSWORD:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-DBPassword
+              - { EnvironmentName: !Ref EnvironmentName }
+          PROJECT_NAME: "Glaedis"
   GetUserPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:

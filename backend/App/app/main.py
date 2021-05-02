@@ -1,17 +1,17 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from mangum import Mangum
 
 from app.api.api_v1.api import router as api_router
-from app.core.config import API_V1_STR, PROJECT_NAME
+from app.core.config import settings
+from app.core.auth import auth
 
 app = FastAPI(
-    title=PROJECT_NAME,
+    title=settings.PROJECT_NAME,
     # if not custom domain
     # openapi_prefix="/prod"
 )
 
-
-app.include_router(api_router, prefix=API_V1_STR)
+app.include_router(api_router, prefix=settings.API_V1_STR, dependencies=[Depends(auth)])
 
 
 @app.get("/ping")
@@ -25,7 +25,7 @@ def pong():
     * show a lifesign
 
     """
-    return {"ping": "pongeur!"}
+    return {"ping": "pong!"}
 
 
 handler = Mangum(app)
