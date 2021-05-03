@@ -5,6 +5,7 @@ python:
 install:
 - pip install awscli
 - pip install aws-sam-cli
+- pip install alembic
 jobs:
   include:
   - stage: init master
@@ -74,6 +75,10 @@ jobs:
     - sam deploy --template-file out.yml --stack-name glaedis-app-api-${TRAVIS_BRANCH}
       --region eu-west-1 --parameter-overrides EnvironmentName=$TRAVIS_BRANCH --no-fail-on-empty-changeset
       --capabilities CAPABILITY_IAM
+    - cd ../..
+    - source scripts/generate-env-alembic.sh
+    - cd backend/App
+    - alembic upgrade head
     - cd ../..
   - stage: Deploy front prod
     skip_cleanup: true
