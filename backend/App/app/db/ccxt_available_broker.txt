@@ -1,0 +1,11 @@
+aax
+binance
+bittrex
+bitvavo
+bytetrade
+currencycom
+eterbase
+ftx
+gopax
+idex
+kraken
