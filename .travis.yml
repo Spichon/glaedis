@@ -78,7 +78,7 @@ jobs:
     - cd ../..
     - source scripts/generate-env-alembic.sh
     - cd backend/App
-    - alembic upgrade head
+    - PYTHONPATH=. alembic upgrade head
     - cd ../..
   - stage: Deploy front prod
     skip_cleanup: true
