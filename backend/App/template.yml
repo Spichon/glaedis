@@ -60,15 +60,6 @@ Resources:
         - { EnvironmentName: !Ref EnvironmentName }
       StageName: !Ref EnvironmentName
       Cors: "'*'"
-      Auth:
-        DefaultAuthorizer: MyCognitoAuthorizer
-        Authorizers:
-          MyCognitoAuthorizer:
-            UserPoolArn:
-              - Fn::ImportValue:
-                  !Sub
-                  - Glaedis-${EnvironmentName}-CognitoUserPoolArn
-                  - { EnvironmentName: !Ref EnvironmentName }
 
 
   ApiGatewayStage:
@@ -97,8 +88,6 @@ Resources:
               Ref: AppApi
             Path: /{proxy+}
             Method: ANY
-            Auth:
-              Authorizer: MyCognitoAuthorizer
           Type: Api
       FunctionName: !Sub
         - GlaedisAppLambda-${EnvironmentName}
