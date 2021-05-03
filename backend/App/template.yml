@@ -57,7 +57,7 @@ Resources:
         - glaedis-AppApiGateway-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
       StageName: !Ref EnvironmentName
-#      Cors: "'*'"
+      Cors: "'*'"
 #      Auth:
 #        DefaultAuthorizer: MyCognitoAuthorizer
 #        Authorizers:
