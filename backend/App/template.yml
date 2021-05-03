@@ -36,7 +36,7 @@ Resources:
     Properties:
       DomainName: !Ref DomainName
       RestApiId: !Ref AppApi
-      Stage: !Ref AppApi.Stage
+      Stage: !Ref EnvironmentName
 
   RecordSet:
     Type: AWS::Route53::RecordSet
@@ -58,9 +58,14 @@ Resources:
       Name: !Sub
         - glaedis-AppApiGateway-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
-      StageName: !Ref EnvironmentName
-      Cors: "'*'"
+      StageName: 'prod'
 
+  ApiGatewayModel:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      ContentType: 'application/json'
+      RestApiId: !Ref AppApi
+      Schema: { }
 
   ApiGatewayStage:
     Type: AWS::ApiGateway::Stage
@@ -69,7 +74,7 @@ Resources:
       DeploymentId: !Ref AppApiDeployment0
       Description: Lambda API Stage v0
       RestApiId: !Ref AppApi
-      StageName: !Ref EnvironmentName
+      StageName: 'v0'
 
   AppApiDeployment0:
     Type: 'AWS::ApiGateway::Deployment'
