@@ -14,7 +14,7 @@ app = FastAPI(
 app.include_router(api_router, prefix=settings.API_V1_STR, dependencies=[Depends(auth)])
 
 
-@app.get("/ping")
+@app.get("/test")
 def pong():
     """
     Sanity check.
@@ -25,7 +25,7 @@ def pong():
     * show a lifesign
 
     """
-    return {"ping": "pong!"}
+    return "ok"
 
 
 handler = Mangum(app)
