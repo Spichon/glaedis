@@ -28,15 +28,13 @@ Resources:
 
   BasePathMapping:
     DependsOn:
-      - AppApiDeployment0
       - AppApi
       - AppFunction
-      - ApiGatewayStage
     Type: AWS::ApiGateway::BasePathMapping
     Properties:
       DomainName: !Ref DomainName
       RestApiId: !Ref AppApi
-      Stage: !Ref EnvironmentName
+      Stage: !Ref AppApi.Stage
 
   RecordSet:
     Type: AWS::Route53::RecordSet
@@ -58,30 +56,17 @@ Resources:
       Name: !Sub
         - glaedis-AppApiGateway-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
-      StageName: 'prod'
-
-  ApiGatewayModel:
-    Type: AWS::ApiGateway::Model
-    Properties:
-      ContentType: 'application/json'
-      RestApiId: !Ref AppApi
-      Schema: { }
-
-  ApiGatewayStage:
-    Type: AWS::ApiGateway::Stage
-    DependsOn: AppApiDeployment0
-    Properties:
-      DeploymentId: !Ref AppApiDeployment0
-      Description: Lambda API Stage v0
-      RestApiId: !Ref AppApi
-      StageName: 'v0'
-
-  AppApiDeployment0:
-    Type: 'AWS::ApiGateway::Deployment'
-    Properties:
-      RestApiId: !Ref AppApi
-      Description: 'App RestApi deployment id: 0'
       StageName: !Ref EnvironmentName
+      Cors: "'*'"
+      Auth:
+        DefaultAuthorizer: MyCognitoAuthorizer
+        Authorizers:
+          MyCognitoAuthorizer:
+            UserPoolArn:
+              - Fn::ImportValue:
+                  !Sub
+                  - Glaedis-${EnvironmentName}-CognitoUserPoolArn
+                  - { EnvironmentName: !Ref EnvironmentName }
 
   AppFunction:
     Type: AWS::Serverless::Function
@@ -93,6 +78,8 @@ Resources:
               Ref: AppApi
             Path: /{proxy+}
             Method: ANY
+            Auth:
+              Authorizer: MyCognitoAuthorizer
           Type: Api
       FunctionName: !Sub
         - GlaedisAppLambda-${EnvironmentName}
