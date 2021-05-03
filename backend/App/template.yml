@@ -28,8 +28,10 @@ Resources:
 
   BasePathMapping:
     DependsOn:
+      - AppApiDeployment0
       - AppApi
       - AppFunction
+      - ApiGatewayStage
     Type: AWS::ApiGateway::BasePathMapping
     Properties:
       DomainName: !Ref DomainName
@@ -58,15 +60,32 @@ Resources:
         - { EnvironmentName: !Ref EnvironmentName }
       StageName: !Ref EnvironmentName
       Cors: "'*'"
-#      Auth:
-#        DefaultAuthorizer: MyCognitoAuthorizer
-#        Authorizers:
-#          MyCognitoAuthorizer:
-#            UserPoolArn:
-#              - Fn::ImportValue:
-#                  !Sub
-#                  - Glaedis-${EnvironmentName}-CognitoUserPoolArn
-#                  - { EnvironmentName: !Ref EnvironmentName }
+      Auth:
+        DefaultAuthorizer: MyCognitoAuthorizer
+        Authorizers:
+          MyCognitoAuthorizer:
+            UserPoolArn:
+              - Fn::ImportValue:
+                  !Sub
+                  - Glaedis-${EnvironmentName}-CognitoUserPoolArn
+                  - { EnvironmentName: !Ref EnvironmentName }
+
+
+  ApiGatewayStage:
+    Type: AWS::ApiGateway::Stage
+    DependsOn: AppApiDeployment0
+    Properties:
+      DeploymentId: !Ref AppApiDeployment0
+      Description: Lambda API Stage v0
+      RestApiId: !Ref AppApi
+      StageName: !Ref EnvironmentName
+
+  AppApiDeployment0:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref AppApi
+      Description: 'App RestApi deployment id: 0'
+      StageName: !Ref EnvironmentName
 
   AppFunction:
     Type: AWS::Serverless::Function
@@ -78,8 +97,8 @@ Resources:
               Ref: AppApi
             Path: /{proxy+}
             Method: ANY
-#            Auth:
-#              Authorizer: MyCognitoAuthorizer
+            Auth:
+              Authorizer: MyCognitoAuthorizer
           Type: Api
       FunctionName: !Sub
         - GlaedisAppLambda-${EnvironmentName}
@@ -127,6 +146,18 @@ Resources:
               - Glaedis-${EnvironmentName}-DBPassword
               - { EnvironmentName: !Ref EnvironmentName }
           PROJECT_NAME: "Glaedis"
+
+  GetUserPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref AppFunction
+      SourceArn: !Sub
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/user
+        - __Stage__: '*'
+          __ApiId__: !Ref AppApi
 
   ApiGatewayIamRole:
     Type: AWS::IAM::Role
