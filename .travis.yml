@@ -5,7 +5,6 @@ python:
 install:
 - pip install awscli
 - pip install aws-sam-cli
-- pip install alembic
 jobs:
   include:
   - stage: init master
@@ -78,6 +77,7 @@ jobs:
     - cd ../..
     - source scripts/generate-env-alembic.sh
     - cd backend/App
+    - pip install -r requirements.txt
     - PYTHONPATH=. alembic upgrade head
     - cd ../..
   - stage: Deploy front prod
