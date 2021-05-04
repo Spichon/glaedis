@@ -32,3 +32,4 @@ npm run test:unit
 
 
 SDK : aws-amplify
+penser à la traduction : i18n (en/fr)
