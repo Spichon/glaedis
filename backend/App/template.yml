@@ -116,6 +116,11 @@ Resources:
               - Glaedis-${EnvironmentName}-DBPassword
               - { EnvironmentName: !Ref EnvironmentName }
           PROJECT_NAME: "Glaedis"
+          SECRET_KEY:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-SecretKey
+              - { EnvironmentName: !Ref EnvironmentName }
 
   GetUserPermission:
     Type: 'AWS::Lambda::Permission'

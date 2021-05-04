@@ -29,6 +29,9 @@ Parameters:
   DBPassword:
     Type: String
     Description: Password of the PSQL user
+  SecretKey:
+    Type: String
+    Description: Secret to encode users api keys
 
 Resources:
   CodeBucket:
@@ -116,4 +119,11 @@ Outputs:
     Export:
       Name: !Sub
         - Glaedis-${EnvironmentName}-DBPassword
+        - { EnvironmentName: !Ref EnvironmentName }
+  SecretKey:
+    Description: "SecretKey"
+    Value: !Ref SecretKey
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-SecretKey
         - { EnvironmentName: !Ref EnvironmentName }
