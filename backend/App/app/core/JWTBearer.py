@@ -63,7 +63,6 @@ class JWTBearer(HTTPBearer):
                     signature=signature,
                     message=message,
                 )
-                print(jwt_credentials)
             except JWTError:
                 raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail="JWK invalid")
 

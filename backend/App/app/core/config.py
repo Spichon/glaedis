@@ -1,5 +1,5 @@
 from typing import Optional, Dict, Any
-
+import secrets
 from pydantic import BaseSettings, PostgresDsn, validator
 from starlette.datastructures import CommaSeparatedStrings
 import os
@@ -32,5 +32,6 @@ class Settings(BaseSettings):
             path=f"/{values.get('DB_NAME') or ''}",
         )
 
+    SECRET_KEY: str = secrets.token_urlsafe(32)
 
 settings = Settings()

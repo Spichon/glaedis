@@ -77,9 +77,10 @@ jobs:
       --capabilities CAPABILITY_IAM
     - cd ../..
     - source scripts/generate-env-alembic.sh
+    - bash scripts/generate-env-local-dev.sh
+    - export $(cat .env | xargs)
     - cd backend/App
-    - pip install -r requirements.txt
-    - PYTHONPATH=. alembic upgrade head
+    - bash ./scripts/prestart.sh
     - cd ../..
   - stage: Deploy front prod
     skip_cleanup: true

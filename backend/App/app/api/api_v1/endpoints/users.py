@@ -16,12 +16,4 @@ def read_user_me(
     """
     Get current user.
     """
-    print(db)
     return current_user
-
-@router.get("/test", response_model=User)
-def test() -> Any:
-    """
-    Get current user.
-    """
-    return 'ok'

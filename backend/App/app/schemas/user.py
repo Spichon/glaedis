@@ -5,7 +5,7 @@ from pydantic import BaseModel, EmailStr
 
 # Shared properties
 class UserBase(BaseModel):
-    username: Optional[str] = None
+    id: Optional[str] = None
 
 
 class UserInDBBase(UserBase):
