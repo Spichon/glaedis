@@ -1,6 +1,6 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List, Union
 import secrets
-from pydantic import BaseSettings, PostgresDsn, validator
+from pydantic import BaseSettings, PostgresDsn, validator, AnyHttpUrl
 from starlette.datastructures import CommaSeparatedStrings
 import os
 
@@ -33,5 +33,21 @@ class Settings(BaseSettings):
         )
 
     SECRET_KEY: str = secrets.token_urlsafe(32)
+
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = ["http://localhost", "http://localhost:4200", "http://localhost:3000",
+                                              "http://localhost:8080", "https://localhost", "https://localhost:4200",
+                                              "https://localhost:3000", "https://localhost:8080",
+                                              "http://www.dev.glaedis.com", "https://www.dev.glaedis.com",
+                                              "https://www.glaedis.com", "http://local.dockertoolbox.glaedis.com",
+                                              "http://localhost.glaedis.com"]
+
+    @validator("BACKEND_CORS_ORIGINS", pre=True)
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
+
 
 settings = Settings()
