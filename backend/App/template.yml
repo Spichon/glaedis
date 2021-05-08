@@ -57,6 +57,12 @@ Resources:
         - glaedis-AppApiGateway-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
       StageName: !Ref EnvironmentName
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+        MaxAge: "'600'"
+        AllowCredentials: True
 
   AppFunction:
     Type: AWS::Serverless::Function
