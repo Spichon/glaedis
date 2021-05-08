@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = ["http://localhost", "http://localhost:4200", "http://localhost:3000",
                                               "http://localhost:8080", "https://localhost", "https://localhost:4200",
                                               "https://localhost:3000", "https://localhost:8080",
+                                              "http://localhost:5000",
                                               "http://www.dev.glaedis.com", "https://www.dev.glaedis.com",
                                               "https://www.glaedis.com", "http://local.dockertoolbox.glaedis.com",
                                               "http://localhost.glaedis.com"]
