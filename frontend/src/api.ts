@@ -10,6 +10,7 @@ import {
 async function authHeaders() {
     return {
         headers: {
+            Accept: 'application/json',
             Authorization: `Bearer ${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
         },
     };
