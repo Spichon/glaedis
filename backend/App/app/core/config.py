@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str
 
     COGNITO_USER_POOL_ID: str
+    COGNITO_USER_POOL_CLIENT_ID: str
     COGNITO_REGION: str
 
     DB_URL: str

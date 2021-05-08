@@ -6,6 +6,9 @@ install:
 - pip install awscli
 - pip install aws-sam-cli
 - pip install alembic
+- pip install pytest
+- pip install codecov
+- pip install pytest-cov
 jobs:
   include:
   - stage: init master
@@ -81,7 +84,9 @@ jobs:
     - cd backend/App
     - pip install -r requirements.txt
     - bash ./scripts/prestart.sh
-    - cd ../..
+    - bash ./scripts/test.sh
+    after_success:
+      - codecov
   - stage: Deploy front prod
     skip_cleanup: true
     language: node_js
