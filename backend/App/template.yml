@@ -89,6 +89,11 @@ Resources:
               !Sub
               - Glaedis-${EnvironmentName}-CognitoUserPoolId
               - { EnvironmentName: !Ref EnvironmentName }
+          COGNITO_USER_POOL_CLIENT_ID:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-CognitoUserPoolClientId
+              - { EnvironmentName: !Ref EnvironmentName }
           COGNITO_REGION: !Ref AWS::Region
           DB_URL:
             Fn::ImportValue:
