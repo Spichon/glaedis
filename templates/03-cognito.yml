@@ -63,7 +63,8 @@ Resources:
                   - { EnvironmentName: !Ref EnvironmentName }
       SupportedIdentityProviders:
         - COGNITO
-
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
   PostConfirmationLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
