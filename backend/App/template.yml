@@ -62,7 +62,7 @@ Resources:
         AllowHeaders: "'*'"
         AllowOrigin: "'*'"
         MaxAge: "'600'"
-        AllowCredentials: True
+        AllowCredentials: False
 
   AppFunction:
     Type: AWS::Serverless::Function
