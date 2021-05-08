@@ -147,17 +147,17 @@ if __name__ == '__main__':
     global deadpool     # Yes, global. This isn't production code
     deadpool = {}
     # Put in your own values. These are fake
-    deadpool['user_pool_id'] = 'eu-west-1_nqxhV7cIl'
+    deadpool['user_pool_id'] = 'eu-west-1_ATH8yVdnE'
     deadpool['region'] = 'eu-west-1'
     deadpool['jwks_url'] = 'https://cognito-idp.{}.amazonaws.com/{}/' \
                            '.well-known/jwks.json'.format(
                                    deadpool['region'],
                                    deadpool['user_pool_id'])
-    deadpool['app_client_id'] = '49j53hfs1v6ouf30d92dmoejrq'
+    deadpool['app_client_id'] = '1n4c5fsng9q48duss5pi4iugve'
     deadpool['app_client_secret'] = \
         'https://stackoverflow.com/questions/1306550/' + \
         'calculating-a-sha-hash-with-a-string-secret-key-in-python'
-    deadpool['username'] = 'cognito-py-demo'
+    deadpool['username'] = 'cognito-py-demo@antispam.com'
     deadpool['password'] = 'D0lphins!'
     deadpool['email'] = 'cognito-py-demo@antispam.com'
     deadpool['api_url'] = 'https://' \
