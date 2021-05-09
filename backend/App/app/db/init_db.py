@@ -10,12 +10,8 @@ from app import crud, schemas
 
 
 def init_db(db: Session) -> None:
-    # Tables should be created with Alembic migrations
-    # But if you don't want to use migrations, create
-    # the tables un-commenting the next line
-    # Base.metadata.create_all(bind=engine)
-    # crud.crypto_asset.create_assets_from_api_referential(db)  # noqa: F841
-    # crud.fiat_asset.create_assets_from_api_referential(db)  # noqa: F841
+    crud.crypto_asset.create_assets_from_api_referential(db)  # noqa: F841
+    crud.fiat_asset.create_assets_from_api_referential(db)  # noqa: F841
     crud.broker.create_brokers_from_ccxt(db)  # noqa: F841
     # for e in [1, 5, 15, 30, 60, 240, 1440, 10080, 21600]:
     #     schedule = db.query(IntervalSchedule).filter_by(every=e, period=IntervalSchedule.MINUTES).first()

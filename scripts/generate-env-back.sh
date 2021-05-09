@@ -11,4 +11,5 @@ DB_USER=$(aws cloudformation describe-stacks --stack-name glaedis-rds-stack-${TR
 DB_PASSWORD=$(aws cloudformation describe-stacks --stack-name glaedis-rds-stack-${TRAVIS_BRANCH} --query "Stacks[0].Outputs[?OutputKey=='DBPassword'].OutputValue" --output text)
 SECRET_KEY=$(aws cloudformation describe-stacks --stack-name glaedis-rds-stack-${TRAVIS_BRANCH} --query "Stacks[0].Outputs[?OutputKey=='SecretKey'].OutputValue" --output text)
 PROJECT_NAME=Glaedis
+COIN_MARKET_CAP_API_KEY=$(aws cloudformation describe-stacks --stack-name glaedis-rds-stack-${TRAVIS_BRANCH} --query "Stacks[0].Outputs[?OutputKey=='CoinMarketCapApiKey'].OutputValue" --output text)
 EOL

@@ -131,6 +131,11 @@ Resources:
               !Sub
               - Glaedis-${EnvironmentName}-SecretKey
               - { EnvironmentName: !Ref EnvironmentName }
+          COIN_MARKET_CAP_API_KEY:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-CoinMarketCapApiKey
+              - { EnvironmentName: !Ref EnvironmentName }
 
   GetUserPermission:
     Type: 'AWS::Lambda::Permission'

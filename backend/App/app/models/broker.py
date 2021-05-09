@@ -2,12 +2,12 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, Integer, String
 from app.db.base_class import Base
-# from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.associationproxy import association_proxy
 import pandas as pd
 import ccxt
 
-# if TYPE_CHECKING:
-#     from app.models.association_table.asset_broker import Asset_broker  # noqa: F401
+if TYPE_CHECKING:
+    from app.models.association_table.asset_broker import Asset_broker  # noqa: F401
 
 
 class Broker(Base):
@@ -15,7 +15,7 @@ class Broker(Base):
     name = Column(String, index=True)
     broker_id = Column(String, index=True)
     logo = Column(String)
-    # assets = association_proxy("assets_broker", "asset")
+    assets = association_proxy("assets_broker", "asset")
 
     def get_api(self, api_key: str = "", secret_key: str = ""):
         return getattr(ccxt, self.broker_id)({

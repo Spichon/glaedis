@@ -3,8 +3,7 @@
     <v-app>
       <v-app-bar app color="primary" dark>
         <v-btn to="/" text class="d-flex align-center display-1">
-          <v-icon>mdi-hand</v-icon>
-          API
+          <img width=100, height=64, src="@/assets/2Fichier 28.png">
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn to="/main/dashboard" large text>

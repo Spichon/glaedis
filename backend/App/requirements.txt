@@ -28,6 +28,7 @@ h11==0.12.0
 idna==2.10
 importlib-metadata==4.0.1
 iniconfig==1.1.1
+itsdangerous==1.1.0
 Jinja2==2.11.3
 jmespath==0.10.0
 kombu==5.0.2
@@ -51,13 +52,16 @@ pydantic==1.8.1
 pyparsing==2.4.7
 pytest==6.2.3
 pytest-cov==2.11.1
+python-coinmarketcap==0.2
 python-dateutil==2.8.1
 python-dotenv==0.17.1
 python-editor==1.0.4
 python-jose==3.2.0
 pytz==2021.1
+ratelimit==2.2.1
 raven==6.10.0
 requests==2.25.1
+requests-cache==0.6.3
 rsa==4.7.2
 s3transfer==0.4.2
 six==1.15.0
@@ -66,6 +70,7 @@ starlette==0.13.6
 tenacity==7.0.0
 toml==0.10.2
 typing-extensions==3.7.4.3
+url-normalize==1.4.3
 urllib3==1.26.4
 uvicorn==0.13.4
 vine==5.0.0

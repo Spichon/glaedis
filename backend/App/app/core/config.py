@@ -35,6 +35,8 @@ class Settings(BaseSettings):
 
     SECRET_KEY: str = secrets.token_urlsafe(32)
 
+    COIN_MARKET_CAP_API_KEY: str
+
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = ["http://localhost", "http://localhost:4200", "http://localhost:3000",
                                               "http://localhost:8080", "https://localhost", "https://localhost:4200",
                                               "https://localhost:3000", "https://localhost:8080",

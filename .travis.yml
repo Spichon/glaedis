@@ -21,7 +21,8 @@ jobs:
       glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM
       --parameter-overrides RootDomain=$DOMAIN RegionalCertArn=$REGIONAL_CERT HostedZoneId=$HOSTED_ZONE_ID
       CloudFrontCertArn=$CLOUDFRONT_CERT EmailAddress=$EMAIL EnvironmentName=$TRAVIS_BRANCH
-      DBName=$DB_NAME DBUser=$DB_USER DBPassword=$DB_PASSWORD SecretKey=$SECRET_KEY --no-fail-on-empty-changeset
+      DBName=$DB_NAME DBUser=$DB_USER DBPassword=$DB_PASSWORD SecretKey=$SECRET_KEY
+      CoinMarketCapApiKey=$COIN_MARKET_CAP_API_KEY --no-fail-on-empty-changeset
   - stage: init dev
     skip_cleanup: true
     before_install:
@@ -32,8 +33,8 @@ jobs:
       glaedis-infra-$TRAVIS_BRANCH --region=$AWS_DEFAULT_REGION --capabilities CAPABILITY_IAM
       --parameter-overrides RootDomain=$DEV_DOMAIN RegionalCertArn=$DEV_REGIONAL_CERT
       HostedZoneId=$HOSTED_ZONE_ID CloudFrontCertArn=$DEV_CLOUDFRONT_CERT EmailAddress=$EMAIL
-      EnvironmentName=$TRAVIS_BRANCH DBName=$DB_NAME DBUser=$DB_USER DBPassword=$DB_PASSWORD SecretKey=$SECRET_KEY
-      --no-fail-on-empty-changeset
+      EnvironmentName=$TRAVIS_BRANCH DBName=$DB_NAME DBUser=$DB_USER DBPassword=$DB_PASSWORD
+      SecretKey=$SECRET_KEY CoinMarketCapApiKey=$COIN_MARKET_CAP_API_KEY --no-fail-on-empty-changeset
   - stage: architecture
     skip_cleanup: true
     if: branch IN (dev, master)
@@ -86,7 +87,7 @@ jobs:
     - bash ./scripts/prestart.sh
     - bash ./scripts/test.sh
     after_success:
-      - codecov
+    - codecov
   - stage: Deploy front prod
     skip_cleanup: true
     language: node_js
@@ -144,3 +145,4 @@ env:
   - secure: ngEUEL3gV6RuTVvZ11ME4n+QSADZh3nkMMQoKLkHzwQiwy3cFQNXPY14LEV6XADwXs30eJvYpMtoFWppqrP9VVEiTl7SbW1qL/TF9xxj6DkpY2wkSRDra5yGasVArPaWS05rqn8eWglkxJAj1qtlL9Gc18zPCAdbT4mAOii8QbngSuNiVpn6ucO7LnpQY4r/eJBKVZ/SJBPw24Kg2E8H4V0EedQ4UQYhv1NZQFit1LgF/HRzw1JqpFRmfETi+Pg89vzsQ1QX43F/bl35kHe81uXZN9NGbQHHRDK7xyVuWdJ0j0qH094Xu4CTZuiyDtLhlRu+Yd2B/d7XLM3DCl+vvGvOrfQUb/H8xXyuKrdjtrtWyM5EFPttLqUH8oZ5m64Xwalkrn11qKBQaaULfWda6dVCavQFf3oByrxeRrAupn75xELQnNwUWz+h1Fw80YqSnvaLj0+ylKw/AJ96Vd0md4BFGh3/G7wZdH0+RGd8NpDtUm6TFpGqi9FX7z6R7svT9LWmudcQcnHV1mjY0pyUs0Mdw+JIhn6dv1SN5/YNLlHmInyWLGPH/3vnhzhZ0mMkkiIUW0O428w7CvUrvp9jUTKQGMasC1WlCptfsi5tEeXecTCvt9cCNorlOPn9evQsTxyhKcnexsHquvXo2fK/PYslLMxh3xd/ZsvEbtSh7rU=
   - secure: N9gZxzScMaY9A/R3zy0m0EASMwfMdUaKUTowq1LedQx8uzvj9iuMExMjONhyj4+IJsSV4zN/GExjuWR5LWIOkWl5fAg6p02GrP1yYIOdTLW1bXOuyyrpVhyZ5iMnMULWUmbWLscy1q85HwwCB1MjSz3QIDVpBeEWojgTd+GwO4xXnggwzZiDjJTm870pb8JyzAL2YIrZivqvaZGUd8zHKgERYPAHSbweVASpmbe1ZffTURlQytb0ILoe4hGkq25oyS/HwFFupFTOLuKgWC9hzc7pexTjpIO2VGZw2SjgoLQva1Golh9fQspEuo3XBzwAlMp8V9hIdTbkPOtO9La4q1ivYfWY20oMM8UUyep759itj/h5S4x9wo1A3Y7GCxNjLFshgyUhwQ9d1k5x0qt/y/T2+TXHxgTUdCekmcSlG1/0WnBIM2cDN+qd9T3LiFIpdn1pNmHVw2l7dtM/5H08pjKG+lWHYeHvkSf/8RIDZ8RDnfkQQxVN6FTIMHDxje59lRw9ZnBqv/GxgbwpBV4JPDhEiUiV/+wXI6ogTCh5tBEKKsvyaXWuv6bnfR8ra208kicIEmxPA3qLHtpm3/2QDwx5bKgcOos+Moq57rLF6vmXlimR2By7RuUW/qIwbnn2IvPkmcuG62y9cSWQASIcVz4aNLJ+tJJqlHnuSq0hN1E=
   - secure: i3efSMI/7sKN4gtoVRSpRZTTHzMKd7yoDjMeb8k4O3IJWhgRkEKDNXJ8VkR+LomGlNBhz84GL+zvhoxjDbyEaKoXM8Ae6FwolVDEO9AD5CNHg200Hs7ZgKvwmYr8wnCocjv1IUwH0bEcCeIv+fFgmX131ActFFG701RdHTMWwnGGr2B/gfwVcWN9IXmKDIqzIeg8gYyByikokYyx8yJjOOPtdqNYy0XJbDNMDazK5p1Lreg+q7xdeWwEfMMZpPK/1h3rsRC2P83ewv0Q4HZGal9SAGQbOxdbGninCQ3munBWBsEhiXf31tJejJFXkrJfV6+HuV7HPGYx8AX2SUvz9TdDBhlc8XLA1sKFaxB+/aQFCxCekGp1ophPn8LNj9GGgSvzKkhHYQUK1LTzvURE3gzjTcH6dLLboi0ty6h16DOFiBWxBBHa/tN0kTIPhKuzcE/bxFkKqdez3CvqHHhtJnzTLPsOzHsZzB26ubxarqVmuKMFQ/4O9Vj8KEUiyW0lIYnJccJBmPhVNMrlhb/xtrAHzexIpMvR+9LLv4u/vnJk9sZynuu7mQVIrsdiwERSCfa84MGAPzJ6P/i+zq4whdwylpaKJbLmdtF7Jv1CKyop3n2Fo9dUyz0y6KbZ3xztfXm0c9Lb5sf7vKpwjPXnw4aJqzM4KIvVfynaQX/L5Mg=
+  - secure: nslumK6kyJ2shO5erGqTFNv3jk/RKugbsloZzTsJ9KV9mZJlY2cSZVLcL0rt1xbJeRYoe1Vgj2zhUReYDcFjNLsOXrqAcxs5l00XMHFAsFYFMU3NFdqYtGtN1uHQvsvqMUZMahdsGBkm6U2JQd6Ybu6YqQgy5Pe5fYmqqnrdrnGs7I88+yoPVAbZ5iPpfeypqvw6qFPeFP+CFHwX5YW/T8lm+zpGYxvTDoU+8pame+tuBjzgQK8nyKbSUYW9bVuRm7LZ7NFFaXZjujht24J3MTpiMEWWmJC8+QSBQfo1XgmqSxe+OPFlELDo5/nVWidHMiQiAF/s7FBZF1WXKg5AnaVguGBC8d/7dm0iK37vhUThPAhbokgCWsb9XfYEG7xySj6gO9Z7Pjn6pMtEhek+zOwnLrn0Rm6F+Q7QEIwggYL3tSXjf1Naipzq2WcFNLvHSs98VPfrcAJvhuP+M8q4a8FKSbvRWf0ZT9w6dyukeBsin8Rq5ebXJx4nf1nHnuvDocIu7iGWR1uGSlJSwXzTMz5ZJkwu8iyv6jR7/1WgM9+Boj2WyMdsoBzPZ9h8VKVKS31WZZVsmIYkforidOexBT7s83NxSBgszKNHTg5vInvNSXs505XX2OTydjJQ2y9EIkYdos5ejiBElXh5ogT0BcuNbVRPOP/2HtcnZmQei6g=

@@ -32,6 +32,9 @@ Parameters:
   SecretKey:
     Type: String
     Description: Secret to encode users api keys
+  CoinMarketCapApiKey:
+    Type: String
+    Description: Secret of coin market cap
 
 Resources:
   CodeBucket:
@@ -126,4 +129,11 @@ Outputs:
     Export:
       Name: !Sub
         - Glaedis-${EnvironmentName}-SecretKey
+        - { EnvironmentName: !Ref EnvironmentName }
+  CoinMarketCapApiKey:
+    Description: "CoinMarketCapApiKey"
+    Value: !Ref CoinMarketCapApiKey
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-CoinMarketCapApiKey
         - { EnvironmentName: !Ref EnvironmentName }
