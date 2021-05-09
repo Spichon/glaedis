@@ -15,56 +15,65 @@
       <v-spacer></v-spacer>
       <v-btn color="primary" to="/main/accounts/create">Create Account</v-btn>
     </v-toolbar>
-    <v-data-table :headers="headers" :items="accounts" :search="search">
-      <template slot="items" slot-scope="props">
-        <td>{{ props.item.name }}</td>
-        <td class="justify-center">
-          <v-icon v-if="props.item.public_status" color="green">check</v-icon>
-          <v-icon v-else color="red">cancel</v-icon>
-        </td>
-        <td class="justify-center">
-          <v-icon v-if="props.item.private_status" color="green">check</v-icon>
-          <v-icon v-else color="red">cancel</v-icon>
-        </td>
-        <td class="justify-center layout px-0">
-          <v-tooltip top>
-            <span>Show</span>
-            <v-btn slot="activator" flat :to="{name: 'main-accounts-show', params: {id: props.item.id}}">
-              <v-icon>visibility</v-icon>
-            </v-btn>
-          </v-tooltip>
-          <v-tooltip top>
-            <span>Edit</span>
-            <v-btn slot="activator" flat :to="{name: 'main-accounts-edit', params: {id: props.item.id}}">
-              <v-icon>edit</v-icon>
-            </v-btn>
-          </v-tooltip>
-          <v-tooltip top>
-            <span>Delete</span>
-            <v-btn slot="activator" flat @click="dialog=true">
-              <v-icon>delete</v-icon>
-            </v-btn>
-          </v-tooltip>
-          <v-dialog v-model="dialog" max-width="290">
-            <v-card>
-              <v-card-title class="headline">
-                Delete Account ?
-              </v-card-title>
-              <v-card-text>
-                Are you sure you want to delete the account ? This action is final
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="red" text @click="dialog = false">
-                  Disagree
-                </v-btn>
-                <v-btn color="green" text @click="deleteAccount(props.item.id)">
-                  Agree
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </td>
+    <v-data-table
+        :headers="headers"
+        :items="accounts"
+        :search="search"
+        sort-by="Exchange"
+        class="elevation-1"
+    >
+      <template v-slot:item.broker_logo="{ item }">
+        <img :class="['mr-2', 'em']"
+             :width="70"
+             :height="32"
+             :src="item.broker.logo">
+      </template>
+      <template v-slot:item.public_status="{ item }">
+        <v-icon v-if="item.public_status" color="green">check</v-icon>
+        <v-icon v-else color="red">cancel</v-icon>
+      </template>
+      <template v-slot:item.private_status="{ item }">
+        <v-icon v-if="item.private_status" color="green">check</v-icon>
+        <v-icon v-else color="red">cancel</v-icon>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-tooltip top>
+          <span>Show</span>
+          <v-btn slot="activator" flat :to="{name: 'main-accounts-show', params: {id: item.id}}">
+            <v-icon>visibility</v-icon>
+          </v-btn>
+        </v-tooltip>
+        <v-tooltip top>
+          <span>Edit</span>
+          <v-btn slot="activator" flat :to="{name: 'main-accounts-edit', params: {id: item.id}}">
+            <v-icon>edit</v-icon>
+          </v-btn>
+        </v-tooltip>
+        <v-tooltip top>
+          <span>Delete</span>
+          <v-btn slot="activator" flat @click="dialog=true">
+            <v-icon>delete</v-icon>
+          </v-btn>
+        </v-tooltip>
+        <v-dialog v-model="dialog" max-width="290">
+          <v-card>
+            <v-card-title class="headline">
+              Delete Account ?
+            </v-card-title>
+            <v-card-text>
+              Are you sure you want to delete the account ? This action is final
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="red" text @click="dialog = false">
+                Disagree
+              </v-btn>
+              <v-btn color="green" text @click="deleteAccount(item.id)">
+                Agree
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </template>
     </v-data-table>
   </div>
@@ -72,8 +81,6 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import {Store} from 'vuex';
-import {IAccount, IAccountUpdate} from '@/interfaces';
 import {readAccounts} from '@/store/account/getters';
 import {dispatchDeleteAccount, dispatchGetAccounts, dispatchUpdateAccount} from '@/store/account/actions';
 
@@ -81,9 +88,21 @@ import {dispatchDeleteAccount, dispatchGetAccounts, dispatchUpdateAccount} from 
 export default class ListAccounts extends Vue {
   public headers = [
     {
-      text: 'Account',
+      text: 'Logo',
+      sortable: false,
+      value: 'broker_logo',
+      align: 'left',
+    },
+    {
+      text: 'Name',
       sortable: true,
       value: 'name',
+      align: 'left',
+    },
+    {
+      text: 'Exchange',
+      sortable: true,
+      value: 'broker.name',
       align: 'left',
     },
     {
@@ -101,7 +120,7 @@ export default class ListAccounts extends Vue {
     {
       text: 'Actions',
       sortable: false,
-      value: 'id',
+      value: 'actions',
       align: 'center',
     },
   ];
