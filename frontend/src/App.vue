@@ -7,7 +7,7 @@
           API
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn to="/main" large text>
+        <v-btn to="/main/dashboard" large text>
           Account
           <v-icon class="ml-2">mdi-account-key</v-icon>
         </v-btn>

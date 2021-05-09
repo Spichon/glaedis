@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import {Auth} from 'aws-amplify';
 import RouterComponent from './components/RouterComponent.vue';
+import {dispatchUserLogIn} from '@/store/main/actions';
 
 Vue.use(Router);
 
@@ -76,9 +77,6 @@ router.beforeResolve((to, from, next) => {
     }).catch(() => {
       next({
         name: 'auth',
-        query: {
-          redirect: to.fullPath,
-        },
       });
     });
   }

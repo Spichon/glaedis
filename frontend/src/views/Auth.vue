@@ -9,6 +9,7 @@
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
 import {onAuthUIStateChange} from '@aws-amplify/ui-components';
+import {dispatchUserLogIn} from '@/store/main/actions';
 
 @Component
 export default class Auth extends Vue {
@@ -20,6 +21,14 @@ export default class Auth extends Vue {
       type: 'password',
     },
   ];
+
+  public async created() {
+    onAuthUIStateChange((authState) => {
+      if (authState === 'signedin') {
+        dispatchUserLogIn(this.$store);
+      }
+    });
+  }
 }
 </script>
 
