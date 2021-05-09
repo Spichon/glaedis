@@ -28,7 +28,6 @@ def available_assets(
         *,
         db: Session = Depends(deps.get_db),
         id: int,
-        current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Get account by ID.
@@ -42,7 +41,6 @@ def quote_assets(
         *,
         db: Session = Depends(deps.get_db),
         id: int,
-        current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Get account by ID.
@@ -56,7 +54,6 @@ def tradable_asset_pairs(
         *,
         db: Session = Depends(deps.get_db),
         id: int,
-        current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Get account by ID.
