@@ -34,4 +34,7 @@ export const api = {
     async getBrokers() {
         return axios.get<IBroker[]>(`${apiUrl}/api/v1/brokers/`, await authHeaders());
     },
+    async getAvailableAssets(brokerId: number) {
+        return axios.get(`${apiUrl}/api/v1/brokers/${brokerId}/available_assets`, await authHeaders());
+    },
 };

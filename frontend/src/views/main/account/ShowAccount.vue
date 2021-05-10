@@ -65,6 +65,21 @@
               hide-details
           ></v-text-field>
         </v-toolbar>
+        <v-data-table
+            :headers="headers"
+            :items="availableAssets"
+            :search="search"
+            sort-by="Exchange"
+            class="elevation-1"
+        >
+          <template v-slot:item.logo="{ item }">
+            <v-img
+                width="32px"
+                height="32px"
+                :src="'https://s2.coinmarketcap.com/static/img/coins/64x64/'+ item.cmc_id  + '.png'"
+            ></v-img>
+          </template>
+        </v-data-table>
       </div>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -97,7 +112,7 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import {IAccount, IAccountUpdate} from '@/interfaces';
+import {IAccount, IAccountUpdate, IAsset} from '@/interfaces';
 import {
   dispatchDeleteAccount,
   dispatchGetAccounts,
@@ -105,7 +120,7 @@ import {
 } from '@/store/account/actions';
 import {readOneAccount} from '@/store/account/getters';
 import {readBrokers, readOneBroker} from '@/store/broker/getters';
-import {dispatchGetBrokers} from '@/store/broker/actions';
+import {dispatchGetBrokers, dispatchGetAvailableAssets} from '@/store/broker/actions';
 
 @Component
 export default class ShowAccount extends Vue {
@@ -137,10 +152,12 @@ export default class ShowAccount extends Vue {
   ];
   public search = '';
   public dialog: boolean = false;
+  public availableAssets: IAsset[] = [];
 
   public async mounted() {
     await dispatchGetAccounts(this.$store);
     await dispatchGetBrokers(this.$store);
+    this.availableAssets = await dispatchGetAvailableAssets(this.$store, {id: this.account!.broker.id});
   }
 
   public previous() {

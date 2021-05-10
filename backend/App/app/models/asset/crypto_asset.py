@@ -14,7 +14,7 @@ class Crypto_asset(Asset):
     @declared_attr
     def cmc_id(cls):
         "cmc_id column, if not present already."
-        return Asset.__table__.c.get('cmc_id', Column(Integer, index=True, unique=True))
+        return Asset.__table__.c.get('cmc_id', Column(Integer, unique=True))
 
     @declared_attr
     def __tablename__(cls) -> str:

@@ -4,9 +4,9 @@ from app.db.base_class import Base
 
 class Asset(Base):
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
+    name = Column(String,)
     symbol = Column(String)
-    slug = Column(String, index=True, unique=True)
+    slug = Column(String, unique=True)
     type = Column(String(20))
 
     __mapper_args__ = {

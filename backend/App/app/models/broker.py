@@ -12,8 +12,8 @@ if TYPE_CHECKING:
 
 class Broker(Base):
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    broker_id = Column(String, index=True)
+    name = Column(String)
+    broker_id = Column(String)
     logo = Column(String)
     assets = association_proxy("assets_broker", "asset")
 
