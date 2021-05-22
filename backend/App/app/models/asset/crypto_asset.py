@@ -7,7 +7,7 @@ class Crypto_asset(Asset):
     __mapper_args__ = {
         'polymorphic_identity': 'crypto_asset'
     }
-    cmc_rank = Column(Integer, index=True)
+    cmc_rank = Column(Integer)
     circulating_supply = Column(Float)
     total_supply = Column(Float)
 

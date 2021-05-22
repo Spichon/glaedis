@@ -6,3 +6,5 @@ from .asset.fiat_asset import Fiat_asset
 from .asset.fiat_asset import Fiat_asset
 from .association_table.asset_broker import Asset_broker
 from .asset_broker_pair import Asset_broker_pair
+from .association_table.portfolio_asset_broker import Portfolio_asset_broker
+from .portfolio import Portfolio

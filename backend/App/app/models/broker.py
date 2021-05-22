@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 
 class Broker(Base):
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String)
     broker_id = Column(String)
     logo = Column(String)

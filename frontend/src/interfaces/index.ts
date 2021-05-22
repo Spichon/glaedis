@@ -53,3 +53,33 @@ export interface IAssetBrokerPair {
     base: IAssetBroker;
     quote: IAssetBroker;
 }
+
+export interface IPortfolio {
+    id: number;
+    name: string;
+    // percentage: number;
+    account: IAccount;
+    assets: IAssetBrokerPair[];
+    quote_asset_id: number;
+    quote_asset: IAssetBroker;
+    trade_balance: number;
+    // ticker: number;
+    // automation_task: IAutomationTask;
+}
+
+export interface IPortfolioUpdate {
+    name?: string;
+    // percentage?: number;
+    quote_asset_id?: number;
+    asset_broker_pairs: IAssetBrokerPair[];
+    // ticker?: number;
+}
+
+export interface IPortfolioCreate {
+    name: string;
+    // percentage: number;
+    account_id: number;
+    quote_asset_id: number;
+    asset_broker_pairs: IAssetBrokerPair[];
+    // ticker: number;
+}

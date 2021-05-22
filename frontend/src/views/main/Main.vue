@@ -19,6 +19,14 @@
               <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item to="/main/portfolios/all">
+            <v-list-item-action>
+              <v-icon>adjust</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Portfolios</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item to="/main/accounts/all">
             <v-list-item-action>
               <v-icon>workspaces</v-icon>

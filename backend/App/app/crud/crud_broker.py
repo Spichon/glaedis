@@ -1,7 +1,7 @@
-
 from typing import List, Optional, Dict, Any, Union
 
 from app.models import Asset
+from app import schemas
 from fastapi import Body
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session, with_polymorphic
@@ -91,6 +91,11 @@ class CRUDBroker(CRUDBase[Broker, BrokerCreate, BrokerUpdate]):
     def get_tradable_asset_pairs(self, db: Session, id: int) -> List[Asset_broker_pair]:
         tradable_asset_pairs = db.query(Asset_broker_pair).filter(Asset_broker_pair.quote_id == id).distinct().all()
         return tradable_asset_pairs
+
+    def get_available_assets(self, db: Session, id: int) -> List[schemas.Asset]:
+        assets = db.query(Asset).join(Asset_broker).filter(Asset.id == Asset_broker.asset_id).filter(
+            Asset_broker.broker_id == id).all()
+        return assets
 
     def update_tradable_asset_pairs(self, db: Session, db_obj: Broker):
         broker = db_obj

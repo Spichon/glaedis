@@ -18,7 +18,7 @@ class Account(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     owner_id = Column(String, index=True)
-    # portfolios = relationship("Portfolio", back_populates="account", cascade="all, delete-orphan")
+    portfolios = relationship("Portfolio", back_populates="account", cascade="all, delete-orphan")
     broker_id = Column(Integer, ForeignKey("broker.id"))
     broker = relationship("Broker", lazy='subquery')
     api_key = Column(String, nullable=False)

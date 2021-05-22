@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Union
 
 from app.schemas.assets_broker import AssetBroker
 from fastapi import APIRouter, Depends, HTTPException
@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
 from app.api import deps
+from app.models import Asset, Asset_broker, Crypto_asset, Fiat_asset
 
 router = APIRouter()
 
@@ -23,17 +24,17 @@ def read_brokers(
     return brokers
 
 
-@router.get("/{id}/available_assets", response_model=schemas.AssociationList)
+@router.get("/{id}/available_assets", response_model=List[schemas.Asset])
 def available_assets(
         *,
         db: Session = Depends(deps.get_db),
-        id: int,
+        id: int
 ) -> Any:
     """
     Get account by ID.
     """
-    broker = crud.broker.get(db=db, id=id)
-    return broker.assets
+    assets = crud.broker.get_available_assets(db, id=id)
+    return assets
 
 
 @router.get("/{id}/quote_assets", response_model=List[AssetBroker])

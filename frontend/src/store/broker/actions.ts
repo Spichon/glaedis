@@ -31,9 +31,33 @@ export const actions = {
             commitAddNotification(context, errorNotification);
         }
     },
+    async actionGetQuoteAssets(context: MainContext, payload: { id: number }) {
+        try {
+            const response = await api.getQuoteAssets(payload.id);
+            if (response) {
+                return response.data;
+            }
+        } catch (error) {
+            const errorNotification = {content: error, showProgress: false};
+            commitAddNotification(context, errorNotification);
+        }
+    },
+    async actionGetTradableAssetPairs(context: MainContext, payload: { id: number }) {
+        try {
+            const response = await api.getTradableAssetPairs(payload.id);
+            if (response) {
+                return response.data;
+            }
+        } catch (error) {
+            const errorNotification = {content: error, showProgress: false};
+            commitAddNotification(context, errorNotification);
+        }
+    },
 };
 
 const {dispatch} = getStoreAccessors<BrokerState, State>('');
 
 export const dispatchGetBrokers = dispatch(actions.actionGetBrokers);
 export const dispatchGetAvailableAssets = dispatch(actions.actionGetAvailableAssets);
+export const dispatchGetQuoteAssets = dispatch(actions.actionGetQuoteAssets);
+export const dispatchGetTradableAssetPairs = dispatch(actions.actionGetTradableAssetPairs);

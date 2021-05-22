@@ -44,7 +44,6 @@ class JWTBearer(HTTPBearer):
 
     async def __call__(self, request: Request) -> Optional[JWTAuthorizationCredentials]:
         credentials: HTTPAuthorizationCredentials = await super().__call__(request)
-        print(credentials)
         if credentials:
             if not credentials.scheme == "Bearer":
                 raise HTTPException(

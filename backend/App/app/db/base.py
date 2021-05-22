@@ -7,3 +7,4 @@ from app.models.asset.base_asset import Asset  # noqa
 from app.models.asset.crypto_asset import Crypto_asset  # noqa
 from app.models.asset.fiat_asset import Fiat_asset  # noqa
 from app.models.asset_broker_pair import Asset_broker_pair  # noqa
+from app.models.portfolio import Portfolio  # noqa

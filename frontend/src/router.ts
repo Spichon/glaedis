@@ -62,6 +62,36 @@ const router =  new Router({
             },
           ],
         },
+        {
+            path: 'portfolios',
+            component: RouterComponent,
+            redirect: 'portfolios/all',
+            children: [
+                {
+                  path: 'all',
+                  component: () => import(
+                    /* webpackChunkName: "main-portfolios" */ './views/main/portfolio/ListPortfolios.vue'),
+                },
+                {
+                  path: 'edit/:id',
+                  name: 'main-portfolios-edit',
+                  component: () => import(
+                    /* webpackChunkName: "main-portfolios-edit" */ './views/main/portfolio/EditPortfolio.vue'),
+                },
+                {
+                  path: 'show/:id',
+                  name: 'main-portfolios-show',
+                  component: () => import(
+                    /* webpackChunkName: "main-portfolios-show" */ './views/main/portfolio/ShowPortfolio.vue'),
+                },
+                {
+                  path: 'create',
+                  name: 'main-portfolios-create',
+                  component: () => import(
+                    /* webpackChunkName: "main-portfolios-create" */ './views/main/portfolio/CreatePortfolio.vue'),
+                },
+            ],
+        },
       ],
     },
     {

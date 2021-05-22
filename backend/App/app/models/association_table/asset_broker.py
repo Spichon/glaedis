@@ -9,9 +9,9 @@ if TYPE_CHECKING:
 
 
 class Asset_broker(Base):
-    id = Column(Integer, primary_key=True, index=True)
-    broker_id = Column(Integer, ForeignKey('broker.id'), index=True)
-    asset_id = Column(Integer, ForeignKey('asset.id'), index=True)
+    id = Column(Integer, primary_key=True)
+    broker_id = Column(Integer, ForeignKey('broker.id'))
+    asset_id = Column(Integer, ForeignKey('asset.id'))
     broker = relationship("Broker", backref=backref("assets_broker", cascade="all, delete-orphan"))
     asset = relationship("Asset")
     name = Column(String(20))

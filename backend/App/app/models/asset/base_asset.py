@@ -3,7 +3,7 @@ from app.db.base_class import Base
 
 
 class Asset(Base):
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String,)
     symbol = Column(String)
     slug = Column(String, unique=True)
@@ -11,7 +11,8 @@ class Asset(Base):
 
     __mapper_args__ = {
         'polymorphic_on': type,
-        'polymorphic_identity': 'asset'
+        'polymorphic_identity': 'asset',
+        'with_polymorphic': '*'
     }
 
     def __init__(self, name, type, symbol, slug):

@@ -5,6 +5,7 @@ import { mainModule } from './main';
 import { State } from './state';
 import { accountModule } from './account';
 import { brokerModule } from './broker';
+import {portfolioModule} from './portfolio';
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ const storeOptions: StoreOptions<State> = {
     main: mainModule,
     account: accountModule,
     broker: brokerModule,
+    portofolio: portfolioModule,
   },
 };
 
