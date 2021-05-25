@@ -2,7 +2,7 @@ import json
 from typing import List, Optional, Union, Dict, Any
 
 from app.core.security import decode_secret_key
-from app.core.optimizer import markov_optimize
+# from app.core.optimizer import markov_optimize
 from app.models import Asset_broker_pair
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -132,20 +132,20 @@ class CRUDPortfolio(CRUDBase[Portfolio, PortfolioCreate, PortfolioUpdate]):
         asset_balance = db_obj.account.broker.get_asset_balance(api_key, secret_key, db_obj.quote_asset.asset.symbol)
         return asset_balance
 
-    def get_weights(self, db_obj: Portfolio) -> Any:
-        dfs = []
-        if len(db_obj.assets) > 0:
-            for asset in db_obj.assets:
-                result = db_obj.account.broker.fetch_ohlcv(assets=[asset.symbol],
-                                                           ticker=db_obj.ticker)
-                result['{}'.format(asset.symbol)] = result['close']
-                dfs.append(result['{}'.format(asset.symbol)])
-            if len(dfs) > 0:
-                dfs = reduce(lambda df1, df2: pd.merge(df1, df2, left_index=True, right_index=True), dfs)
-            weights = markov_optimize(dfs)
-            return weights
-        else:
-            return []
+    # def get_weights(self, db_obj: Portfolio) -> Any:
+    #     dfs = []
+    #     if len(db_obj.assets) > 0:
+    #         for asset in db_obj.assets:
+    #             result = db_obj.account.broker.fetch_ohlcv(assets=[asset.symbol],
+    #                                                        ticker=db_obj.ticker)
+    #             result['{}'.format(asset.symbol)] = result['close']
+    #             dfs.append(result['{}'.format(asset.symbol)])
+    #         if len(dfs) > 0:
+    #             dfs = reduce(lambda df1, df2: pd.merge(df1, df2, left_index=True, right_index=True), dfs)
+    #         weights = markov_optimize(dfs)
+    #         return weights
+    #     else:
+    #         return []
 
 
 portfolio = CRUDPortfolio(Portfolio)
