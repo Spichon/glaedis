@@ -1,4 +1,5 @@
 from .user import User
+from .timeframes import Timeframes
 from .account import Account, AccountCreate, AccountInDB, AccountUpdate
 from .broker import Broker, BrokerCreate, BrokerInDB, BrokerUpdate
 from .asset.asset import Asset, AssetCreate, AssetInDB, AssetUpdate

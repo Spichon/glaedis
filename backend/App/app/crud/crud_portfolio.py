@@ -2,10 +2,11 @@ import json
 from typing import List, Optional, Union, Dict, Any
 
 from app.core.security import decode_secret_key
+from app.core.optimizer import markov_optimize
 from app.models import Asset_broker_pair
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-
+from functools import reduce
 from app.crud.base import CRUDBase
 from app import crud
 from app.models.portfolio import Portfolio
@@ -13,7 +14,8 @@ from app.models.account import Account
 from app.schemas.portfolio import PortfolioCreate, PortfolioUpdate
 from app.models.association_table.portfolio_asset_broker import Portfolio_asset_broker
 from app.schemas.portfolio_assets_broker import PortfolioAssetBrokerCreate
-
+import pandas as pd
+import numpy as np
 
 class CRUDPortfolio(CRUDBase[Portfolio, PortfolioCreate, PortfolioUpdate]):
 
@@ -129,6 +131,21 @@ class CRUDPortfolio(CRUDBase[Portfolio, PortfolioCreate, PortfolioUpdate]):
         secret_key = decode_secret_key(db_obj.account.hashed_secret_key)
         asset_balance = db_obj.account.broker.get_asset_balance(api_key, secret_key, db_obj.quote_asset.asset.symbol)
         return asset_balance
+
+    def get_weights(self, db_obj: Portfolio) -> Any:
+        dfs = []
+        if len(db_obj.assets) > 0:
+            for asset in db_obj.assets:
+                result = db_obj.account.broker.fetch_ohlcv(assets=[asset.symbol],
+                                                           ticker=db_obj.ticker)
+                result['{}'.format(asset.symbol)] = result['close']
+                dfs.append(result['{}'.format(asset.symbol)])
+            if len(dfs) > 0:
+                dfs = reduce(lambda df1, df2: pd.merge(df1, df2, left_index=True, right_index=True), dfs)
+            weights = markov_optimize(dfs)
+            return weights
+        else:
+            return []
 
 
 portfolio = CRUDPortfolio(Portfolio)

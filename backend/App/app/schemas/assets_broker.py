@@ -37,6 +37,7 @@ class AssetBrokerCreate(AssetBrokerBase):
 class AssetBrokerInDBBase(AssetBrokerBase):
     id: int
     name: Optional[str] = ""
+
     class Config:
         orm_mode = True
 

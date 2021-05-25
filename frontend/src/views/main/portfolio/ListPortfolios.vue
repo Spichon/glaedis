@@ -99,6 +99,12 @@ export default class ListPortfolios extends Vue {
       align: 'left',
     },
     {
+      text: 'Ticker',
+      sortable: true,
+      value: 'ticker',
+      align: 'left',
+    },
+    {
       text: 'Actions',
       sortable: false,
       value: 'actions',

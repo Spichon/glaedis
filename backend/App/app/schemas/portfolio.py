@@ -5,7 +5,6 @@ from sqlalchemy.ext.associationproxy import _AssociationList
 from app.schemas.assets_broker import AssetBroker
 from app.schemas.asset_broker_pair import AssetBrokerPair
 # from app.schemas.periodic_task import PeriodicTask
-# from app.schemas.type.ticker import TickerEnum
 
 
 class AssociationList(_AssociationList):
@@ -31,7 +30,7 @@ class PortfolioBase(BaseModel):
     name: Optional[str] = None
     # percentage: Optional[str] = None
     quote_asset_id: Optional[int] = None
-    # ticker: Optional[TickerEnum] = None
+    ticker: Optional[str] = None
 
 
 # Properties to receive on item creation
@@ -41,7 +40,7 @@ class PortfolioCreate(PortfolioBase):
     account_id: int
     quote_asset_id: int
     asset_broker_pairs: Optional[List[AssetBrokerPair]] = []
-    # ticker: TickerEnum = 1
+    ticker: str
 
 
 # Properties to receive on item update
@@ -55,7 +54,7 @@ class PortfolioInDBBase(PortfolioBase):
     id: int
     name: Optional[str] = None
     # percentage: Optional[int] = None
-    # ticker: TickerEnum
+    ticker: str
     # automation_task: Optional[PeriodicTask] = None
 
     class Config:

@@ -19,12 +19,11 @@ if TYPE_CHECKING:
 class Portfolio(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    # percentage = Column(Integer, index=True)
     account_id = Column(Integer, ForeignKey("account.id"))
     quote_asset_id = Column(Integer, ForeignKey("asset_broker.id"))
     account = relationship("Account", back_populates="portfolios", lazy='subquery')
     quote_asset = relationship("Asset_broker", lazy='subquery')
     assets = association_proxy("portfolio_asset_broker_pairs", "asset_broker_pair")
-    ticker = Column(Integer)
+    ticker = Column(String)
     # automation_task_id = Column(Integer, ForeignKey("periodic_task.id"))
     # automation_task = relationship("Periodic_task", lazy='subquery')

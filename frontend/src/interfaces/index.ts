@@ -63,7 +63,7 @@ export interface IPortfolio {
     quote_asset_id: number;
     quote_asset: IAssetBroker;
     trade_balance: number;
-    // ticker: number;
+    ticker: string;
     // automation_task: IAutomationTask;
 }
 
@@ -72,7 +72,7 @@ export interface IPortfolioUpdate {
     // percentage?: number;
     quote_asset_id?: number;
     asset_broker_pairs: IAssetBrokerPair[];
-    // ticker?: number;
+    ticker?: string;
 }
 
 export interface IPortfolioCreate {
@@ -81,5 +81,9 @@ export interface IPortfolioCreate {
     account_id: number;
     quote_asset_id: number;
     asset_broker_pairs: IAssetBrokerPair[];
-    // ticker: number;
+    ticker: string;
+}
+
+export interface ITimeframes {
+    timeframes: {};
 }

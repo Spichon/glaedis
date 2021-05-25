@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ARRAY
 from app.db.base_class import Base
 from sqlalchemy.ext.associationproxy import association_proxy
 import pandas as pd
@@ -50,6 +50,13 @@ class Broker(Base):
         except:
             return {}
 
+    def get_timeframes(self) -> {}:
+        try:
+            api = self.get_api()
+            return api.timeframes
+        except:
+            return {}
+
     def get_tradable_asset_pairs(self) -> [{}]:
         try:
             api = self.get_api()
@@ -95,13 +102,19 @@ class Broker(Base):
         except:
             return []
 
-    def fetch_ohlcv(self, assets: [str], ticker: int):
+    def fetch_ohlcv(self, assets: [str], ticker: str):
         try:
             api = self.get_api()
             if (api.has['fetchOHLCV']):
                 for asset in assets:
-                    tickers = api.fetch_ohlcv(asset, ticker)
-                    return tickers
+                    ohlcv = api.fetch_ohlcv(asset, ticker)
+                    columns = ['time', 'open', 'high', 'low', 'close', 'volume']
+                    df = pd.DataFrame(ohlcv, columns=columns)
+                    df = df.astype(float)
+                    df['time'] = pd.to_datetime(df['time'].astype(int), unit='ms')
+                    df = df.set_index('time')
+                    df = df.fillna(method='ffill')
+                    return df
             return {}
-        except:
+        except Exception as e:
             return {}

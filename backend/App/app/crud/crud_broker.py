@@ -54,17 +54,17 @@ class CRUDBroker(CRUDBase[Broker, BrokerCreate, BrokerUpdate]):
             db.refresh(db_obj)
         return db_obj
 
-    def remove_asset(self, db: Session, asset_in: Asset) -> Broker:
-        broker = self.get_or_create(db=db)
-        asset_broker = db.query(Asset_broker) \
-            .filter(Asset_broker.asset_id == asset_in.id) \
-            .filter(Asset_broker.broker_id == broker.id).first()
-        if asset_broker:
-            broker.assets_broker.remove(asset_broker)
-        db.add(broker)
-        db.commit()
-        db.refresh(broker)
-        return broker
+    # def remove_asset(self, db: Session, asset_in: Asset) -> Broker:
+    #     broker = self.get_or_create(db=db)
+    #     asset_broker = db.query(Asset_broker) \
+    #         .filter(Asset_broker.asset_id == asset_in.id) \
+    #         .filter(Asset_broker.broker_id == broker.id).first()
+    #     if asset_broker:
+    #         broker.assets_broker.remove(asset_broker)
+    #     db.add(broker)
+    #     db.commit()
+    #     db.refresh(broker)
+    #     return broker
 
     def update_asset_broker(self, db: Session, db_obj: Broker) -> Broker:
         broker = db_obj
@@ -155,6 +155,9 @@ class CRUDBroker(CRUDBase[Broker, BrokerCreate, BrokerUpdate]):
                 self.update_asset_broker(db=db, db_obj=existing_broker)
             except Exception as e:
                 print(e)
+
+    def get_timeframes(self, db_obj: Broker) -> schemas.Timeframes:
+        return db_obj.get_timeframes()
 
 
 broker = CRUDBroker(Broker)

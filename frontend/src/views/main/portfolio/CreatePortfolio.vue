@@ -21,6 +21,16 @@
                 v-validate="'required'"
                 :error-messages="errors.first('accountId')"
             ></v-select>
+            <v-select
+                label="Ticker"
+                data-vv-name="Ticker"
+                data-vv-delay="100"
+                v-model="ticker"
+                v-if="accountId"
+                :items="Object.keys(timeframes.timeframes)"
+                v-validate="'required'"
+                :error-messages="errors.first('ticker')"
+            ></v-select>
           </v-form>
         </template>
       </v-card-text>
@@ -101,12 +111,12 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import {IAssetBroker, IAssetBrokerPair, IPortfolioCreate} from '@/interfaces';
+import {IAssetBroker, IAssetBrokerPair, IPortfolioCreate, ITimeframes} from '@/interfaces';
 import {dispatchGetAccounts} from '@/store/account/actions';
 import {dispatchGetPortfolios} from '@/store/portfolio/actions';
 import {dispatchCreatePortfolio} from '@/store/portfolio/actions';
 import {readAccounts, readOneAccount} from '@/store/account/getters';
-import {dispatchGetQuoteAssets, dispatchGetTradableAssetPairs} from '@/store/broker/actions';
+import {dispatchGetQuoteAssets, dispatchGetTimeframes, dispatchGetTradableAssetPairs} from '@/store/broker/actions';
 
 @Component
 export default class CreatePortfolio extends Vue {
@@ -118,6 +128,8 @@ export default class CreatePortfolio extends Vue {
   public quoteAssets: IAssetBroker[] = [];
   public selected: IAssetBrokerPair[] = [];
   public search = '';
+  public timeframes: ITimeframes = {'timeframes': {}};
+  public ticker: string = null as any;
   public headers = [
     {text: 'Logo', sortable: false, value: 'logo', align: 'left'},
     {text: 'Name', sortable: true, value: 'base.asset.name', align: 'left'},
@@ -143,6 +155,7 @@ export default class CreatePortfolio extends Vue {
 
   public async setAccountInformation() {
     this.quoteAssets = await dispatchGetQuoteAssets(this.$store, {id: this.account!.broker.id});
+    this.timeframes = await dispatchGetTimeframes(this.$store, {id: this.account!.broker.id});
   }
 
   public async getTradableAssetPairs() {
@@ -165,6 +178,7 @@ export default class CreatePortfolio extends Vue {
         account_id: this.accountId,
         asset_broker_pairs: this.selected,
         quote_asset_id: this.quoteAssetId,
+        ticker: this.ticker,
       };
       await dispatchCreatePortfolio(this.$store, updatedPortfolio);
       this.$router.push('/main/portfolios');

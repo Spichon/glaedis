@@ -44,6 +44,9 @@ export const api = {
     async getTradableAssetPairs(assetBrokerId: number) {
         return axios.get(`${apiUrl}/api/v1/brokers/${assetBrokerId}/tradable_asset_pairs`, await authHeaders());
     },
+    async getTimeframes(brokerId: number) {
+        return axios.get(`${apiUrl}/api/v1/brokers/${brokerId}/get_timeframes`, await authHeaders());
+    },
     async getPortfolios() {
         return axios.get<IPortfolio[]>(`${apiUrl}/api/v1/portfolios/`, await authHeaders());
     },

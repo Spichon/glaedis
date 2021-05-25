@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Union, Dict
 
 from app.schemas.assets_broker import AssetBroker
 from fastapi import APIRouter, Depends, HTTPException
@@ -60,3 +60,20 @@ def tradable_asset_pairs(
     Get account by ID.
     """
     return crud.broker.get_tradable_asset_pairs(db=db, id=id)
+
+
+# id is not the broker but the asset_broker
+@router.get("/{id}/get_timeframes", response_model=schemas.Timeframes)
+def tradable_asset_pairs(
+        *,
+        db: Session = Depends(deps.get_db),
+        id: int,
+) -> Any:
+    """
+    Get account by ID.
+    """
+    broker = crud.broker.get(db=db, id=id)
+    if not broker:
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+    timeframes = crud.broker.get_timeframes(db_obj=broker)
+    return {"timeframes": timeframes}

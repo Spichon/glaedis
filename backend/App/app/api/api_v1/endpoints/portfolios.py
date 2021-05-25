@@ -194,3 +194,21 @@ def get_quote_asset_balance(
         raise HTTPException(status_code=400, detail="Not enough permissions")
     asset_balance = crud.portfolio.get_asset_balance(db_obj=portfolio)
     return asset_balance
+
+@router.get("/{id}/get_weights", response_model=Any)
+def get_weights(
+        *,
+        db: Session = Depends(deps.get_db),
+        id: int,
+        current_user: schemas.User = Depends(deps.get_current_user),
+) -> Any:
+    """
+    Backtest a portfolio
+    """
+    portfolio = crud.portfolio.get(db=db, id=id)
+    if not portfolio:
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+    if portfolio.account.owner_id != current_user["id"]:
+        raise HTTPException(status_code=400, detail="Not enough permissions")
+    weights = crud.portfolio.get_weights(db_obj=portfolio)
+    return weights

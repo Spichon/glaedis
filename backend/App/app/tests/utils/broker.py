@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app import crud, models
 
 
-def create_broker(db_session: Session) -> models.Broker:
+def create_broker(db: Session) -> models.Broker:
     name = random_lower_string()
     logo = random_lower_string()
     broker_id = random_lower_string()
@@ -16,7 +16,7 @@ def create_broker(db_session: Session) -> models.Broker:
         logo=logo,
         broker_id=broker_id
     )
-    broker = crud.broker.create(db=db_session, obj_in=broker_in)
+    broker = crud.broker.create(db=db, obj_in=broker_in)
     return broker
 
 #

@@ -110,6 +110,19 @@
             </div>
           </div>
           <div class="my-3">
+            <div class="subheading secondary--text text--lighten-2">Ticker</div>
+            <div
+                class="title primary--text text--darken-2"
+                v-if="portfolio"
+            >{{ portfolio.ticker }}
+            </div>
+            <div
+                class="title primary--text text--darken-2"
+                v-else
+            >-----
+            </div>
+          </div>
+          <div class="my-3">
             <div class="subheading secondary--text text--lighten-2">Trade_balance</div>
             <div
                 class="title primary--text text--darken-2"

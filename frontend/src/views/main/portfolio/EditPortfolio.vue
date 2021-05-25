@@ -42,6 +42,15 @@
                 v-model="name"
                 required
             ></v-text-field>
+            <v-select
+                label="Ticker"
+                data-vv-name="Ticker"
+                data-vv-delay="100"
+                v-model="ticker"
+                :items="Object.keys(timeframes.timeframes)"
+                v-validate="'required'"
+                :error-messages="errors.first('ticker')"
+            ></v-select>
             <v-card elevation="10">
               <v-card-title class="display-1 text--primary">
                 Select your assets
@@ -146,8 +155,8 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import {IAssetBroker, IAssetBrokerPair, IPortfolioUpdate} from '@/interfaces';
-import {dispatchGetQuoteAssets, dispatchGetTradableAssetPairs} from '@/store/broker/actions';
+import {IAssetBroker, IAssetBrokerPair, IPortfolioUpdate, ITimeframes} from '@/interfaces';
+import {dispatchGetQuoteAssets, dispatchGetTimeframes, dispatchGetTradableAssetPairs} from '@/store/broker/actions';
 import {
   dispatchGetPortfolios,
   dispatchUpdatePortfolio,
@@ -163,9 +172,11 @@ export default class EditPortfolio extends Vue {
   public quoteAssetId: number = null as any;
   public quoteAssets: IAssetBroker[] = [];
   public selected: IAssetBrokerPair[] = [];
+  public timeframes: ITimeframes = {'timeframes': {}};
   public dialog: boolean = false;
   public refresh: boolean = false;
   public search = '';
+  public ticker: string = null as any;
   public headers = [
     {text: 'Logo', sortable: false, value: 'logo', align: 'left'},
     {text: 'Name', sortable: true, value: 'base.asset.name', align: 'left'},
@@ -176,6 +187,7 @@ export default class EditPortfolio extends Vue {
   public async mounted() {
     await dispatchGetPortfolios(this.$store);
     this.quoteAssets = await dispatchGetQuoteAssets(this.$store, {id: this.portfolio!.account.broker.id});
+    this.timeframes = await dispatchGetTimeframes(this.$store, {id: this.portfolio!.account.broker.id});
     this.reset();
   }
 
@@ -195,6 +207,7 @@ export default class EditPortfolio extends Vue {
       this.name = this.portfolio.name;
       this.selected = this.portfolio!.assets;
       this.quoteAssetId = this.portfolio!.quote_asset_id;
+      this.ticker = this.portfolio!.ticker;
     }
     this.getTradableAssetPairs();
   }
@@ -214,6 +227,7 @@ export default class EditPortfolio extends Vue {
         name: this.name,
         quote_asset_id: this.quoteAssetId,
         asset_broker_pairs: this.selected,
+        ticker: this.ticker,
       };
       await dispatchUpdatePortfolio(this.$store, {id: this.portfolio!.id, portfolio: updatedPortfolio});
       this.$router.push('/main/portfolios');
