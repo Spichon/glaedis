@@ -29,6 +29,12 @@ Parameters:
   DBPassword:
     Type: String
     Description: Password of the PSQL user
+  SecretKey:
+    Type: String
+    Description: Secret to encode users api keys
+  CoinMarketCapApiKey:
+    Type: String
+    Description: Secret of coin market cap
 
 Resources:
   CodeBucket:
@@ -116,4 +122,18 @@ Outputs:
     Export:
       Name: !Sub
         - Glaedis-${EnvironmentName}-DBPassword
+        - { EnvironmentName: !Ref EnvironmentName }
+  SecretKey:
+    Description: "SecretKey"
+    Value: !Ref SecretKey
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-SecretKey
+        - { EnvironmentName: !Ref EnvironmentName }
+  CoinMarketCapApiKey:
+    Description: "CoinMarketCapApiKey"
+    Value: !Ref CoinMarketCapApiKey
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-CoinMarketCapApiKey
         - { EnvironmentName: !Ref EnvironmentName }

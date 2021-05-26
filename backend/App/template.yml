@@ -57,16 +57,12 @@ Resources:
         - glaedis-AppApiGateway-${EnvironmentName}
         - { EnvironmentName: !Ref EnvironmentName }
       StageName: !Ref EnvironmentName
-      Cors: "'*'"
-      Auth:
-        DefaultAuthorizer: MyCognitoAuthorizer
-        Authorizers:
-          MyCognitoAuthorizer:
-            UserPoolArn:
-              - Fn::ImportValue:
-                  !Sub
-                  - Glaedis-${EnvironmentName}-CognitoUserPoolArn
-                  - { EnvironmentName: !Ref EnvironmentName }
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+        MaxAge: "'600'"
+        AllowCredentials: False
 
   AppFunction:
     Type: AWS::Serverless::Function
@@ -78,8 +74,6 @@ Resources:
               Ref: AppApi
             Path: /{proxy+}
             Method: ANY
-            Auth:
-              Authorizer: MyCognitoAuthorizer
           Type: Api
       FunctionName: !Sub
         - GlaedisAppLambda-${EnvironmentName}
@@ -93,6 +87,55 @@ Resources:
       # other options, see ->
       # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html#sam-specification-template-anatomy-globals-supported-resources-and-properties
       Role: !GetAtt LambdaIamRole.Arn
+      Environment:
+        Variables:
+          COGNITO_USER_POOL_ID:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-CognitoUserPoolId
+              - { EnvironmentName: !Ref EnvironmentName }
+          COGNITO_USER_POOL_CLIENT_ID:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-CognitoUserPoolClientId
+              - { EnvironmentName: !Ref EnvironmentName }
+          COGNITO_REGION: !Ref AWS::Region
+          DB_URL:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-EndpointMaster
+              - { EnvironmentName: !Ref EnvironmentName }
+          DB_URL_REPLICA:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-PortReadReplica
+              - { EnvironmentName: !Ref EnvironmentName }
+          DB_NAME:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-DBName
+              - { EnvironmentName: !Ref EnvironmentName }
+          DB_USER:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-DBUser
+              - { EnvironmentName: !Ref EnvironmentName }
+          DB_PASSWORD:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-DBPassword
+              - { EnvironmentName: !Ref EnvironmentName }
+          PROJECT_NAME: "Glaedis"
+          SECRET_KEY:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-SecretKey
+              - { EnvironmentName: !Ref EnvironmentName }
+          COIN_MARKET_CAP_API_KEY:
+            Fn::ImportValue:
+              !Sub
+              - Glaedis-${EnvironmentName}-CoinMarketCapApiKey
+              - { EnvironmentName: !Ref EnvironmentName }
 
   GetUserPermission:
     Type: 'AWS::Lambda::Permission'

@@ -33,7 +33,7 @@ Parameters:
     Default: "eu-west-1"
   DBInstanceClass:
     Type: String
-    Default: "db.t3.medium"
+    Default: "db.t3.micro"
   DBStorageType:
     Type: String
     Default: "gp2"
@@ -192,12 +192,24 @@ Outputs:
   EndpointMaster:
     Description: "Endpoint of the newly created RDS PostgreSQL master"
     Value: !GetAtt GlaedisMasterInstance.Endpoint.Address
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-EndpointMaster
+        - { EnvironmentName: !Ref EnvironmentName }
   PortReadReplica:
     Description: "Endpoint of the newly created RDS PostgreSQL replica"
     Value: !GetAtt GlaedisReadReplica.Endpoint.Address
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-PortReadReplica
+        - { EnvironmentName: !Ref EnvironmentName }
   PortDB:
     Description: "Port of the newly created RDS PostgreSQL master and replica"
     Value: !GetAtt GlaedisMasterInstance.Endpoint.Port
+    Export:
+      Name: !Sub
+        - Glaedis-${EnvironmentName}-PortDB
+        - { EnvironmentName: !Ref EnvironmentName }
   DBName:
     Description: "Name of the DB"
     Value:
