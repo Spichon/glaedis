@@ -4,10 +4,11 @@ from functools import reduce
 import pandas as pd
 import numpy as np
 
+
 kraken = getattr(ccxt, 'kraken')()
 selected = ['ALGO/EUR', 'OXT/EUR', 'USDC/EUR', 'BTC/EUR', 'XRP/EUR', 'DOGE/EUR']
 
-def get_ohclh(asset, ticker="1w"):
+def get_ohclh(asset, ticker="1h"):
     ohlcv = kraken.fetch_ohlcv(asset, ticker)
     columns = ['time', 'open', 'high', 'low', 'close', 'volume']
     df = pd.DataFrame(ohlcv, columns=columns)
@@ -37,11 +38,12 @@ def calcPortfolioPerf(weights, meanReturns, covMatrix):
     OUTPUT
     tuple containing the portfolio return and volatility
     '''
-    #Calculate return and variance
-    portReturn = np.sum( meanReturns*weights )
+    # Calculate return and variance
+    portReturn = np.sum(meanReturns * weights)
     portStdDev = np.sqrt(np.dot(weights.T, np.dot(covMatrix, weights)))
 
     return portReturn, portStdDev
+
 
 def negSharpeRatio(weights, meanReturns, covMatrix, riskFreeRate):
     '''
@@ -57,6 +59,7 @@ def negSharpeRatio(weights, meanReturns, covMatrix, riskFreeRate):
 
     return -(p_ret - riskFreeRate) / p_var
 
+
 def getPortfolioVol(weights, meanReturns, covMatrix):
     '''
     Returns the volatility of the specified portfolio of assets
@@ -71,6 +74,7 @@ def getPortfolioVol(weights, meanReturns, covMatrix):
     '''
     return calcPortfolioPerf(weights, meanReturns, covMatrix)[1]
 
+
 def findMaxSharpeRatioPortfolio(meanReturns, covMatrix, riskFreeRate):
     '''
     Finds the portfolio of assets providing the maximum Sharpe Ratio
@@ -83,12 +87,13 @@ def findMaxSharpeRatioPortfolio(meanReturns, covMatrix, riskFreeRate):
     numAssets = len(meanReturns)
     args = (meanReturns, covMatrix, riskFreeRate)
     constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
-    bounds = tuple( (0,1) for asset in range(numAssets))
+    bounds = tuple((0, 1) for asset in range(numAssets))
 
-    opts = sco.minimize(negSharpeRatio, numAssets*[1./numAssets,], args=args,
+    opts = sco.minimize(negSharpeRatio, numAssets * [1. / numAssets, ], args=args,
                         method='SLSQP', bounds=bounds, constraints=constraints)
 
     return opts
+
 
 def findMinVariancePortfolio(meanReturns, covMatrix):
     '''
@@ -101,28 +106,26 @@ def findMinVariancePortfolio(meanReturns, covMatrix):
     numAssets = len(meanReturns)
     args = (meanReturns, covMatrix)
     constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
-    bounds = tuple( (0,1) for asset in range(numAssets))
+    bounds = tuple((0, 1) for asset in range(numAssets))
 
-    opts = sco.minimize(getPortfolioVol, numAssets*[1./numAssets,], args=args,
+    opts = sco.minimize(getPortfolioVol, numAssets * [1. / numAssets, ], args=args,
                         method='SLSQP', bounds=bounds, constraints=constraints)
 
     return opts
 
 
-numAssets = len(selected)
-
-#Calculate simple linear returns
+# Calculate simple linear returns
 returns = (table - table.shift(1)) / table.shift(1)
 
-#Calculate individual mean returns and covariance between the stocks
+# Calculate individual mean returns and covariance between the stocks
 meanDailyReturns = returns.mean()
 covMatrix = returns.cov()
-riskFreeRate=0.1
+riskFreeRate = 0.1
 
-#Find portfolio with maximum Sharpe ratio
+# Find portfolio with maximum Sharpe ratio
 maxSharpe = findMaxSharpeRatioPortfolio(meanDailyReturns, covMatrix, riskFreeRate)
 rp, sdp = calcPortfolioPerf(maxSharpe['x'], meanDailyReturns, covMatrix)
 
-#Find portfolio with minimum variance
+# Find portfolio with minimum variance
 minVar = findMinVariancePortfolio(meanDailyReturns, covMatrix)
 rp, sdp = calcPortfolioPerf(minVar['x'], meanDailyReturns, covMatrix)

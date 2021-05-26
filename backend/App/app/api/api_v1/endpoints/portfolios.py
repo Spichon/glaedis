@@ -195,7 +195,7 @@ def get_quote_asset_balance(
     asset_balance = crud.portfolio.get_asset_balance(db_obj=portfolio)
     return asset_balance
 
-@router.get("/{id}/get_weights", response_model=Any)
+@router.get("/{id}/get_weights", response_model=List)
 def get_weights(
         *,
         db: Session = Depends(deps.get_db),
@@ -211,4 +211,4 @@ def get_weights(
     if portfolio.account.owner_id != current_user["id"]:
         raise HTTPException(status_code=400, detail="Not enough permissions")
     weights = crud.portfolio.get_weights(db_obj=portfolio)
-    return weights
+    return list(weights)
