@@ -3,7 +3,7 @@
     <v-app>
       <v-app-bar app color="primary" dark>
         <v-btn to="/" text class="d-flex align-center display-1">
-          <img width=100, height=64, src="@/assets/2Fichier 28.png">
+          <img width="100," height="64," src="@/assets/2Fichier 28.png" />
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn to="/main/dashboard" large text>
@@ -11,14 +11,15 @@
           <v-icon class="ml-2">mdi-account-key</v-icon>
         </v-btn>
       </v-app-bar>
-      <router-view/>
+      <router-view />
       <NotificationsManager></NotificationsManager>
     </v-app>
   </div>
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator';
+import '@/assets/minify/css/main.css';
+import { Component, Vue } from 'vue-property-decorator';
 import NotificationsManager from '@/components/NotificationsManager.vue';
 
 @Component({
@@ -26,6 +27,5 @@ import NotificationsManager from '@/components/NotificationsManager.vue';
     NotificationsManager,
   },
 })
-export default class App extends Vue {
-}
+export default class App extends Vue {}
 </script>

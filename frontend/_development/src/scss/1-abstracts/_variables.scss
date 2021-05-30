@@ -1,0 +1,65 @@
+// -----------------------------------------------------------------------------
+// This file contains all application-wide Sass variables.
+// -----------------------------------------------------------------------------
+
+/* Regular font family */
+$main-font-stack: "Lato", sans-serif;
+$secondary-font-stack: "Merriweather", serif;
+$main-line-height: normal;
+$main-font-weight: 400;
+
+/* Code (monospace) font family */
+$code-font-stack: "Courier New", "DejaVu Sans Mono", "Bitstream Vera Sans Mono",
+  "Monaco", monospace;
+
+/* Colors */
+:root {
+  // colors
+  --white-color: rgb(255, 255, 255);
+  --black-color: rgb(0, 0, 0);
+  --text-color: var(--black);
+}
+
+/* Breakpoints */
+$s-small-max: max-width ((374 / 16) * 1em);
+$x-small-max: max-width ((575 / 16) * 1em);
+$small-min: ((576 / 16) * 1em);
+$small-max: max-width ((767 / 16) * 1em);
+$medium-min: ((768 / 16) * 1em);
+$medium-max: max-width ((991 / 16) * 1em);
+$large-min: ((992 / 16) * 1em);
+$large-max: max-width ((1199 / 16) * 1em);
+$x-large-min: ((1200 / 16) * 1em);
+$x-large-max: max-width ((1399 / 16) * 1em);
+$xx-large-min: ((1400 / 16) * 1em);
+$xx-large-max: max-width ((1570 / 16) * 1em);
+$xxx-large-min: ((1904 / 16) * 1em);
+$xxx-large-max: max-width ((1905 / 16) * 1em);
+
+/// Relative or absolute URL where all assets are served from
+/// @example scss - When using a CDN
+///   $base-url: 'http://cdn.example.com/assets/';
+$base-url: "/assets/" !default;
+
+/* Hamburger */
+$hamburger-padding-x: 0;
+$hamburger-padding-y: 0;
+$hamburger-layer-width: 22px;
+$hamburger-layer-height: 2px;
+$hamburger-layer-spacing: 4px;
+$hamburger-layer-color: var(--red-color);
+$hamburger-layer-border-radius: 0;
+$hamburger-hover-opacity: 1;
+$hamburger-active-layer-color: $hamburger-layer-color;
+$hamburger-active-hover-opacity: $hamburger-hover-opacity;
+
+// To use CSS filters as the hover effect instead of opacity,
+// set $hamburger-hover-use-filter as true and
+// change the value of $hamburger-hover-filter accordingly.
+$hamburger-hover-use-filter: false;
+$hamburger-hover-filter: opacity(50%);
+$hamburger-active-hover-filter: $hamburger-hover-filter;
+
+// Remove or comment out the hamburger types you don’t want
+// or need, so they get excluded from the compiled CSS.
+$hamburger-types: (squeeze);

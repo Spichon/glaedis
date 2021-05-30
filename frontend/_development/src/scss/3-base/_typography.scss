@@ -1,0 +1,321 @@
+/**
+ * Basic typography style for copy text
+ */
+
+body {
+  font: normal $main-font-weight 100% / $main-line-height $main-font-stack;
+  font-variant: none;
+  color: v(text-color);
+}
+
+.font {
+  &--300 {
+    font-weight: 300;
+  }
+
+  &--400 {
+    font-weight: 400;
+  }
+
+  &--500 {
+    font-weight: 500;
+  }
+
+  &--700 {
+    font-weight: 700;
+  }
+}
+
+.bold {
+  font-weight: 700 !important;
+}
+
+.regular {
+  font-weight: 400;
+}
+
+.white {
+  color: v(white-color);
+}
+
+$display-1-font-sizes: (
+  null: calc(4.375rem + #{80 / 1920 * 100vw}),
+  $medium-max: calc(4.375rem + #{80 / 1920 * 100vw}),
+  $small-max: 4.375rem,
+  $s-small-max: 3.85rem,
+);
+
+$display-2-font-sizes: (
+  null: calc(2.375rem + #{30 / 1920 * 100vw}),
+  $medium-max: calc(2.375rem + #{30 / 1920 * 100vw}),
+  $small-max: 2.375rem,
+);
+
+$display-3-font-sizes: (
+  null: calc(1.75rem + #{12 / 1920 * 100vw}),
+  $medium-max: calc(1.75rem + #{12 / 1920 * 100vw}),
+  $small-max: 1.75rem,
+);
+
+$display-chapo-font-sizes: (
+  null: calc(1rem + #{14 / 1920 * 100vw}),
+  $medium-max: calc(1rem + #{14 / 1920 * 100vw}),
+  $small-max: 1rem,
+);
+
+$display-intro-font-sizes: (
+  null: calc(0.875rem + #{11 / 1920 * 100vw}),
+  $medium-max: calc(0.875rem + #{11 / 1920 * 100vw}),
+  $small-max: 0.875rem,
+);
+
+$display-tag-font-sizes: (
+  null: calc(0.75rem + #{3 / 1920 * 100vw}),
+  $medium-max: calc(0.75rem + #{3 / 1920 * 100vw}),
+  $small-max: 0.75rem,
+);
+
+$display-time-font-sizes: (
+  null: calc(0.875rem + #{0 / 1920 * 100vw}),
+  $medium-max: calc(0.875rem + #{0 / 1920 * 100vw}),
+  $small-max: 0.875rem,
+);
+
+$display-status-font-sizes: (
+  null: calc(0.625rem + #{4 / 1920 * 100vw}),
+  $medium-max: calc(0.625rem + #{4 / 1920 * 100vw}),
+  $small-max: 0.625rem,
+);
+
+$display-formation-title-font-sizes: (
+  null: calc(1.375rem + #{3 / 1920 * 100vw}),
+  $medium-max: calc(1.375rem + #{0 / 1920 * 100vw}),
+  $small-max: 1.375rem,
+);
+
+$display-conseil-title-font-sizes: (
+  null: calc(1.375rem + #{8 / 1920 * 100vw}),
+  $medium-max: calc(1.375rem + #{8 / 1920 * 100vw}),
+  $small-max: 1.375rem,
+);
+
+$display-conseil-chapo-font-sizes: (
+  null: calc(0.875rem + #{6 / 1920 * 100vw}),
+  $medium-max: calc(0.875rem + #{6 / 1920 * 100vw}),
+  $small-max: 0.875rem,
+);
+
+$display-highlighted-homepage-chapo-font-sizes: (
+  null: calc(1.75rem + #{40 / 1920 * 100vw}),
+  $medium-max: calc(1.75rem + #{40 / 1920 * 100vw}),
+  $small-max: 1.75rem,
+);
+
+$display-highlighted-landing-chapo-font-sizes: (
+  null: calc(1.75rem + #{27 / 1920 * 100vw}),
+  $medium-max: calc(1.75rem + #{27 / 1920 * 100vw}),
+  $small-max: 1.75rem,
+);
+
+$display-blockquote-font-sizes: (
+  null: calc(1rem + #{9 / 1920 * 100vw}),
+  $medium-max: calc(1rem + #{9 / 1920 * 100vw}),
+  $small-max: 1rem,
+);
+
+$display-date-font-sizes: (
+  null: calc(0.875rem + #{11 / 1920 * 100vw}),
+  $medium-max: calc(0.875rem + #{11 / 1920 * 100vw}),
+  $small-max: 0.875rem,
+);
+
+$display-article-documents-title-font-sizes: (
+  null: calc(0.875rem + #{11 / 1920 * 100vw}),
+  $medium-max: calc(0.875rem + #{11 / 1920 * 100vw}),
+  $small-max: 0.875rem,
+);
+
+$display-engagement-title-font-sizes: (
+  null: calc(1.75rem + #{22 / 1920 * 100vw}),
+  $medium-max: calc(1.75rem + #{17 / 1920 * 100vw}),
+  $small-max: 1.75rem,
+);
+
+$display-engagement-text-font-sizes: (
+  null: calc(0.875rem + #{11 / 1920 * 100vw}),
+  $medium-max: calc(0.875rem + #{7 / 1920 * 100vw}),
+  $small-max: 0.875rem,
+);
+
+$display-recommandation-title-font-sizes: (
+  null: calc(1.875rem + #{40 / 1920 * 100vw}),
+  $medium-max: calc(1.875rem + #{40 / 1920 * 100vw}),
+  $small-max: 1.875rem,
+);
+
+$display-recommandation-chapo-font-sizes: (
+  null: calc(0.875rem + #{6 / 1920 * 100vw}),
+  $medium-max: calc(0.875rem + #{6 / 1920 * 100vw}),
+  $small-max: 0.875rem,
+);
+
+.display {
+  &-1 {
+    @include font-size($display-1-font-sizes);
+
+    font-weight: 300;
+    line-height: 1.06;
+    letter-spacing: -0.05em;
+    margin-left: -0.1em;
+  }
+
+  &-2 {
+    @include font-size($display-2-font-sizes);
+
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  &-3 {
+    @include font-size($display-3-font-sizes);
+
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  &-chapo {
+    @include font-size($display-chapo-font-sizes);
+
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1.16;
+  }
+
+  &-intro {
+    @include font-size($display-intro-font-sizes);
+
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  &-tag {
+    @include font-size($display-tag-font-sizes);
+
+    font-weight: 400;
+    line-height: 1.66;
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    text-transform: uppercase;
+  }
+
+  &-time {
+    @include font-size($display-time-font-sizes);
+
+    font-weight: 900;
+    line-height: normal;
+    color: v(white-color);
+    background-color: v(white-time-color);
+    border-radius: 100px;
+    padding: 13px 20px;
+    display: inline-block;
+
+    &--duree {
+      margin-right: 15px;
+    }
+  }
+
+  &-status {
+    @include font-size($display-status-font-sizes);
+
+    font-weight: 900;
+    line-height: normal;
+  }
+
+  &-formation-title {
+    @include font-size($display-formation-title-font-sizes);
+
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  &-conseil-title {
+    @include font-size($display-conseil-title-font-sizes);
+
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &-conseil-chapo {
+    @include font-size($display-conseil-chapo-font-sizes);
+
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  &-highlighted-chapo {
+    @include font-size($display-highlighted-homepage-chapo-font-sizes);
+
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  &-landing-chapo {
+    @include font-size($display-highlighted-landing-chapo-font-sizes);
+
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  &-blockquote {
+    @include font-size($display-blockquote-font-sizes);
+
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &-date {
+    @include font-size($display-date-font-sizes);
+
+    font-weight: 400;
+    line-height: 1.2;
+    font-style: italic;
+  }
+
+  &-article-documents-title {
+    @include font-size($display-article-documents-title-font-sizes);
+
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &-engagement-title {
+    @include font-size($display-engagement-title-font-sizes);
+
+    font-weight: 700;
+    line-height: 0.8;
+    font-style: italic;
+    color: v(red-color);
+  }
+
+  &-engagement-text {
+    @include font-size($display-engagement-text-font-sizes);
+
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  &-recommandation-title {
+    @include font-size($display-recommandation-title-font-sizes);
+
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  &-recommandation-chapo {
+    @include font-size($display-recommandation-chapo-font-sizes);
+
+    font-weight: 400;
+    line-height: 1.5;
+  }
+}

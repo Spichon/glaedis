@@ -1,0 +1,144 @@
+/* Addthis */
+
+/* .article__content--published {
+  & + .addthis_toolbox {
+    margin-top: 1.8em;
+  }
+}
+
+.addthis {
+  &__container {
+    margin-bottom: 1.8em;
+    margin-left: 0;
+    margin-right: 0;
+
+    .addthis {
+      &__link {
+        display: inline-block;
+        margin: 0 1.5px;
+      }
+
+      &__icon {
+        color: $black;
+        display: inline-block;
+        border-radius: 100%;
+        font-size: 32px;
+
+        @include on-event() {
+          color: rgba($black, 0.8);
+        }
+      }
+    }
+  }
+} */
+
+/* Views infinite scroll */
+/* .js-pager__items {
+  list-style: none;
+  padding-left: 0;
+  margin: auto;
+} */
+
+/* Manage cookies btn */
+.manage-cookies {
+  cursor: pointer;
+  transition: color 0.35s ease-in;
+
+  /* @include on-event {
+    color: v(black-color);
+  } */
+}
+
+/* Custom plugins checkbox, radio input */
+.checkbox input ~ label {
+  &::before,
+  &::after {
+    border-radius: 0;
+  }
+}
+
+.checkbox.checkbox--terms input ~ label a {
+  margin-left: 0;
+  margin-right: 0;
+  color: inherit;
+}
+
+.radio {
+  input {
+    &:checked {
+      & ~ label {
+        &::before {
+          background-size: 50%;
+        }
+      }
+    }
+  }
+}
+
+.checkbox,
+.radio {
+  //margin: 1.75em 0;
+  &.checkbox--terms {
+    .option {
+      align-items: center;
+
+      a {
+        color: inherit;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  input {
+    & ~ label {
+      align-items: center;
+
+      &::before {
+        width: 1.3125rem;
+        height: 1.3125rem;
+        background-color: transparent;
+        transform: none;
+      }
+
+      &::before,
+      &::after {
+        border-radius: 5px;
+        outline: none;
+        box-shadow: none;
+        border: 1px solid v(grey-label-form-color);
+      }
+    }
+
+    &:focus {
+      & ~ label {
+        &::before,
+        &::after {
+          outline: 1px solid green;
+          outline-offset: -1px;
+        }
+      }
+    }
+
+    &:not(output):-moz-ui-invalid {
+      & ~ label {
+        &::before,
+        &::after {
+          outline: 1px solid v(red-color);
+          outline-offset: -1px;
+          box-shadow: none;
+        }
+      }
+
+      &:focus {
+        & ~ label {
+          &::before,
+          &::after {
+            outline: 1px solid v(red-color);
+            outline-offset: -1px;
+            box-shadow: none;
+          }
+        }
+      }
+    }
+  }
+}

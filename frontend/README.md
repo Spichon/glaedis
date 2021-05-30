@@ -10,6 +10,13 @@ npm install
 npm run serve
 ```
 
+### Compiles and minifies assets dev ENV
+```
+cd _development/
+npm install
+npm run build
+```
+
 ### Compiles and minifies for production
 ```
 npm run build
