@@ -8,7 +8,7 @@ from app.schemas.asset.asset_crypto import CryptoAssetCreate, CryptoAssetUpdate
 from app.models.asset.crypto_asset import Crypto_asset
 from app.core.config import settings
 from coinmarketcapapi import CoinMarketCapAPI
-
+from sqlalchemy import or_
 
 class CRUDAsset(CRUDBase[Crypto_asset, CryptoAssetCreate, CryptoAssetUpdate]):
     def create(self, db: Session, obj_in: CryptoAssetCreate) -> Optional[Crypto_asset]:
@@ -30,9 +30,10 @@ class CRUDAsset(CRUDBase[Crypto_asset, CryptoAssetCreate, CryptoAssetUpdate]):
                     list_result = list_result + payload
                     index = index + limit
             for result in list_result:
+                result['slug'] = result['name'].replace(" ", "_").lower()
                 result['cmc_id'] = result["id"]
                 asset_in = CryptoAssetCreate(**result)
-                instance = db.query(self.model).filter_by(slug=asset_in.slug).first()
+                instance = db.query(self.model).filter(or_(Crypto_asset.slug==asset_in.slug, Crypto_asset.cmc_id==asset_in.cmc_id)).first()
                 if instance:
                     pass
                 else:

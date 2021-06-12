@@ -8,6 +8,7 @@ from app.schemas.asset.asset_fiat import FiatAssetCreate, FiatAssetUpdate
 from app.models.asset.fiat_asset import Fiat_asset
 from app.core.config import settings
 from coinmarketcapapi import CoinMarketCapAPI
+from sqlalchemy import or_
 
 
 class CRUDAsset(CRUDBase[Fiat_asset, FiatAssetCreate, FiatAssetUpdate]):
@@ -33,7 +34,8 @@ class CRUDAsset(CRUDBase[Fiat_asset, FiatAssetCreate, FiatAssetUpdate]):
                 result['slug'] = result['name'].replace(" ", "_").lower()
                 result['cmc_id'] = result["id"]
                 asset_in = FiatAssetCreate(**result)
-                instance = db.query(self.model).filter_by(slug=asset_in.slug).first()
+                instance = db.query(self.model).filter(
+                    or_(Fiat_asset.slug == asset_in.slug, Fiat_asset.cmc_id == asset_in.cmc_id)).first()
                 if instance:
                     pass
                 else:

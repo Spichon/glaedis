@@ -6,6 +6,9 @@ import {
     IAccount, IAccountUpdate, IAccountCreate,
     IBroker,
     IPortfolio, IPortfolioCreate, IPortfolioUpdate,
+    IOptimizer,
+    IRun,
+    ITransaction
 } from './interfaces';
 
 async function authHeaders() {
@@ -50,9 +53,6 @@ export const api = {
     async getPortfolios() {
         return axios.get<IPortfolio[]>(`${apiUrl}/api/v1/portfolios/`, await authHeaders());
     },
-    async getAssetsLastValues(portfolioId: number) {
-        return axios.get(`${apiUrl}/api/v1/portfolios/${portfolioId}/get_assets_last_values`, await authHeaders());
-    },
     async updatePortfolio(portfolioId: number, data: IPortfolioUpdate) {
         return axios.put(`${apiUrl}/api/v1/portfolios/${portfolioId}`, data, await authHeaders());
     },
@@ -71,7 +71,19 @@ export const api = {
     // async deleteAutomation(token: string, portfolioId: number) {
     //     return axios.get(`${apiUrl}/api/v1/portfolios/${portfolioId}/delete_automation`, authHeaders(token));
     // },
-    async getQuoteAssetBalance(portfolioId: number) {
-        return axios.get(`${apiUrl}/api/v1/portfolios/${portfolioId}/get_quote_asset_balance`, await authHeaders());
+    async getPortfolioEquityBalance(portfolioId: number) {
+        return axios.get(`${apiUrl}/api/v1/portfolios/${portfolioId}/get_portfolio_equity_balance`, await authHeaders());
+    },
+    async getPortfolioAssets(portfolioId: number) {
+        return axios.get(`${apiUrl}/api/v1/portfolios/${portfolioId}/get_portfolio_assets`, await authHeaders());
+    },
+    async getOptimizers() {
+        return axios.get<IOptimizer[]>(`${apiUrl}/api/v1/optimizers`, await authHeaders());
+    },
+    async getRuns(portfolioId: number) {
+        return axios.get<IRun[]>(`${apiUrl}/api/v1/runs/${portfolioId}`, await authHeaders());
+    },
+    async getTransactions(portfolioId: number) {
+        return axios.get<ITransaction[]>(`${apiUrl}/api/v1/transactions/${portfolioId}`, await authHeaders());
     },
 };

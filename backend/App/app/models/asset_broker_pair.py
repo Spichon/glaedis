@@ -12,8 +12,8 @@ class Asset_broker_pair(Base):
     id = Column(Integer, primary_key=True, index=True)
     base_id = Column(Integer, ForeignKey('asset_broker.id'))
     quote_id = Column(Integer, ForeignKey('asset_broker.id'))
-    base = relationship("Asset_broker", uselist=False, foreign_keys=[base_id], lazy='subquery')
-    quote = relationship("Asset_broker", uselist=False, foreign_keys=[quote_id], lazy='subquery')
+    base = relationship("Asset_broker", uselist=False, foreign_keys=[base_id], lazy='selectin')
+    quote = relationship("Asset_broker", uselist=False, foreign_keys=[quote_id], lazy='selectin')
     symbol = Column(String(20))
     active = Column(Boolean, default=False)
 

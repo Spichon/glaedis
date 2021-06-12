@@ -1,29 +1,6 @@
 import scipy.optimize as sco
-import ccxt
-from functools import reduce
-import pandas as pd
 import numpy as np
 
-
-kraken = getattr(ccxt, 'kraken')()
-selected = ['ALGO/EUR', 'OXT/EUR', 'USDC/EUR', 'BTC/EUR', 'XRP/EUR', 'DOGE/EUR']
-
-def get_ohclh(asset, ticker="1h"):
-    ohlcv = kraken.fetch_ohlcv(asset, ticker)
-    columns = ['time', 'open', 'high', 'low', 'close', 'volume']
-    df = pd.DataFrame(ohlcv, columns=columns)
-    df = df.astype(float)
-    df['time'] = pd.to_datetime(df['time'].astype(int), unit='ms')
-    df = df.set_index('time')
-    return df
-
-table = []
-for asset in selected:
-    result = get_ohclh(asset)
-    result['{}'.format(asset)] = result['close']
-    table.append(result['{}'.format(asset)])
-if len(table) > 0:
-    table = reduce(lambda df1, df2: pd.merge(df1, df2, left_index=True, right_index=True), table)
 
 def calcPortfolioPerf(weights, meanReturns, covMatrix):
     '''
@@ -112,20 +89,3 @@ def findMinVariancePortfolio(meanReturns, covMatrix):
                         method='SLSQP', bounds=bounds, constraints=constraints)
 
     return opts
-
-
-# Calculate simple linear returns
-returns = (table - table.shift(1)) / table.shift(1)
-
-# Calculate individual mean returns and covariance between the stocks
-meanDailyReturns = returns.mean()
-covMatrix = returns.cov()
-riskFreeRate = 0.1
-
-# Find portfolio with maximum Sharpe ratio
-maxSharpe = findMaxSharpeRatioPortfolio(meanDailyReturns, covMatrix, riskFreeRate)
-rp, sdp = calcPortfolioPerf(maxSharpe['x'], meanDailyReturns, covMatrix)
-
-# Find portfolio with minimum variance
-minVar = findMinVariancePortfolio(meanDailyReturns, covMatrix)
-rp, sdp = calcPortfolioPerf(minVar['x'], meanDailyReturns, covMatrix)

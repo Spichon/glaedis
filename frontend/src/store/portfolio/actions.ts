@@ -68,17 +68,6 @@ export const actions = {
             commitAddNotification(context, errorNotification);
         }
     },
-    async actionGetAssetsLastValues(context: MainContext, payload: { id: number }) {
-        try {
-            const response = await api.getAssetsLastValues(payload.id);
-            if (response) {
-                return response.data;
-            }
-        } catch (error) {
-            const errorNotification = {content: error, showProgress: false};
-            commitAddNotification(context, errorNotification);
-        }
-    },
     // async actionStartAutomation(context: MainContext, payload: { id: number }) {
     //     try {
     //         const startingNotification = {content: 'Starting...', showProgress: true};
@@ -124,9 +113,20 @@ export const actions = {
     //         await dispatchCheckApiError(context, error);
     //     }
     // },
-    async actionGetQuoteAssetBalance(context: MainContext, payload: { id: number }) {
+    async actionGetPortfolioEquityBalance(context: MainContext, payload: { id: number }) {
         try {
-            const response = await api.getQuoteAssetBalance(payload.id);
+            const response = await api.getPortfolioEquityBalance(payload.id);
+            if (response) {
+                return response.data;
+            }
+        } catch (error) {
+            const errorNotification = {content: error, showProgress: false};
+            commitAddNotification(context, errorNotification);
+        }
+    },
+    async actionGetPortfolioAssets(context: MainContext, payload: { id: number }) {
+        try {
+            const response = await api.getPortfolioAssets(payload.id);
             if (response) {
                 return response.data;
             }
@@ -143,8 +143,8 @@ export const dispatchCreatePortfolio = dispatch(actions.actionCreatePortfolio);
 export const dispatchGetPortfolios = dispatch(actions.actionGetPortfolios);
 export const dispatchUpdatePortfolio = dispatch(actions.actionUpdatePortfolio);
 export const dispatchDeletePortfolio = dispatch(actions.actionDeletePortfolio);
-export const dispatchGetAssetsLastValues = dispatch(actions.actionGetAssetsLastValues);
 // export const dispatchStartAutomation = dispatch(actions.actionStartAutomation);
 // export const dispatchPauseAutomation = dispatch(actions.actionPauseAutomation);
 // export const dispatchDeleteAutomation = dispatch(actions.actionDeleteAutomation);
-export const dispatchGetQuoteAssetBalance = dispatch(actions.actionGetQuoteAssetBalance);
+export const dispatchGetPortfolioEquityBalance = dispatch(actions.actionGetPortfolioEquityBalance);
+export const dispatchGetPortfolioAssets = dispatch(actions.actionGetPortfolioAssets);

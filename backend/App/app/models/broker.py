@@ -35,7 +35,7 @@ class Broker(Base):
     def private_status(self, api_key: str = "", secret_key: str = "") -> bool:
         try:
             api = self.get_api(api_key=api_key, secret_key=secret_key)
-            api.fetch_balance()
+            api.checkRequiredCredentials()
             return True
         except Exception as e:
             print(e)
@@ -68,18 +68,10 @@ class Broker(Base):
     def get_balance(self, api_key: str = "", secret_key: str = "") -> {}:
         try:
             api = self.get_api(api_key=api_key, secret_key=secret_key)
-            balance = api.fetch_balance()
+            balance = api.fetchBalance()
             return balance
         except:
             return {}
-
-    def get_asset_balance(self, api_key: str = "", secret_key: str = "", asset_symbol: str = "") -> float:
-        try:
-            balance = self.get_balance(api_key=api_key, secret_key=secret_key)
-            balance_asset = balance[asset_symbol]['total']
-            return balance_asset
-        except:
-            return 0
 
     def get_ticker(self, assets: [str]) -> {}:
         try:
@@ -91,13 +83,19 @@ class Broker(Base):
         except:
             return {}
 
-    def get_last_values(self, assets: [str]) -> [dict]:
+    def load_market(self) -> {}:
+        try:
+            api = self.get_api()
+            market = api.loadMarkets()
+            return market
+        except:
+            return {}
+
+    def get_last_values(self, assets: [str]) -> dict:
         try:
             tickers = self.get_ticker(assets)
-            to_return = [
-                {ticker: {"current_price": tickers[ticker]['close'], "opening_price": tickers[ticker]['open']}} for
-                ticker
-                in tickers]
+            to_return = {ticker: {"current_price": tickers[ticker]['close'], "opening_price": tickers[ticker]['open']}
+                         for ticker in tickers}
             return to_return
         except:
             return []
@@ -117,4 +115,16 @@ class Broker(Base):
                     return df
             return {}
         except Exception as e:
+            return {}
+
+    def create_order(self, api_key: str = "", secret_key: str = "", symbol="", qty: float = 0, type='market',
+                     side='buy'):
+        try:
+            api = self.get_api(api_key=api_key, secret_key=secret_key)
+            if (api.has['createMarketOrder']):
+                order = api.createOrder(symbol, type, side, qty)
+                return order
+            return {}
+        except Exception as e:
+            print(e)
             return {}

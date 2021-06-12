@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Dict
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -60,25 +60,6 @@ def read_portfolio(
     if portfolio.account.owner_id != current_user["id"]:
         raise HTTPException(status_code=400, detail="Not enough permissions")
     return portfolio
-
-
-@router.get("/{id}/get_assets_last_values", response_model=List[dict])
-def get_assets_last_values(
-        *,
-        db: Session = Depends(deps.get_db),
-        id: int,
-        current_user: schemas.User = Depends(deps.get_current_user),
-) -> Any:
-    """
-    Get last values of assets in portfolios
-    """
-    portfolio = crud.portfolio.get(db=db, id=id)
-    if not portfolio:
-        raise HTTPException(status_code=404, detail="Portfolio not found")
-    if portfolio.account.owner_id != current_user["id"]:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
-    assets_last_values = crud.portfolio.get_assets_last_values(db_obj=portfolio)
-    return assets_last_values
 
 
 @router.put("/{id}", response_model=schemas.Portfolio)
@@ -176,9 +157,8 @@ def delete_portfolio(
 #     portfolio = crud.portfolio_automation_task.delete_automation(db=db, db_obj=portfolio)
 #     return portfolio
 
-
-@router.get("/{id}/get_quote_asset_balance", response_model=float)
-def get_quote_asset_balance(
+@router.get("/{id}/get_portfolio_equity_balance", response_model=float)
+def get_portfolio_equity_balance(
         *,
         db: Session = Depends(deps.get_db),
         id: int,
@@ -192,11 +172,31 @@ def get_quote_asset_balance(
         raise HTTPException(status_code=404, detail="Portfolio not found")
     if portfolio.account.owner_id != current_user["id"]:
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    asset_balance = crud.portfolio.get_asset_balance(db_obj=portfolio)
-    return asset_balance
+    total_equity_balance = crud.portfolio.get_portfolio_equity_balance(db=db, db_obj=portfolio)
+    return total_equity_balance
 
-@router.get("/{id}/get_weights", response_model=List)
-def get_weights(
+
+@router.get("/{id}/get_portfolio_assets", response_model=List[schemas.PortfolioAssetBroker])
+def get_portfolio_assets(
+        *,
+        db: Session = Depends(deps.get_db),
+        id: int,
+        current_user: schemas.User = Depends(deps.get_current_user),
+) -> Any:
+    """
+    return list of AssetBrokerPair from portfolioId
+    """
+    portfolio = crud.portfolio.get(db=db, id=id)
+    if not portfolio:
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+    if portfolio.account.owner_id != current_user["id"]:
+        raise HTTPException(status_code=400, detail="Not enough permissions")
+    portfolio_assets = crud.portfolio.get_portfolio_assets(db, db_obj=portfolio)
+    return portfolio_assets
+
+
+@router.get("/{id}/optimize", response_model=Any)
+def optimize(
         *,
         db: Session = Depends(deps.get_db),
         id: int,
@@ -210,5 +210,5 @@ def get_weights(
         raise HTTPException(status_code=404, detail="Portfolio not found")
     if portfolio.account.owner_id != current_user["id"]:
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    weights = crud.portfolio.get_weights(db_obj=portfolio)
+    weights = crud.portfolio.optimize(db, db_obj=portfolio)
     return list(weights)

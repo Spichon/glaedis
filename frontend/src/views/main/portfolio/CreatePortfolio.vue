@@ -31,6 +31,28 @@
                 v-validate="'required'"
                 :error-messages="errors.first('ticker')"
             ></v-select>
+            <v-select
+                label="Optimizer"
+                data-vv-name="optimizerId"
+                data-vv-delay="100"
+                v-model="optimizerId"
+                :items="optimizers"
+                item-value="id"
+                item-text="name"
+                v-validate="'required'"
+                :error-messages="errors.first('optimizerId')"
+            ></v-select>
+            <v-slider
+                v-if="optimizer && optimizer.name==='Max_profit'"
+                v-model="riskFree.val"
+                :label="'Risk Free'"
+                :thumb-color="riskFree.color"
+                thumb-label="always"
+            >
+              <template v-slot:thumb-label="{ value }">
+                {{ value + '%' }}
+              </template>
+            </v-slider>
           </v-form>
         </template>
       </v-card-text>
@@ -117,6 +139,8 @@ import {dispatchGetPortfolios} from '@/store/portfolio/actions';
 import {dispatchCreatePortfolio} from '@/store/portfolio/actions';
 import {readAccounts, readOneAccount} from '@/store/account/getters';
 import {dispatchGetQuoteAssets, dispatchGetTimeframes, dispatchGetTradableAssetPairs} from '@/store/broker/actions';
+import {dispatchGetOptimizers} from '@/store/optimizer/actions';
+import {readOneOptimizer, readOptimizers} from '@/store/optimizer/getters';
 
 @Component
 export default class CreatePortfolio extends Vue {
@@ -124,12 +148,14 @@ export default class CreatePortfolio extends Vue {
   public name: string = '';
   public accountId: number = null as any;
   public quoteAssetId: number = null as any;
+  public optimizerId: number = null as any;
   public tradableAssetPairs: IAssetBrokerPair[] = [];
   public quoteAssets: IAssetBroker[] = [];
   public selected: IAssetBrokerPair[] = [];
   public search = '';
-  public timeframes: ITimeframes = {'timeframes': {}};
+  public timeframes: ITimeframes = {timeframes: {}};
   public ticker: string = null as any;
+  public riskFree = {label: 'color', val: 10, color: 'orange darken-3'};
   public headers = [
     {text: 'Logo', sortable: false, value: 'logo', align: 'left'},
     {text: 'Name', sortable: true, value: 'base.asset.name', align: 'left'},
@@ -140,6 +166,7 @@ export default class CreatePortfolio extends Vue {
   public async mounted() {
     await dispatchGetAccounts(this.$store);
     await dispatchGetPortfolios(this.$store);
+    await dispatchGetOptimizers(this.$store);
     this.reset();
   }
 
@@ -166,6 +193,14 @@ export default class CreatePortfolio extends Vue {
     return readAccounts(this.$store);
   }
 
+  get optimizers() {
+    return readOptimizers(this.$store);
+  }
+
+  get optimizer() {
+    return readOneOptimizer(this.$store)(+this.optimizerId);
+  }
+
   get account() {
     return readOneAccount(this.$store)(+this.accountId);
   }
@@ -179,6 +214,8 @@ export default class CreatePortfolio extends Vue {
         asset_broker_pairs: this.selected,
         quote_asset_id: this.quoteAssetId,
         ticker: this.ticker,
+        optimizer_id: this.optimizerId,
+        risk_free: this.riskFree.val,
       };
       await dispatchCreatePortfolio(this.$store, updatedPortfolio);
       this.$router.push('/main/portfolios');

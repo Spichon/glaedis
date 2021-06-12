@@ -8,6 +8,11 @@ export interface IBroker {
     logo: string;
 }
 
+export interface IOptimizer {
+    id: number;
+    name: string;
+}
+
 export interface IAccount {
     id: number;
     name: string;
@@ -59,11 +64,13 @@ export interface IPortfolio {
     name: string;
     // percentage: number;
     account: IAccount;
-    assets: IAssetBrokerPair[];
     quote_asset_id: number;
     quote_asset: IAssetBroker;
     trade_balance: number;
     ticker: string;
+    optimizer: IOptimizer;
+    risk_free: number;
+    quote_asset_balance: number;
     // automation_task: IAutomationTask;
 }
 
@@ -71,8 +78,10 @@ export interface IPortfolioUpdate {
     name?: string;
     // percentage?: number;
     quote_asset_id?: number;
+    optimizer_id?: number;
     asset_broker_pairs: IAssetBrokerPair[];
     ticker?: string;
+    risk_free?: number;
 }
 
 export interface IPortfolioCreate {
@@ -80,10 +89,37 @@ export interface IPortfolioCreate {
     // percentage: number;
     account_id: number;
     quote_asset_id: number;
+    optimizer_id: number;
     asset_broker_pairs: IAssetBrokerPair[];
     ticker: string;
+    risk_free?: number;
 }
 
 export interface ITimeframes {
     timeframes: {};
+}
+
+export interface IPortfolioAssetBroker {
+    asset_broker_pair: IAssetBrokerPair;
+    qty: number;
+    current_price: number;
+    opening_price: number;
+}
+
+export interface IRun {
+    id: number;
+    date: Date;
+    state: string;
+    optimizer: IOptimizer;
+}
+
+export interface ITransaction {
+    id: number;
+    date: Date;
+    order_id: string;
+    side: string;
+    price: number;
+    qty: number;
+    asset_broker_pair: IAssetBrokerPair;
+    run: IRun;
 }

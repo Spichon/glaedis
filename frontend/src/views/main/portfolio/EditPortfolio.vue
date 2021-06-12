@@ -32,6 +32,28 @@
             >-----
             </div>
           </div>
+          <v-select
+              label="Optimizer"
+              data-vv-name="optimizerId"
+              data-vv-delay="100"
+              v-model="optimizerId"
+              :items="optimizers"
+              item-value="id"
+              item-text="name"
+              v-validate="'required'"
+              :error-messages="errors.first('optimizerId')"
+          ></v-select>
+          <v-slider
+              v-if="optimizer && optimizer.name==='Max_profit'"
+              v-model="riskFree.val"
+              :label="'Risk Free'"
+              :thumb-color="riskFree.color"
+              thumb-label="always"
+          >
+            <template v-slot:thumb-label="{ value }">
+              {{ value + '%' }}
+            </template>
+          </v-slider>
           <v-form
               v-model="valid"
               ref="form"
@@ -155,14 +177,16 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import {IAssetBroker, IAssetBrokerPair, IPortfolioUpdate, ITimeframes} from '@/interfaces';
+import {IAssetBroker, IAssetBrokerPair, IPortfolioAssetBroker, IPortfolioUpdate, ITimeframes} from '@/interfaces';
 import {dispatchGetQuoteAssets, dispatchGetTimeframes, dispatchGetTradableAssetPairs} from '@/store/broker/actions';
+import {dispatchGetOptimizers} from '@/store/optimizer/actions';
 import {
   dispatchGetPortfolios,
   dispatchUpdatePortfolio,
-  dispatchDeletePortfolio,
+  dispatchDeletePortfolio, dispatchGetPortfolioAssets,
 } from '@/store/portfolio/actions';
 import {readOnePortfolio} from '@/store/portfolio/getters';
+import {readOneOptimizer, readOptimizers} from '@/store/optimizer/getters';
 
 @Component
 export default class EditPortfolio extends Vue {
@@ -170,13 +194,16 @@ export default class EditPortfolio extends Vue {
   public name: string = '';
   public tradableAssetPairs: IAssetBrokerPair[] = [];
   public quoteAssetId: number = null as any;
+  public optimizerId: number = null as any;
   public quoteAssets: IAssetBroker[] = [];
   public selected: IAssetBrokerPair[] = [];
-  public timeframes: ITimeframes = {'timeframes': {}};
+  public portfolioAssets: IPortfolioAssetBroker[] = [];
+  public timeframes: ITimeframes = {timeframes: {}};
   public dialog: boolean = false;
   public refresh: boolean = false;
   public search = '';
   public ticker: string = null as any;
+  public riskFree = {label: 'color', val: 10, color: 'orange darken-3'};
   public headers = [
     {text: 'Logo', sortable: false, value: 'logo', align: 'left'},
     {text: 'Name', sortable: true, value: 'base.asset.name', align: 'left'},
@@ -186,15 +213,20 @@ export default class EditPortfolio extends Vue {
 
   public async mounted() {
     await dispatchGetPortfolios(this.$store);
+    await dispatchGetOptimizers(this.$store);
     this.quoteAssets = await dispatchGetQuoteAssets(this.$store, {id: this.portfolio!.account.broker.id});
     this.timeframes = await dispatchGetTimeframes(this.$store, {id: this.portfolio!.account.broker.id});
+    this.portfolioAssets = await dispatchGetPortfolioAssets(this.$store, {id: this.portfolio!.id});
     this.reset();
   }
 
   public async getTradableAssetPairs() {
     this.tradableAssetPairs = await dispatchGetTradableAssetPairs(this.$store, {id: this.quoteAssetId});
     if (this.quoteAssetId === this.portfolio!.quote_asset_id) {
-      this.selected = this.portfolio!.assets;
+      this.selected = [];
+      for (const portfolioAsset in this.portfolioAssets) {
+        this.selected.push(this.portfolioAssets[portfolioAsset].asset_broker_pair);
+      }
     } else {
       this.selected = [];
     }
@@ -205,9 +237,14 @@ export default class EditPortfolio extends Vue {
     this.$validator.reset();
     if (this.portfolio) {
       this.name = this.portfolio.name;
-      this.selected = this.portfolio!.assets;
+      this.selected = [];
+      for (const portfolioAsset in this.portfolioAssets) {
+        this.selected.push(this.portfolioAssets[portfolioAsset].asset_broker_pair);
+      }
       this.quoteAssetId = this.portfolio!.quote_asset_id;
       this.ticker = this.portfolio!.ticker;
+      this.riskFree.val = this.portfolio!.risk_free;
+      this.optimizerId = this.portfolio!.optimizer.id;
     }
     this.getTradableAssetPairs();
   }
@@ -228,6 +265,8 @@ export default class EditPortfolio extends Vue {
         quote_asset_id: this.quoteAssetId,
         asset_broker_pairs: this.selected,
         ticker: this.ticker,
+        risk_free: this.riskFree.val,
+        optimizer_id: this.optimizerId,
       };
       await dispatchUpdatePortfolio(this.$store, {id: this.portfolio!.id, portfolio: updatedPortfolio});
       this.$router.push('/main/portfolios');
@@ -236,6 +275,14 @@ export default class EditPortfolio extends Vue {
 
   get portfolio() {
     return readOnePortfolio(this.$store)(+this.$router.currentRoute.params.id);
+  }
+
+  get optimizers() {
+    return readOptimizers(this.$store);
+  }
+
+  get optimizer() {
+    return readOneOptimizer(this.$store)(+this.optimizerId);
   }
 }
 </script>

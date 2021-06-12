@@ -8,3 +8,8 @@ from app.models.asset.crypto_asset import Crypto_asset  # noqa
 from app.models.asset.fiat_asset import Fiat_asset  # noqa
 from app.models.asset_broker_pair import Asset_broker_pair  # noqa
 from app.models.portfolio import Portfolio  # noqa
+from app.models.optimizer.base_optimizer import Optimizer  # noqa
+from app.models.optimizer.markov_sharpe_optimizer import Markov_sharpe_optimizer # noqa
+from app.models.optimizer.markov_volatility_optimizer import Markov_volatility_optimizer # noqa
+from app.models.run import Run # noqa
+from app.models.transaction import Transaction # noqa

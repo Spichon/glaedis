@@ -13,7 +13,7 @@ class Asset_broker(Base):
     broker_id = Column(Integer, ForeignKey('broker.id'))
     asset_id = Column(Integer, ForeignKey('asset.id'))
     broker = relationship("Broker", backref=backref("assets_broker", cascade="all, delete-orphan"))
-    asset = relationship("Asset")
+    asset = relationship("Asset", lazy='selectin')
     name = Column(String(20))
 
     __table_args__ = (UniqueConstraint('broker_id', 'asset_id', name='_asset_broker_uc'),
