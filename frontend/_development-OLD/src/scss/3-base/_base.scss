@@ -1,0 +1,108 @@
+// -----------------------------------------------------------------------------
+// This file contains very basic styles.
+// -----------------------------------------------------------------------------
+
+/**
+ * Set up a decent box model on the root element
+ */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+body {
+  max-width: 1920px;
+  margin: 0 auto;
+  overflow-x: hidden;
+
+  &.overflow-hidden {
+    overflow: hidden !important;
+  }
+}
+
+/**
+ * Make all elements from the DOM inherit from the parent box-sizing
+ * Since `*` has a specificity of 0, it does not override the `html` value
+ * making all elements inheriting from the root box-sizing value
+ * See: https://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/
+ */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/**
+ * Basic styles for links
+ */
+a {
+  text-decoration: none;
+  color: inherit;
+
+  /* @include on-event {
+    color: $links-on-event;
+  } */
+}
+
+/**
+ * Max width pour empêcher les images de sortir de son block parent
+ * Vertical align pour éviter les bordures en bas des images
+ */
+
+video,
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+svg {
+  max-width: 100%;
+  vertical-align: middle;
+
+  &:not([height]) {
+    height: auto;
+  }
+}
+
+iframe {
+  max-width: 100%;
+}
+
+sup {
+  @extend %sup;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+b,
+strong {
+  font-weight: 700;
+}
+
+blockquote {
+  // Reset blockquote tag properties
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+}
+
+ol,
+ul,
+li {
+  list-style: none !important;
+}

@@ -1,0 +1,104 @@
+// -----------------------------------------------------------------------------
+// This file contains CSS helper classes.
+// -----------------------------------------------------------------------------
+
+/*
+* Hide only visually, but have it available for screen readers:
+* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+*
+* 1. For long content, line feeds are not interpreted as spaces and small width
+*    causes content to wrap 1 word per line:
+*    https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
+*/
+
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap; /* 1 */
+
+  /*
+   * Extends the .visuallyhidden class to allow the element
+   * to be focusable when navigated to via the keyboard:
+   * https://www.drupal.org/node/897638
+   */
+  &.focusable {
+    &:active,
+    &:focus {
+      clip: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      position: static;
+      width: auto;
+      white-space: inherit;
+    }
+  }
+}
+
+/*
+* Hide visually and from screen readers, but maintain layout
+*/
+
+.invisible {
+  visibility: hidden;
+}
+
+.d-grid {
+  display: grid;
+}
+
+.justify-items {
+  &--center {
+    & > * {
+      justify-items: center;
+    }
+  }
+}
+
+.d-flex {
+  &--child-flex--110 {
+    & > * {
+      flex: 1 1 0%;
+    }
+  }
+}
+
+.align {
+  &--center {
+    text-align: center;
+  }
+
+  &--right {
+    text-align: right;
+  }
+}
+
+.weight {
+  &--300 {
+    foint-weight: 300;
+  }
+
+  &--400 {
+    foint-weight: 400;
+  }
+
+  &--500 {
+    foint-weight: 500;
+  }
+
+  &--700 {
+    font-weight: 700;
+  }
+}
+
+.color {
+  &--white {
+    color: v(white-color);
+  }
+}

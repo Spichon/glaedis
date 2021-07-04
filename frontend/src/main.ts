@@ -14,13 +14,34 @@ import store from './store';
 import router from './router';
 import VueClipboard from 'vue-clipboard2';
 import VueScrollTo from 'vue-scrollto';
+import Hamburgers from 'hamburgers';
+import Carousel3d from 'vue-carousel-3d';
 
 import fullscreen from 'vue-fullscreen';
-import {redirectUrl, cognitoUserPoolClientId, cognitoUserPoolId, awsRegion, userUrl, testUrl} from './env';
+import { redirectUrl, cognitoUserPoolClientId, cognitoUserPoolId, awsRegion, userUrl, testUrl } from './env';
+
+// Multi languages
+import VueI18n from 'vue-i18n'
+import { languages } from './i18n/index.js'
+import { defaultLocale } from './i18n/index.js'
+
+const messages = Object.assign(languages);
+
+Vue.config.productionTip = false;
+
+
+const i18n = new VueI18n({
+  locale: defaultLocale,
+  fallbackLocale: 'fr',
+  messages
+})
 
 Vue.use(fullscreen);
 Vue.use(VueScrollTo);
+Vue.use(Hamburgers);
+Vue.use(Carousel3d);
 Vue.use(VueClipboard);
+Vue.use(VueI18n);
 
 Amplify.configure({
     Auth: {
@@ -62,5 +83,6 @@ new Vue({
     router,
     // @ts-ignore
     vuetify,
+    i18n,
     render: (h) => h(App),
 }).$mount('#app');

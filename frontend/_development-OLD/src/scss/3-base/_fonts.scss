@@ -1,0 +1,45 @@
+// -----------------------------------------------------------------------------
+// This file contains all @font-face declarations, if any.
+// -----------------------------------------------------------------------------
+/* @include font-face("font name", "/fonts/name-file", 300, italic, woff2 woff); */
+/* @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700'); */
+
+@include font-face(
+  'Helvetica',
+  $base-url + '/fonts/Helvetica',
+  400,
+  normal,
+  woff2 woff
+);
+
+@include font-face(
+  'Helvetica',
+  $base-url + '/fonts/Helvetica-Oblique',
+  400,
+  italic,
+  woff2 woff
+);
+
+@include font-face(
+  'Helvetica',
+  $base-url + '/fonts/Helvetica-Light',
+  300,
+  normal,
+  woff2 woff
+);
+
+@include font-face(
+  'Helvetica',
+  $base-url + '/fonts/Helvetica-BoldOblique',
+  700,
+  italic,
+  woff2 woff
+);
+
+@include font-face(
+  'Helvetica',
+  $base-url + '/fonts/Helvetica-Bold',
+  700,
+  normal,
+  woff2 woff
+);

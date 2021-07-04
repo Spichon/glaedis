@@ -1,0 +1,285 @@
+{
+  "menus": [
+    {
+      "id": 0,
+      "title": "Home",
+      "link": "#highlighted"
+    },
+    {
+      "id": 1,
+      "title": "Product",
+      "link": "#product"
+    },
+    {
+      "id": 2,
+      "title": "Pricing",
+      "link": "#pricing"
+    },
+    {
+      "id": 3,
+      "title": "F.A.Q",
+      "link": "#faq"
+    },
+    {
+      "id": 4,
+      "title": "Contact",
+      "link": "#contact"
+    }
+  ],
+  "blockHighlighted": {
+    "title": "Your Automatic Portfolio Management",
+    "chapo": "Sed hendrerit metus tortor, quis volutpat enim gravida imperdiet.",
+    "cta": "Try it",
+    "link": "/"
+  },
+  "blockCards": {
+    "title": "Why Choose Us",
+    "chapo": "Proin rhoncus, neque sed congue commodo, orci magna tristique ipsum, vel egestas risus augue quis justo.",
+    "cards": [
+      {
+        "id": 0,
+        "title": "Security",
+        "chapo": "Donec tempor finibus ante ac luctus. Fusce facilisis nisi. Donec tempor finibus ante ac luctus.  Fusce facilisis nisi tempor finibus ante ac luctus facilisi.",
+        "illustration": "security"
+      },
+      {
+        "id": 1,
+        "title": "Availability",
+        "chapo": "Donec tempor finibus ante ac luctus. Fusce facilisis nisi. Donec tempor finibus ante ac luctus.  Fusce facilisis nisi tempor finibus ante ac luctus facilisi.",
+        "illustration": "availability"
+      },
+      {
+        "id": 2,
+        "title": "Transparency",
+        "chapo": "Donec tempor finibus ante ac luctus. Fusce facilisis nisi. Donec tempor finibus ante ac luctus.  Fusce facilisis nisi tempor finibus ante ac luctus facilisi.",
+        "illustration": "transparency"
+      }
+    ]
+  },
+  "blockProduct": {
+    "rows": [
+      {
+        "id": 0,
+        "img": "",
+        "title": "Perfect UX Structure",
+        "isList": false,
+        "chapo": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dui orci, sodales a pellentesque vel, pharetra quis elit. In scelerisque lacinia diam eget egestas. Etiam non dui eu felis vestibulum.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dui orci, sodales a pellentesque vel, pharetra quis",
+        "cta": "Try it",
+        "link": "/",
+        "args": []
+      },
+      {
+        "id": 1,
+        "img": "",
+        "title": "Start easily",
+        "isList": true,
+        "chapo": "",
+        "cta": "",
+        "link": "",
+        "args": [
+          {
+            "id": 0,
+            "text": "Sodales a pellentesque vel, pharetra quis elit. In scelerisque lacinia diam eget egestas."
+          },
+          {
+            "id": 1,
+            "text": "Sodales a pellentesque vel, pharetra quis elit. In scelerisque lacinia diam eget egestas."
+          },
+          {
+            "id": 2,
+            "text": "Sodales a pellentesque vel, pharetra quis elit. In scelerisque lacinia diam eget egestas."
+          },
+          {
+            "id": 3,
+            "text": "Sodales a pellentesque vel, pharetra quis elit. In scelerisque lacinia diam eget egestas."
+          }
+        ]
+      }
+    ]
+  },
+  "blockPricing": {
+    "title": "Pricing Plan",
+    "chapo": "Donec augue lorem, mollis quis dui sed, dictum vehicula turpis. Aliquam bibendum vel mi id tempor. Sed efficitur scelerisque mi. Nullam posuere nec ex in malesuada.",
+    "cards": [
+      {
+        "id": 0,
+        "price": "$0",
+        "chapo": "per month",
+        "cta": "I'm in !",
+        "link": "/",
+        "args": [
+          {
+            "id": 0,
+            "text": "Link your broker’s account",
+            "active": true
+          },
+          {
+            "id": 1,
+            "text": "Create a Portfolio",
+            "active": true
+          },
+          {
+            "id": 2,
+            "text": "Backtest your portfolio",
+            "active": true
+          },
+          {
+            "id": 3,
+            "text": "Start automation",
+            "active": false
+          },
+          {
+            "id": 4,
+            "text": "Monitor portfolio",
+            "active": false
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "price": "$19",
+        "chapo": "per month with annual paiement",
+        "cta": "I'm in !",
+        "link": "/",
+        "args": [
+          {
+            "id": 0,
+            "text": "Link your broker’s account",
+            "active": true
+          },
+          {
+            "id": 1,
+            "text": "Create a Portfolio",
+            "active": true
+          },
+          {
+            "id": 2,
+            "text": "Backtest your portfolio",
+            "active": true
+          },
+          {
+            "id": 3,
+            "text": "Start automation",
+            "active": true
+          },
+          {
+            "id": 4,
+            "text": "Monitor portfolio",
+            "active": true
+          }
+        ]
+      }
+    ]
+  },
+  "blockFaq": {
+    "title": "Frequently Asked Questions",
+    "chapo": "Donec augue lorem, mollis quis dui sed, dictum vehicula turpis. Aliquam bibendum vel mi id tempor. Sed efficitur scelerisque mi. Nullam posuere nec ex in malesuada.",
+    "questions": [
+      {
+        "id": 0,
+        "title": "Fusce Sodales Placerat Nibh Eget ?",
+        "answer": "Duis sagittis orci non risus semper feugiat. Fusce ullamcorper sollicitudin velit et pretium. Ut quis orci sed dolor accumsan ultrices. Nunc ut ornare tellus. Nulla ut eros non lorem rhoncus blandit."
+      },
+      {
+        "id": 1,
+        "title": "Fusce Sodales Placerat Nibh Eget ?",
+        "answer": "Duis sagittis orci non risus semper feugiat. Fusce ullamcorper sollicitudin velit et pretium. Ut quis orci sed dolor accumsan ultrices. Nunc ut ornare tellus. Nulla ut eros non lorem rhoncus blandit."
+      },
+      {
+        "id": 2,
+        "title": "Vestibulum Porttitor Convallis Lectus ?",
+        "answer": "Duis sagittis orci non risus semper feugiat. Fusce ullamcorper sollicitudin velit et pretium. Ut quis orci sed dolor accumsan ultrices. Nunc ut ornare tellus. Nulla ut eros non lorem rhoncus blandit."
+      },
+      {
+        "id": 3,
+        "title": "Fusce Sodales Placerat Nibh Eget ?",
+        "answer": "Duis sagittis orci non risus semper feugiat. Fusce ullamcorper sollicitudin velit et pretium. Ut quis orci sed dolor accumsan ultrices. Nunc ut ornare tellus. Nulla ut eros non lorem rhoncus blandit."
+      },
+      {
+        "id": 4,
+        "title": "Fusce Sodales Placerat Nibh Eget ?",
+        "answer": "Duis sagittis orci non risus semper feugiat. Fusce ullamcorper sollicitudin velit et pretium. Ut quis orci sed dolor accumsan ultrices. Nunc ut ornare tellus. Nulla ut eros non lorem rhoncus blandit."
+      },
+      {
+        "id": 5,
+        "title": "Fusce Sodales Placerat Nibh Eget ?",
+        "answer": "Duis sagittis orci non risus semper feugiat. Fusce ullamcorper sollicitudin velit et pretium. Ut quis orci sed dolor accumsan ultrices. Nunc ut ornare tellus. Nulla ut eros non lorem rhoncus blandit."
+      }
+    ]
+  },
+  "blockContact": {
+    "title": "Drop A Message",
+    "chapo": "Donec tempor finibus ante ac luctus. Fusce facilisis nisi vel odio tincidunt maximus. Pellentesque tempus gravida viverra.",
+    "formName": "Name",
+    "formEmail": "Email",
+    "formMessage": "Message",
+    "formSubmit": "SEND MESSAGE"
+  },
+  "blockStarted": {
+    "title": "Ready to Get Started",
+    "chapo": "Donec tempor finibus ante ac luctus. Fusce facilisis nisi vel odio tincidunt maximus. Pellentesque tempus gravida viverra.",
+    "cta": "Try it !",
+    "link": "/"
+  },
+  "footer": {
+    "about": {
+      "title": "About Saas Temp",
+      "text": "Aliquam fermentum tellus vitae nisl dictum vel sodales diam molestie. Pellentesque nec orci posuere, feugiat quam sed.<br><br>Nam tincidunt lectus quis nibh ultrices, vitae congue risus porta mauris eros."
+    },
+    "menus": {
+      "title" : "Quick Links",
+      "links": [
+        {
+          "id": 0,
+          "title": "Career",
+          "link": "/"
+        },
+        {
+          "id": 1,
+          "title": "Testimonials",
+          "link": "/"
+        },
+        {
+          "id": 2,
+          "title": "Support",
+          "link": "/"
+        },
+        {
+          "id": 3,
+          "title": "Pricing",
+          "link": "/"
+        },
+        {
+          "id": 4,
+          "title": "About App",
+          "link": "/"
+        }
+      ]
+    },
+    "newsletter": {
+      "title": "Subscribe Our Newsletter",
+      "label": "Enter Email Address",
+      "submit": "SUBSCRIBE"
+    },
+    "socials": [
+      {
+        "id": 0,
+        "title": "Join us on Facebook",
+        "picto": "facebook",
+        "link": "/"
+      },
+      {
+        "id": 1,
+        "title": "Join us on Twitter",
+        "picto": "twitter",
+        "link": "/"
+      },
+      {
+        "id": 2,
+        "title": "Join us on Linkedin",
+        "picto": "linkedin",
+        "link": "/"
+      }
+    ]
+  }
+}

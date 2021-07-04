@@ -1,0 +1,49 @@
+.hamburger {
+  align-self: flex-start;
+  margin-left: auto;
+  margin-top: 15px;
+  z-index: 10000000;
+
+  @include breakpoint($large-min) {
+    display: none;
+  }
+
+  .show-menu & {
+    position: fixed;
+    right: 15px;
+    /* margin-top + logo height - (height burger menu / 2) */
+    top: (20px + (73px / 2) - 14px);
+  }
+
+  &.is-active {
+    & + .menu-main--responsive {
+      .menu-main--responsive-content {
+        transform: none;
+      }
+
+      .menu-social-links {
+        display: flex;
+      }
+
+      .nav-main {
+        display: block;
+      }
+    }
+  }
+}
+
+// Customize
+.hamburger-inner,
+.hamburger-inner::before,
+.hamburger-inner::after {
+  width: 40px;
+  height: 4px;
+  background-color: #ffffff;
+  border-radius: 2px;
+}
+
+.hamburger.is-active .hamburger-inner,
+.hamburger.is-active .hamburger-inner::before,
+.hamburger.is-active .hamburger-inner::after {
+  background-color: #ffffff;
+}

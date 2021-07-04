@@ -1,0 +1,51 @@
+// -----------------------------------------------------------------------------
+// This file contains all application-wide Sass variables.
+// -----------------------------------------------------------------------------
+
+/* Regular font family */
+$main-font-stack: 'Helvetica', sans-serif !important;
+$main-line-height: normal;
+$main-font-weight: 400;
+
+/* Code (monospace) font family */
+$code-font-stack: 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono',
+  'Monaco', monospace;
+
+/* Global Variables */
+:root {
+  // Colors
+  --blue-color: rgb(88, 111, 124);
+  --orange-color: rgb(221, 152, 92);
+  --white-color: rgb(255, 255, 255);
+  --black-color: rgb(0, 0, 0);
+  --grey-color: rgb(235, 235, 235);
+  --text-color: var(--black);
+
+  // Layout
+  --main-header-height: 150px;
+  --global-padding: 0px 275px;
+  --header-padding: 40px 278px;
+}
+
+$test: gold;
+
+/* Breakpoints */
+$s-small-max: max-width ((374 / 16) * 1em);
+$x-small-max: max-width ((575 / 16) * 1em);
+$small-min: ((576 / 16) * 1em);
+$small-max: max-width ((767 / 16) * 1em);
+$medium-min: ((768 / 16) * 1em);
+$medium-max: max-width ((991 / 16) * 1em);
+$large-min: ((992 / 16) * 1em);
+$large-max: max-width ((1199 / 16) * 1em);
+$x-large-min: ((1200 / 16) * 1em);
+$x-large-max: max-width ((1399 / 16) * 1em);
+$xx-large-min: ((1400 / 16) * 1em);
+$xx-large-max: max-width ((1570 / 16) * 1em);
+$xxx-large-min: ((1904 / 16) * 1em);
+$xxx-large-max: max-width ((1905 / 16) * 1em);
+
+/// Relative or absolute URL where all assets are served from
+/// @example scss - When using a CDN
+///   $base-url: 'http://cdn.example.com/assets/';
+$base-url: '/assets/' !default;

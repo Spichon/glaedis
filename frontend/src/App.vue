@@ -1,16 +1,6 @@
 <template>
   <div id="app">
     <v-app>
-      <v-app-bar app color="primary" dark>
-        <v-btn to="/" text class="d-flex align-center display-1">
-          <img width="100," height="64," src="@/assets/2Fichier 28.png" />
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn to="/main/dashboard" large text>
-          Account
-          <v-icon class="ml-2">mdi-account-key</v-icon>
-        </v-btn>
-      </v-app-bar>
       <router-view />
       <NotificationsManager></NotificationsManager>
     </v-app>
@@ -18,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import '@/assets/minify/css/main.css';
+// import '@/assets/styles/minify/css/main.css';
 import { Component, Vue } from 'vue-property-decorator';
 import NotificationsManager from '@/components/NotificationsManager.vue';
 
@@ -29,3 +19,55 @@ import NotificationsManager from '@/components/NotificationsManager.vue';
 })
 export default class App extends Vue {}
 </script>
+
+<style lang="scss">
+/* Import Local Fonts */
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./assets/fonts/Helvetica.woff') format('woff'),
+    url('./assets/fonts/Helvetica.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./assets/fonts/Helvetica-Light.woff') format('woff'),
+    url('./assets/fonts/Helvetica-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./assets/fonts/Helvetica-Oblique.woff') format('woff'),
+    url('./assets/fonts/Helvetica-Oblique.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./assets/fonts/Helvetica-Bold.woff') format('woff'),
+    url('./assets/fonts/Helvetica-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./assets/fonts/Helvetica-BoldOblique.woff') format('woff'),
+    url('./assets/fonts/Helvetica-BoldOblique.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: block;
+}
+
+#app {
+  font-family: 'Helvetica', sans-serif;
+}
+</style>
